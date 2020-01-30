@@ -2,11 +2,14 @@ Package: SeuratDisk
 Type: Package
 Title: Some Title Here
 Version: 0.1.0
+Date: 2020-02-01
 Authors@R: c(
   person(given = 'Rahul', family = 'Satija', email = 'rsatija@nygenome.org', role = 'aut', comment = c(ORCID = '0000-0001-9448-8833')),
   person(given = 'Paul', family = 'Hoffman', email = 'phoffman@nygenome.org', role = c('aut', 'cre'), comment = c(ORCID = '0000-0002-7693-8957'))
   )
 Description: Some description here
+URL: https://github.com/mojaveazure/seurat-disk
+BugReports: https://github.com/mojaveazure/seurat-disk/issues
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -15,7 +18,13 @@ Depends:
   R (>= 3.6.1)
 Imports:
   hdf5r (>= 1.3.0),
-  R6 (>= 2.4.1)
+  methods (>= 3.6.1),
+  R6 (>= 2.4.1),
+  Seurat (>= 3.1.2)
 Collate:
+    'WriteH5Group.R'
+    'generics.R'
+    'scdisk.R'
     'h5Seurat.R'
     'loom.R'
+    'zzz.R'
