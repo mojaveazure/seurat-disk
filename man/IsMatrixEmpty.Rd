@@ -24,9 +24,11 @@ These two situations correspond to matrices generated with either
 \code{new('matrix')} or \code{matrix()}
 }
 \examples{
-IsMatrixEmpty(new('matrix'))
-IsMatrixEmpty(matrix())
-IsMatrixEmpty(matrix(1:9, nrow = 3))
+\dontrun{
+SeuratDisk:::IsMatrixEmpty(new('matrix'))
+SeuratDisk:::IsMatrixEmpty(matrix())
+SeuratDisk:::IsMatrixEmpty(matrix(1:9, nrow = 3))
+}
 
 }
 \keyword{internal}

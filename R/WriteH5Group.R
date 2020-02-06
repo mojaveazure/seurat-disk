@@ -10,7 +10,7 @@ NULL
 #'
 #' @param x An object
 #' @param name Name to save data as
-#' @param h5group An HDF5 file or group (\code{H5File} or \code{H5Group} objects
+#' @param hgroup An HDF5 file or group (\code{H5File} or \code{H5Group} objects
 #' from hdf5r)
 #' @param verbose Show progress updates
 #'
@@ -32,6 +32,8 @@ setGeneric(
   signature = c('x')
 )
 
+#' @rdname WriteH5Group
+#'
 setMethod(
   f = 'WriteH5Group',
   signature = c(x = 'ANY'),
@@ -55,6 +57,8 @@ setMethod(
 )
 
 #' @importClassesFrom Seurat Assay
+#'
+#' @rdname WriteH5Group
 #'
 setMethod(
   f = 'WriteH5Group',
@@ -148,6 +152,8 @@ setMethod(
   }
 )
 
+#' @rdname WriteH5Group
+#'
 setMethod(
   f = 'WriteH5Group',
   signature = c('x' = 'data.frame'),
@@ -157,6 +163,8 @@ setMethod(
   }
 )
 
+#' @rdname WriteH5Group
+#'
 setMethod(
   f = 'WriteH5Group',
   signature = c('x' = 'dgCMatrix'),
@@ -170,6 +178,8 @@ setMethod(
 )
 
 #' @importClassesFrom Seurat DimReduc
+#'
+#' @rdname WriteH5Group
 #'
 setMethod(
   f = 'WriteH5Group',
@@ -248,6 +258,8 @@ setMethod(
   }
 )
 
+#' @rdname WriteH5Group
+#'
 setMethod(
   f = 'WriteH5Group',
   signature = c('x' = 'factor'),
@@ -271,6 +283,8 @@ setMethod(
   }
 )
 
+#' @rdname WriteH5Group
+#'
 setMethod(
   f = 'WriteH5Group',
   signature = c('x' = 'list'),
@@ -283,6 +297,8 @@ setMethod(
   }
 )
 
+#' @rdname WriteH5Group
+#'
 #' @importClassesFrom Seurat SeuratCommand
 #'
 setMethod(

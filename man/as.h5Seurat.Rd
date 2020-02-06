@@ -2,26 +2,35 @@
 % Please edit documentation in R/generics.R, R/h5Seurat.R
 \name{as.h5Seurat}
 \alias{as.h5Seurat}
+\alias{as.h5Seurat.H5File}
 \alias{as.h5Seurat.Seurat}
 \title{Save an object as an H5Seurat file}
 \usage{
-as.h5Seurat(x, filename, overwrite = FALSE, verbose = TRUE, ...)
+as.h5Seurat(x, ...)
 
-\method{as.h5Seurat}{Seurat}(x, filename, overwrite = FALSE, verbose = TRUE, ...)
+\method{as.h5Seurat}{H5File}(x, ...)
+
+\method{as.h5Seurat}{Seurat}(
+  x,
+  filename = paste0(Project(object = x), ".h5seurat"),
+  overwrite = FALSE,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{An object}
+
+\item{...}{Arguments passed to other methods}
 
 \item{filename}{Name of file to save \code{x} to}
 
 \item{overwrite}{Overwrite \code{filename} if present?}
 
 \item{verbose}{Show progress updates}
-
-\item{...}{Extra parameters passed to and from other methods}
 }
 \value{
-...
+An \code{\link{h5Seurat}} object
 }
 \description{
 Save an object as an H5Seurat file

@@ -22,7 +22,14 @@ scdisk <- R6Class(
     # Methods
     #' @description Create a new \code{scdisk} object
     #' @param filename Name of on-disk file to connect to
-    #' @param mode How to open the file
+    #' @param mode How to open the file, choose from:
+    #' \describe{
+    #'  \item{a}{Create new or open existing file, allow read and write}
+    #'  \item{r}{Open existing file, allow read only}
+    #'  \item{r+}{Open existing file, allow read and write}
+    #'  \item{w}{Create new file (deleting any existing one), allow read and write}
+    #'  \item{w-, x}{Create new file (error if exists), allow read and write}
+    #' }
     #' @param validate Validate the file upon connection
     #' @param ... Extra arguments passed to validation routine
     initialize = function(

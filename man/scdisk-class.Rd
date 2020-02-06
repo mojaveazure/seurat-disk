@@ -116,7 +116,14 @@ Create a new \code{scdisk} object
 \describe{
 \item{\code{filename}}{Name of on-disk file to connect to}
 
-\item{\code{mode}}{How to open the file}
+\item{\code{mode}}{How to open the file, choose from:
+\describe{
+ \item{a}{Create new or open existing file, allow read and write}
+ \item{r}{Open existing file, allow read only}
+ \item{r+}{Open existing file, allow read and write}
+ \item{w}{Create new file (deleting any existing one), allow read and write}
+ \item{w-, x}{Create new file (error if exists), allow read and write}
+}}
 
 \item{\code{validate}}{Validate the file upon connection}
 

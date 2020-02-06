@@ -2,19 +2,43 @@
 % Please edit documentation in R/WriteH5Group.R
 \name{WriteH5Group}
 \alias{WriteH5Group}
+\alias{WriteH5Group,ANY-method}
+\alias{WriteH5Group,Assay-method}
+\alias{WriteH5Group,data.frame-method}
+\alias{WriteH5Group,dgCMatrix-method}
+\alias{WriteH5Group,DimReduc-method}
+\alias{WriteH5Group,factor-method}
+\alias{WriteH5Group,list-method}
+\alias{WriteH5Group,SeuratCommand-method}
 \title{Write data to an HDF5 group}
 \usage{
 WriteH5Group(x, name, hgroup, verbose = TRUE)
+
+\S4method{WriteH5Group}{ANY}(x, name, hgroup, verbose = TRUE)
+
+\S4method{WriteH5Group}{Assay}(x, name, hgroup, verbose = TRUE)
+
+\S4method{WriteH5Group}{data.frame}(x, name, hgroup, verbose = TRUE)
+
+\S4method{WriteH5Group}{dgCMatrix}(x, name, hgroup, verbose = TRUE)
+
+\S4method{WriteH5Group}{DimReduc}(x, name, hgroup, verbose = TRUE)
+
+\S4method{WriteH5Group}{factor}(x, name, hgroup, verbose = TRUE)
+
+\S4method{WriteH5Group}{list}(x, name, hgroup, verbose = TRUE)
+
+\S4method{WriteH5Group}{SeuratCommand}(x, name, hgroup, verbose = TRUE)
 }
 \arguments{
 \item{x}{An object}
 
 \item{name}{Name to save data as}
 
-\item{verbose}{Show progress updates}
-
-\item{h5group}{An HDF5 file or group (\code{H5File} or \code{H5Group} objects
+\item{hgroup}{An HDF5 file or group (\code{H5File} or \code{H5Group} objects
 from hdf5r)}
+
+\item{verbose}{Show progress updates}
 }
 \value{
 Invisibly returns \code{NULL}
