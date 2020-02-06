@@ -1,3 +1,4 @@
+#' @importFrom rlang %||%
 #' @importFrom hdf5r h5const
 #' @importFrom methods setOldClass
 #'
@@ -30,6 +31,79 @@ default.options <- list(
   SeuratDisk.loom3.encoding = h5const$H5T_CSET_UTF8,
   SeuratDisk.loom.string_len = 7L
 )
+
+modes <- list(
+  'new' = c('w', 'w-', 'x'),
+  'existing' = c('r', 'r+')
+)
+
+#' Find the closest version
+#'
+#' @param query A query version (\code{character} or \code{numeric_version})
+#' @param targets A vector of target versions (\code{character} or
+#' \code{numeric_version})
+#' @param direction Which way should we check for closest version? Choose from:
+#' \describe{
+#'  \item{min}{Closest version less than or equal to \code{query}}
+#'  \item{max}{Closest version greater than or equal to \code{query}}
+#' }
+#'
+#' @return The version from \code{targets} that is closest to \code{query} as a
+#' \code{character} vector
+#'
+#' @keywords internal
+#'
+ClosestVersion <- function(query, targets, direction = c('min', 'max')) {
+  direction <- match.arg(arg = direction)
+  query <- numeric_version(x = query)
+  targets <- sort(x = numeric_version(x = targets))
+  index <- suppressWarnings(expr = switch(
+    EXPR = direction,
+    'min' = max(which(x = targets <= query)),
+    'max' = min(which(x = targets >= query))
+  ))
+  if (is.infinite(x = index)) {
+    stop(
+      "All target versions ",
+      switch(EXPR = direction, 'min' = 'greater', 'max' = 'less'),
+      " than query version (",
+      as.character(x = query),
+      ")",
+      call. = FALSE
+    )
+  }
+  return(as.character(x = targets[index]))
+}
+
+#' Enumerate a list or vector
+#'
+#' @param x A list or a vector
+#'
+#' @return A list of length \code{x} with the following named values:
+#' \describe{
+#'   \item{\code{name}}{The name of \code{x} at a given index}
+#'   \item{\code{value}}{The value of \code{x} at the corresponding index}
+#' }
+#'
+#' @note For any given index \code{i} in \code{x}, all attempts to use the name
+#' of the value of \code{x} at \code{i} will be made. If there is no name
+#' (eg. \code{nchar(x = names(x = x)[i]) == 0}), the index \code{i} will be used
+#' in its stead
+#'
+#' @keywords internal
+#'
+Enumerate <- function(x) {
+  indices <- seq_along(along.with = x)
+  keys <- names(x = x) %||% as.character(x = indices)
+  keys[nchar(x = keys) == 0] <- indices[nchar(x = keys) == 0]
+  vals <- lapply(
+    X = indices,
+    FUN = function(i) {
+      return(c('name' = keys[i], 'value' = unname(obj = x[i])))
+    }
+  )
+  return(vals)
+}
 
 #' Get a class string with package information
 #'
@@ -69,9 +143,11 @@ GetClass <- function(class, packages = 'Seurat') {
 #' @keywords internal
 #'
 #' @examples
-#' IsMatrixEmpty(new('matrix'))
-#' IsMatrixEmpty(matrix())
-#' IsMatrixEmpty(matrix(1:9, nrow = 3))
+#' \dontrun{
+#' SeuratDisk:::IsMatrixEmpty(new('matrix'))
+#' SeuratDisk:::IsMatrixEmpty(matrix())
+#' SeuratDisk:::IsMatrixEmpty(matrix(1:9, nrow = 3))
+#' }
 #'
 IsMatrixEmpty <- function(x) {
   matrix.dims <- dim(x = x)
