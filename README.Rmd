@@ -1,0 +1,40 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# SeuratDisk v`r packageVersion("SeuratDisk")`
+
+<!-- badges: start -->
+![CRAN/METACRAN](https://img.shields.io/cran/v/SeuratDisk)
+<!-- badges: end -->
+
+Interfaces for HDF5-based Single Cell File Formats
+
+## Installation
+
+```{r parse.description, echo=FALSE}
+description <- read.dcf(file = "DESCRIPTION")
+github.url <- unlist(x = strsplit(x = description[, "URL"], split = ', '))
+github.url <- grep(pattern = "https://github.com", x = github.url, value = TRUE)[1]
+```
+
+SeuratDisk is not currently available on CRAN.
+You can install it from [GitHub](`r github.url`) with:
+
+``` r
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+remotes::install_github("mojaveazure/seurat-disk")
+```
