@@ -5,9 +5,14 @@
 \alias{SeuratDisk-pacakge}
 \alias{_PACKAGE}
 \alias{SeuratDisk}
-\title{SeuratDisk: Some Title Here}
+\title{SeuratDisk: Interfaces for HDF5-based Single Cell File Formats}
 \description{
-Some description here
+As single-cell expression datasets grow in size, the computational
+  requirements to store and handle them grow as well. To address the issues posed
+  by large datasets, SeuratDisk provides an interface to various single-cell
+  oriented HDF5-based file formats and provides infrastructure to perform
+  disk-based computation on said files. In addition, SeuratDisk integrates with
+  the Seurat framework and provides disk-based methods for Seurat's toolkit.
 }
 \section{Package options}{
 
@@ -36,9 +41,9 @@ Useful links:
 \author{
 \strong{Maintainer}: Paul Hoffman \email{phoffman@nygenome.org} (\href{https://orcid.org/0000-0002-7693-8957}{ORCID})
 
-Authors:
+Other contributors:
 \itemize{
-  \item Rahul Satija \email{rsatija@nygenome.org} (\href{https://orcid.org/0000-0001-9448-8833}{ORCID})
+  \item Rahul Satija \email{rsatija@nygenome.org} (\href{https://orcid.org/0000-0001-9448-8833}{ORCID}) [contributor]
 }
 
 }
