@@ -13,23 +13,47 @@ knitr::opts_chunk$set(
 )
 ```
 
-# SeuratDisk v`r packageVersion("SeuratDisk")`
+```{r gh.url, echo=FALSE}
+ghurl <- function(x) {
+  x <- unlist(x = strsplit(x = x, split = ','))
+  x <- trimws(x = x)
+  x <- grep(pattern = "https://github.com", x = x, value = TRUE)[1]
+  return(unname(obj = x))
+}
+```
+
+```{r parse.description, echo=FALSE}
+description <- read.dcf(file = "DESCRIPTION")
+# Get package name
+pkg <- as.vector(x = description[, "Package"])
+# Get GitHub URL
+github.url <- ghurl(x = description[, "URL"])
+# Get depedencies
+deps <- as.vector(x = description[, c("Depends", "Imports")])
+deps <- unlist(x = strsplit(x = deps, split = "\n"))
+deps <- vapply(
+  X = deps,
+  FUN = function(x) {
+    return(unlist(x = strsplit(x = x, split = "(", fixed = TRUE))[1])
+  },
+  FUN.VALUE = character(length = 1L),
+  USE.NAMES = FALSE
+)
+deps <- trimws(x = deps)
+deps <- deps[deps != "R"]
+```
+
+# `r pkg` v`r packageVersion(pkg)`
 
 <!-- badges: start -->
-![CRAN/METACRAN](https://img.shields.io/cran/v/SeuratDisk)
+![CRAN/METACRAN](https://img.shields.io/cran/v/`r pkg`)
 <!-- badges: end -->
 
 Interfaces for HDF5-based Single Cell File Formats
 
 ## Installation
 
-```{r parse.description, echo=FALSE}
-description <- read.dcf(file = "DESCRIPTION")
-github.url <- unlist(x = strsplit(x = description[, "URL"], split = ', '))
-github.url <- grep(pattern = "https://github.com", x = github.url, value = TRUE)[1]
-```
-
-SeuratDisk is not currently available on CRAN.
+`r pkg` is not currently available on CRAN.
 You can install it from [GitHub](`r github.url`) with:
 
 ``` r
@@ -37,4 +61,39 @@ if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
 remotes::install_github("mojaveazure/seurat-disk")
+```
+
+## Dependencies
+
+`r pkg` depends on the following packages:
+
+```{r dependencies, echo=FALSE, results='asis'}
+cran.cannoncial <- "https://cran.r-project.org/package="
+cran.pkgs <- tools::CRAN_package_db()
+cran.pkgs <- subset(x = cran.pkgs, subset = Package %in% deps)
+deps.md <- vector(mode = "character", length = length(x = deps))
+names(x = deps.md) <- deps
+for (dep in deps) {
+  if (!dep %in% cran.pkgs$Package) {
+    deps.md[[dep]] <- dep
+    next
+  }
+  pkg.info <- subset(x = cran.pkgs, subset = Package == dep)[1, , drop = FALSE]
+  pkg.cran <- paste0("[:link:](", cran.cannoncial, dep, ")")
+  pkg.github <- ghurl(x = pkg.info$URL)
+  pkg.other <- gsub(pattern = pkg.github, replacement = "", x = pkg.info$URL)
+  pkg.other <- if (nchar(x = pkg.other)) {
+    pkg.other <- trimws(x = unlist(x = strsplit(x = pkg.other, split = ","))[1])
+    paste0("[:page_facing_up:](", pkg.other, ")")
+  } else {
+    ""
+  }
+  pkg.github <- if (is.na(x = pkg.github)) {
+    ""
+  } else {
+    paste0("[:octocat:](", pkg.github, ")")
+  }
+  deps.md[[dep]] <- paste(dep, pkg.cran, pkg.github, pkg.other)
+}
+cat('-', paste(deps.md, collapse = '\n- '))
 ```
