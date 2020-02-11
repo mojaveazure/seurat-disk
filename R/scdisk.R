@@ -64,7 +64,11 @@ scdisk <- R6Class(
       type <- match.arg(arg = type)
       return(switch(
         EXPR = type,
-        'mode' = paste('Cannot modify a', class(x = self)[1], 'file in read-only mode'),
+        'mode' = paste(
+          'Cannot modify a',
+          class(x = self)[1],
+          'file in read-only mode'
+        ),
         'ambiguous' = 'Cannot identify the dataset provided, found too many like it; please be more specific'
       ))
     },
