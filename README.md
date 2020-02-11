@@ -24,19 +24,14 @@ remotes::install_github("mojaveazure/seurat-disk")
 
 ## Dependencies
 
-SeuratDisk depends on the following packages:
+SeuratDisk depends on the following
+packages:
 
-  - hdf5r [:link:](https://cran.r-project.org/package=hdf5r)
-    [:octocat:](https://github.com/hhoeflin/hdf5r)
-    [:page\_facing\_up:](https://hhoeflin.github.io/hdf5r)
-  - methods
-  - R6 [:link:](https://cran.r-project.org/package=R6)
-    [:octocat:](https://github.com/r-lib/R6/)
-    [:page\_facing\_up:](https://r6.r-lib.org)
-  - rlang [:link:](https://cran.r-project.org/package=rlang)
-    [:octocat:](https://github.com/r-lib/rlang)
-    [:page\_facing\_up:](http://rlang.r-lib.org)
-  - Seurat [:link:](https://cran.r-project.org/package=Seurat)
-    [:octocat:](https://github.com/satijalab/seurat)
-    [:page\_facing\_up:](http://www.satijalab.org/seurat)
-  - tools
+| Package |                   CRAN Webpage                   |                   Source                    |                   Website                   |
+| :-----: | :----------------------------------------------: | :-----------------------------------------: | :-----------------------------------------: |
+|  hdf5r  | [CRAN](https://cran.r-project.org/package=hdf5r) | [GitHub](https://github.com/hhoeflin/hdf5r) | [Website](https://hhoeflin.github.io/hdf5r) |
+| methods |                        –                         |                      –                      |                      –                      |
+|   R6    |  [CRAN](https://cran.r-project.org/package=R6)   |   [GitHub](https://github.com/r-lib/R6/)    |       [Website](https://r6.r-lib.org)       |
+|  rlang  | [CRAN](https://cran.r-project.org/package=rlang) |  [GitHub](https://github.com/r-lib/rlang)   |      [Website](http://rlang.r-lib.org)      |
+| Seurat  |                        –                         |                      –                      |                      –                      |
+|  tools  |                        –                         |                      –                      |                      –                      |

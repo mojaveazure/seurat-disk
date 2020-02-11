@@ -67,33 +67,41 @@ remotes::install_github("mojaveazure/seurat-disk")
 
 `r pkg` depends on the following packages:
 
+| Package | CRAN Webpage | Source | Website |
+|:-------:|:------------:|:------:|:-------:|
 ```{r dependencies, echo=FALSE, results='asis'}
 cran.cannoncial <- "https://cran.r-project.org/package="
 cran.pkgs <- tools::CRAN_package_db()
 cran.pkgs <- subset(x = cran.pkgs, subset = Package %in% deps)
 deps.md <- vector(mode = "character", length = length(x = deps))
+url.na <- "| &ndash;"
 names(x = deps.md) <- deps
 for (dep in deps) {
   if (!dep %in% cran.pkgs$Package) {
-    deps.md[[dep]] <- dep
+    deps.md[[dep]] <- paste(
+      "|", 
+      dep, 
+      paste(replicate(n = 3, expr = url.na), collapse = " "),
+      "|"
+    )
     next
   }
   pkg.info <- subset(x = cran.pkgs, subset = Package == dep)[1, , drop = FALSE]
-  pkg.cran <- paste0("[:link:](", cran.cannoncial, dep, ")")
+  pkg.cran <- paste0("| [CRAN](", cran.cannoncial, dep, ")")
   pkg.github <- ghurl(x = pkg.info$URL)
   pkg.other <- gsub(pattern = pkg.github, replacement = "", x = pkg.info$URL)
   pkg.other <- if (nchar(x = pkg.other)) {
     pkg.other <- trimws(x = unlist(x = strsplit(x = pkg.other, split = ","))[1])
-    paste0("[:page_facing_up:](", pkg.other, ")")
+    paste0("| [Website](", pkg.other, ")")
   } else {
-    ""
+    url.na
   }
   pkg.github <- if (is.na(x = pkg.github)) {
-    ""
+    url.na
   } else {
-    paste0("[:octocat:](", pkg.github, ")")
+    paste0("| [GitHub](", pkg.github, ")")
   }
-  deps.md[[dep]] <- paste(dep, pkg.cran, pkg.github, pkg.other)
+  deps.md[[dep]] <- paste(dep, pkg.cran, pkg.github, pkg.other, "|")
 }
-cat('-', paste(deps.md, collapse = '\n- '))
+cat("|", paste(deps.md, collapse = "\n"))
 ```
