@@ -31,8 +31,10 @@ Imports:
 Collate:
     'WriteH5Group.R'
     'generics.R'
+    'as_h5Seurat.R'
     'scdisk.R'
     'h5Seurat.R'
+    'h5Seurat_bindings.R'
     'loom.R'
     'zzz.R'
 Suggests: 

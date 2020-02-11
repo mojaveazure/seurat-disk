@@ -155,6 +155,45 @@ IsMatrixEmpty <- function(x) {
   return(all(matrix.dims == 0) || matrix.na)
 }
 
+#' Update slots in an object
+#'
+#' @param object An object to update
+#'
+#' @return \code{object} with the latest slot definitions
+#'
+#' @importFrom methods slotNames slot slot<-
+#'
+#' @keywords internal
+#'
+UpdateSlots <- function(object) {
+  object.list <- sapply(
+    X = slotNames(x = object),
+    FUN = function(x) {
+      return(tryCatch(
+        expr = slot(object = object, name = x),
+        error = function(...) {
+          return(NULL)
+        }
+      ))
+    },
+    simplify = FALSE,
+    USE.NAMES = TRUE
+  )
+  object.list <- Filter(f = Negate(f = is.null), x = object.list)
+  object.list <- c('Class' = class(x = object)[1], object.list)
+  object <- do.call(what = 'new', args = object.list)
+  for (x in setdiff(x = slotNames(x = object), y = names(x = object.list))) {
+    xobj <- slot(object = object, name = x)
+    if (is.vector(x = xobj) && !is.list(x = xobj) && length(x = xobj) == 0) {
+      slot(object = object, name = x) <- vector(
+        mode = class(x = xobj),
+        length = 1L
+      )
+    }
+  }
+  return(object)
+}
+
 .onLoad <- function(libname, pkgname) {
   # Make the classes defined in SeuratDisk compatible with S4 generics/methods
   setOldClass(Classes = c('scdisk', 'h5Seurat', 'loom'))

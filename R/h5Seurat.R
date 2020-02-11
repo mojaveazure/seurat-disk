@@ -2,13 +2,9 @@
 #'
 NULL
 
-h5seurat.validate <- list(
-  '3.1.2' = function(hfile, verbose = TRUE) {
-    valid <- TRUE
-    .NotYetImplemented()
-    return(valid)
-  }
-)
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Class definitions
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #' A class for connections to h5Seurat files
 #'
@@ -21,6 +17,7 @@ h5seurat.validate <- list(
 #'
 #' @importFrom R6 R6Class
 #' @importFrom hdf5r H5File
+#' @importFrom utils packageVersion
 #'
 #' @export
 #'
@@ -34,62 +31,64 @@ h5Seurat <- R6Class(
     # Methods
   ),
   private = list(
+    versions = c('3.1.2'),
     # Methods
-    validate = function(verbose = TRUE, ...) {
-      message("Validating h5Seurat file")
-      if (self$mode %in% modes$new) {
-        ''
+    create = function(version, verbose = TRUE) {
+      if (self$mode == 'r') {
+        stop(private$errors(type = 'mode'), call. = FALSE)
       }
+      version <- ClosestVersion(query = version, targets = private$versions)
+      switch(
+        EXPR = version,
+        '3.1.2' = {
+          if (verbose) {
+            message("Creating h5Seurat file for version ", version)
+          }
+          for (group in c('assays', 'commands', 'graphs', 'misc', 'reductions', 'tools')) {
+            self$create_group(name = group)
+          }
+          attrs <- c(
+            'active.assay' = '',
+            'project' = 'SeuratDiskProject',
+            'version' = '3.1.2'
+          )
+          for (i in seq_along(along.with = attrs)) {
+            self$create_attr(attr_name = names(x = attrs)[i], robj = attrs[i])
+          }
+        },
+        stop("Unknown version ", version, call. = FALSE)
+      )
+      return(invisible(x = self))
+    },
+    validate = function(verbose = TRUE, ...) {
+      if (self$mode %in% modes$new) {
+        private$create(
+          version = packageVersion(pkg = 'Seurat'),
+          verbose = verbose
+        )
+      }
+      if (verbose) {
+        message("Validating h5Seurat file")
+      }
+      if (!self$attr_exists(attr_name = 'version')) {
+        stop("Invalid h5Seurat file: cannot find attribute 'version'", call. = FALSE)
+      }
+      version <- self$attr_open(attr_name = 'version')$read()
+      switch(
+        EXPR = ClosestVersion(query = version, targets = private$versions),
+        '3.1.2' = {
+          ''
+        },
+        stop("Unknown version ", version, call. = FALSE)
+      )
       return(invisible(x = NULL))
     }
   )
 )
 
-#' @rdname as.h5Seurat
-#' @method as.h5Seurat H5File
-#' @export
-#'
-as.h5Seurat.H5File <- function(x, ...) {
-  return(h5Seurat$new(filename = x$filename, mode = x$mode))
-}
-
-#' @param filename Name of file to save \code{x} to
-#' @param overwrite Overwrite \code{filename} if present?
-#' @param verbose Show progress updates
-#'
-#' @importFrom tools file_ext
-#' @importFrom Seurat Project
-#'
-#' @rdname as.h5Seurat
-#' @method as.h5Seurat Seurat
-#' @export
-#'
-as.h5Seurat.Seurat <- function(
-  x,
-  filename = paste0(Project(object = x), '.h5seurat'),
-  overwrite = FALSE,
-  verbose = TRUE,
-  ...
-) {
-  if (!grepl(pattern = '\\.h5seurat', x = file_ext(x = filename), ignore.case = TRUE)) {
-    filename <- paste0(filename, '.h5seurat')
-  }
-  if (file.exists(filename)) {
-    if (overwrite) {
-      warning(
-        "Overwriting previous file ",
-        filename,
-        call. = FALSE,
-        immediate. = TRUE
-      )
-      file.remove(filename)
-    } else {
-      stop("H5Seurat file at ", filename, " already exists", call. = FALSE)
-    }
-  }
-  hfile <- h5Seurat$new(filename = filename, mode = 'w')
-  return(hfile)
-}
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Methods for Seurat-defined generics
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #' @rdname LoadH5Seurat
 #' @method LoadH5Seurat character
@@ -115,29 +114,4 @@ LoadH5Seurat.H5File <- function(file, ...) {
 #'
 LoadH5Seurat.h5Seurat <- function(file, ...) {
   .NotYetImplemented()
-}
-
-#' Save an object as an h5seurat file
-#'
-#' @inheritParams as.h5Seurat
-#'
-#' @return Invisibly returns h5seurat file name
-#'
-#' @export
-#'
-SaveH5Seurat <- function(
-  object,
-  filename = 'object.h5seurat',
-  overwrite = FALSE,
-  verbose = TRUE,
-  ...
-) {
-  h5seurat <- as.h5Seurat(
-    x = object,
-    filename = filename,
-    overwrite = overwrite,
-    verbose = verbose
-  )
-  h5seurat$close_all()
-  return(invisible(x = NULL))
 }
