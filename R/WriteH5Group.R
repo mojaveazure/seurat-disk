@@ -320,10 +320,10 @@ setMethod(
       if (slot == 'params') {
         next
       }
-      h5attr(x = hgroup[[name]], which = slot) <- as.character(x = slot(
-        object = x,
-        name = slot
-      ))
+      slot.val <- slot(object = x, name = slot)
+      if (!is.null(x = slot.val)) {
+        h5attr(x = hgroup[[name]], which = slot) <- as.character(x = slot.val)
+      }
     }
     return(invisible(x = NULL))
   }
