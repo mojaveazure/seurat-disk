@@ -9,9 +9,14 @@
 \alias{DefaultAssay<-.h5Seurat}
 \alias{Idents.h5Seurat}
 \alias{Idents}
+\alias{IsGlobal.H5Group}
+\alias{IsGlobal}
+\alias{Key.H5Group}
+\alias{Key}
 \alias{Project.h5Seurat}
 \alias{Project}
 \alias{Project<-.h5Seurat}
+\alias{Stdev.h5Seurat}
 \title{Seurat bindings for h5Seurat files}
 \usage{
 \method{Cells}{h5Seurat}(x)
@@ -22,9 +27,15 @@
 
 \method{Idents}{h5Seurat}(object, ...)
 
+\method{IsGlobal}{H5Group}(object)
+
+\method{Key}{H5Group}(object, ...)
+
 \method{Project}{h5Seurat}(object, ...)
 
 \method{Project}{h5Seurat}(object, ...) <- value
+
+\method{Stdev}{h5Seurat}(object, reduction = "pca")
 }
 \arguments{
 \item{x}{An object}
@@ -34,6 +45,8 @@
 \item{...}{Arguments passed to other methods}
 
 \item{value}{Name of assay to set as default}
+
+\item{reduction}{Name of reduction to use}
 }
 \description{
 Seurat bindings for h5Seurat files

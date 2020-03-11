@@ -40,6 +40,7 @@ deps <- vapply(
   USE.NAMES = FALSE
 )
 deps <- trimws(x = deps)
+deps <- gsub(pattern = ",$", replacement = "", x = deps)
 deps <- deps[deps != "R"]
 ```
 
@@ -89,7 +90,11 @@ for (dep in deps) {
   pkg.info <- subset(x = cran.pkgs, subset = Package == dep)[1, , drop = FALSE]
   pkg.cran <- paste0("| [CRAN](", cran.cannoncial, dep, ")")
   pkg.github <- ghurl(x = pkg.info$URL)
-  pkg.other <- gsub(pattern = pkg.github, replacement = "", x = pkg.info$URL)
+  pkg.other <- ifelse(
+    test = is.na(x = pkg.github),
+    yes = pkg.info$URL,
+    no = gsub(pattern = pkg.github, replacement = "", x = pkg.info$URL)
+  )
   pkg.other <- if (nchar(x = pkg.other)) {
     pkg.other <- trimws(x = unlist(x = strsplit(x = pkg.other, split = ","))[1])
     paste0("| [Website](", pkg.other, ")")

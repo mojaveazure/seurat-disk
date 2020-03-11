@@ -3,7 +3,7 @@
 NULL
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-# Class definitions
+# Class definition
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #' A class for connections to h5Seurat files
@@ -16,7 +16,7 @@ NULL
 #' @seealso \code{\link[hdf5r]{H5File}}
 #'
 #' @importFrom R6 R6Class
-#' @importFrom hdf5r H5File
+#' @importFrom hdf5r H5File h5attr
 #' @importFrom utils packageVersion
 #'
 #' @export
@@ -29,10 +29,158 @@ h5Seurat <- R6Class(
   lock_class = TRUE,
   public = list(
     # Methods
+    #' @description Get the index for this h5Seurat file
+    index = function() {
+      if (!length(x = private$index.internal)) {
+        private$build.index(
+          version = ClosestVersion(
+            query = self$version(),
+            targets = private$versions
+          )
+        )
+      }
+      return(private$index.internal)
+    },
+    #' @description Set the version attribute
+    #' @param version A version number matching the regex
+    #' \code{^\\d+(\\.\\d+){2}(\\.9\\d{3})?$}
+    set.version = function(version) {
+      version <- as.character(x = version)
+      if (!grepl(pattern = version.regex, x = version)) {
+        stop("Invalid version specification: ", version, call. = FALSE)
+      }
+      self$attr_delete(attr_name = 'version')
+      self$create_attr(
+        attr_name = 'version',
+        robj = version,
+        dtype = GuessDType(x = version)
+      )
+      if (!self$mode %in% modes$new) {
+        private$validate()
+      }
+      return(invisible(x = self))
+    },
+    #' @description Get the version attribute
+    version = function() {
+      return(h5attr(x = self, which = 'version'))
+    }
   ),
   private = list(
+    # Fields
+    index.internal = list(),
+    # versions = c('3.1.2', '3.1.3.9900'),
     versions = c('3.1.2'),
     # Methods
+    build.index = function(version) {
+      version <- match.arg(arg = version, choices = private$versions)
+      version <- numeric_version(x = version)
+      # Get Assay information
+      index <- sapply(
+        X = names(x = self[['assays']]),
+        FUN = function(x) {
+          slots <- c('counts', 'data', 'scale.data')
+          check <- slots %in% names(x = self[['assays']][[x]])
+          names(x = check) <- slots
+          check[['scale.data']] <- check[['scale.data']] && self[['assays']][[x]]$exists(name = 'scaled.features')
+          check <- list(check)
+          names(x = check) <- 'slots'
+          return(check)
+        },
+        simplify = FALSE,
+        USE.NAMES = TRUE
+      )
+      # Get DimReduc information
+      reduc.slots <- c(
+        'cell.embeddings',
+        'feature.loadings',
+        'feature.loadings.projected',
+        'jackstraw'
+      )
+      for (reduc in names(x = self[['reductions']])) {
+        reduc.assay <- h5attr(
+          x = self[['reductions']][[reduc]],
+          which = 'active.assay'
+        )
+        if (!reduc.assay %in% names(x = index)) {
+          warning(
+            "Cannot find assay ",
+            reduc.assay, " in the H5Seurat file",
+            call. = FALSE,
+            immediate. = TRUE
+          )
+          next
+        }
+        check <- reduc.slots %in% names(x = self[['reductions']][[reduc]])
+        names(x = check) <- reduc.slots
+        if (check[['feature.loadings']]) {
+          check[['feature.loadings']] <- self[['reductions']][[reduc]]$exists(name = 'features')
+        }
+        if (check[['feature.loadings.projected']]) {
+          check[['feature.loadings.projected']] <- self[['reductions']][[reduc]]$exists(name = 'projected.features')
+        }
+        # check <- list(check)
+        # names(x = check) <- reduc
+        index[[reduc.assay]][['reductions']][[reduc]] <- check
+        if (IsGlobal(object = self[['reductions']][[reduc]])) {
+          index$global$reductions <- c(index$global$reductions, reduc)
+        }
+      }
+      # Get graph information
+      for (graph in names(x = self[['graphs']])) {
+        if (self[['graphs']][[graph]]$attr_exists(attr_name = 'assay.used')) {
+          graph.assay <- h5attr(x = self[['graphs']][[graph]], which = 'assay.used')
+          if (graph.assay %in% names(x = index)) {
+            index[[graph.assay]]$graphs <- c(index[[graph.assay]]$graphs, graph)
+          } else {
+            warning(
+              "Cannot find assay ",
+              graph.assay,
+              " in the h5Seurat file",
+              call. = FALSE,
+              immediate. = TRUE
+            )
+          }
+        } else {
+          index$no.assay$graphs <- c(index$no.assay$graphs, graph)
+        }
+      }
+      # TODO: Get images
+      if (version >= numeric_version(x = '3.1.3.9900')) {
+        warning("Image support not yet implemented", call. = FALSE, immediate. = TRUE)
+      }
+      # Get commands
+      for (cmd in names(x = self[['commands']])) {
+        assay <- ifelse(
+          test = self[['commands']][[cmd]]$attr_exists(attr_name = 'assay.used'),
+          yes = h5attr(x = self[['commands']][[cmd]], which = 'assay.used'),
+          no = NA_character_
+        )
+        if (assay %in% setdiff(x = names(x = index), y = c('global', 'no.assay'))) {
+          index[[assay]]$commands <- c(index[[assay]]$commands, cmd)
+        } else if (!is.na(x = assay)) {
+          warning(
+            "Cannot find assay",
+            assay,
+            " in the h5Seurat file",
+            call. = FALSE,
+            immediate. = TRUE
+          )
+        } else {
+          index$no.assay$commands <- c(index$no.assay$commands, cmd)
+        }
+      }
+      # TODO: Get metadata
+      # TODO: Get miscellaneous data
+      # TODO: Get tool-specific results
+      # Finalize the index
+      private$index.internal <- structure(
+        .Data = index,
+        class = c('h5SI', 'list'),
+        # active.assay = DefaultAssay(object = self)
+        active.assay = 'SCT'
+      )
+      return(invisible(x = NULL))
+    },
     create = function(version, verbose = TRUE) {
       if (self$mode == 'r') {
         stop(private$errors(type = 'mode'), call. = FALSE)
@@ -45,7 +193,9 @@ h5Seurat <- R6Class(
             message("Creating h5Seurat file for version ", version)
           }
           for (group in c('assays', 'commands', 'graphs', 'misc', 'reductions', 'tools')) {
-            self$create_group(name = group)
+            if (!private$is.data(name = group, type = 'H5Group')) {
+              self$create_group(name = group)
+            }
           }
           attrs <- c(
             'active.assay' = '',
@@ -53,7 +203,13 @@ h5Seurat <- R6Class(
             'version' = '3.1.2'
           )
           for (i in seq_along(along.with = attrs)) {
-            self$create_attr(attr_name = names(x = attrs)[i], robj = attrs[i])
+            if (!self$attr_exists(attr_name = names(x = attrs)[i])) {
+              self$create_attr(
+                attr_name = names(x = attrs)[i],
+                robj = attrs[i],
+                dtype = GuessDType(x = attrs[i])
+              )
+            }
           }
         },
         stop("Unknown version ", version, call. = FALSE)
@@ -66,52 +222,224 @@ h5Seurat <- R6Class(
           version = packageVersion(pkg = 'Seurat'),
           verbose = verbose
         )
+        return(invisible(x = NULL))
       }
       if (verbose) {
         message("Validating h5Seurat file")
       }
       if (!self$attr_exists(attr_name = 'version')) {
-        stop("Invalid h5Seurat file: cannot find attribute 'version'", call. = FALSE)
+        stop(
+          "Invalid h5Seurat file: cannot find attribute 'version'",
+          call. = FALSE
+        )
       }
-      version <- self$attr_open(attr_name = 'version')$read()
-      switch(
-        EXPR = ClosestVersion(query = version, targets = private$versions),
-        '3.1.2' = {
-          ''
-        },
+      version <- h5attr(x = self, which = 'version')
+      version <- ClosestVersion(query = version, targets = private$versions)
+      if (!version %in% private$versions) {
         stop("Unknown version ", version, call. = FALSE)
-      )
+      }
+      version <- numeric_version(x = version)
+      if (version >= numeric_version(x = '3.1.2')) {
+        private$v3.1.2()
+      }
+      if (version >= numeric_version(x = '3.1.3.9900')) {
+        ''
+        # private$v3.2.0()
+      }
+      # switch(
+      #   EXPR = ClosestVersion(query = version, targets = private$versions),
+      #   '3.1.2' = {
+      #     private$v3.1.2()
+      #   },
+      #   stop("Unknown version ", version, call. = FALSE)
+      # )
+      private$build.index()
       return(invisible(x = NULL))
+    },
+    v3.1.2 = function() {
+      # TODO: Check top-level attributes
+      attrs <- c('project', 'active.assay', 'version')
+      for (attr in attrs) {
+        if (!self$attr_exists(attr_name = attr)) {
+          stop("")
+        }
+      }
+      # TODO: Check cell.names and meta.data
+      if (!private$is.data(name = 'cell.names')) {
+        stop("Cannot find dataset with cell names", call. = FALSE)
+      }
+      ncells <- self[['cell.names']]$dims
+      if (length(x = ncells) != 1) {
+        stop("Cell names must be one-dimensional", call. = FALSE)
+      }
+      # if (!private$is.data(name = 'meta.data')) {
+      #   stop("Cannot find cell-level metadata", call. = FALSE)
+      # }
+      if (private$is.data(name = 'meta.data')) {
+        if (length(x = self[['meta.data']]$dims) != 1) {
+          stop("Cell-level metadata must be one-dimensional")
+        } else if (self[['meta.data']]$dims != ncells) {
+          stop(
+            "Cell number mismatch between cell names and cell-level metadata",
+            call. = FALSE
+          )
+        }
+        if (!inherits(x = self[['meta.data']]$get_type(), what = 'H5T_COMPOUND')) {
+          stop("Cell-level metadata must be a data frame", call. = FALSE)
+        }
+      } else if (private$is.data(name = 'meta.data', type = 'H5Group')) {
+        warning("Validation for group meta data not yet implemented", call. = FALSE, immediate. = TRUE)
+      } else {
+        stop("Cannot find cell-level metadata")
+      }
+      # TODO: Check Assays
+      if (!private$is.data(name = 'assays', type = 'H5Group')) {
+        stop("Cannot find assay expression data", call. = FALSE)
+      }
+      if (!DefaultAssay(object = self) %in% names(x = self[['assays']])) {
+        stop("Default assay not present", call. = FALSE)
+      }
+      for (assay in names(x = self[['assays']])) {
+        if (!private$is.data(name = file.path('assays', assay), type = 'H5Group')) {
+          stop(
+            "Assay representations must be HDF5 groups, offending entry: ",
+            assay,
+            call. = FALSE
+          )
+        }
+      }
+      # TODO: Check DimReducs
+      # TODO: Check Graphs
+      # TODO: Check SeuratCommands
+      # TODO: Check miscellaneous data
+      # TODO: Check tool-specific results
+      return(invisible(x = NULL))
+    },
+    v3.2.0 = function() {
+      .NotYetImplemented()
     }
   )
 )
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-# Methods for Seurat-defined generics
+# Tools for handling h5Seurat indexes (h5SI objects)
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#' @rdname LoadH5Seurat
-#' @method LoadH5Seurat character
+#' Tools for handling h5Seurat indexes
+#'
+#' @param x,object An h5Seurat index (\code{h5SI})
+#'
+#' @name h5SI
+#' @rdname h5SI
+#'
+#' @seealso \code{\link[Seurat]{DefaultAssay}} \code{\link[base]{print}}
+#'
+#' @keywords internal
+#'
+NULL
+
+#' @importFrom Seurat DefaultAssay
+#'
+#' @inheritParams Seurat::DefaultAssay
+#'
+#' @return \code{DefaultAssay}: the assay set as the default assay
+#'
+#' @rdname h5SI
+#' @method DefaultAssay h5SI
 #' @export
 #'
-LoadH5Seurat.character <- function(file, ...) {
-  hfile <- h5Seurat$new(filename = file, mode = 'r')
-  on.exit(expr = hfile$close_all())
-  return(LoadH5Seurat(file = hfile, ...))
+DefaultAssay.h5SI <- function(object) {
+  return(attr(x = object, which = 'active.assay'))
 }
 
-#' @rdname LoadH5Seurat
-#' @method LoadH5Seurat H5File
+#' @inheritParams base::print
+#'
+#' @return \code{print}: Invisibly returns \code{x}
+#'
+#' @importFrom cli symbol
+#' @importFrom tools toTitleCase
+#' @importFrom crayon red green yellow col_align
+#'
+#' @rdname h5SI
+#' @method print h5SI
 #' @export
 #'
-LoadH5Seurat.H5File <- function(file, ...) {
-  return(LoadH5Seurat(file = as.h5Seurat(x = file), ...))
-}
-
-#' @rdname LoadH5Seurat
-#' @method LoadH5Seurat h5Seurat
-#' @export
-#'
-LoadH5Seurat.h5Seurat <- function(file, ...) {
-  .NotYetImplemented()
+print.h5SI <- function(x, ...) {
+  # Some constants
+  catn <- function(...) {
+    cat(..., '\n', sep = '')
+  }
+  reduc.header <- c(
+    'Embeddings' = 'cell.embeddings',
+    'Loadings' = 'feature.loadings',
+    'Projected' = 'feature.loadings.projected',
+    'JackStraw' = 'jackstraw'
+  )
+  symbols <- c(red(symbol$cross), green(symbol$tick))
+  # Get the assays
+  assays <- setdiff(x = names(x = x), y = c('global', 'no.assay'))
+  assays <- assays[order(assays == DefaultAssay(object = x), decreasing = TRUE)]
+  for (assay in assays) {
+    header <- paste("Data for assay", assay)
+    if (assay == DefaultAssay(object = x)) {
+      header <- paste0(header, yellow(symbol$star), ' (default assay)')
+    }
+    catn(header)
+    # Show slot information
+    catn(col_align(
+      text = c('counts', 'data', 'scale.data'),
+      width = nchar(x = 'scale.data') + 1,
+      align = 'center'
+    ))
+    catn(col_align(
+      text = symbols[x[[assay]]$slots + 1],
+      width = nchar(x = 'scale.data') + 1,
+      align = 'center'
+    ))
+    # Show dimensional reduction information
+    if (!is.null(x = x[[assay]]$reductions)) {
+      catn("Dimensional reductions:")
+      reductions <- names(x = x[[assay]]$reductions)
+      reductions <- paste0(' ', reductions, ': ')
+      reductions <- col_align(text = reductions, width = max(nchar(x = reductions)))
+      catn(
+        MakeSpace(n = max(nchar(x = reductions))),
+        col_align(
+          text = names(x = reduc.header),
+          width = max(nchar(x = names(x = reduc.header))) + 1,
+          align = 'center'
+        )
+      )
+      for (i in seq_along(along.with = reductions)) {
+        reduc <- names(x = x[[assay]]$reductions)[i]
+        catn(
+          reductions[i],
+          col_align(
+            text = symbols[x[[assay]]$reductions[[reduc]] + 1],
+            width = max(nchar(x = names(x = reduc.header))) + 1,
+            align = 'center'
+          )
+        )
+      }
+    }
+    # Show graph information
+    if (!is.null(x = x[[assay]]$graphs)) {
+      catn("Graphs:")
+      catn(paste0(
+        ' ',
+        symbol$line,
+        ' ',
+        x[[assay]]$graphs,
+        collapse = '\n'
+      ))
+    }
+    # TODO: Show image information
+    # TODO: Show command information
+    # Show globals
+    # if (!is.null(x = x$global)) {
+    #   catn("Globally available information:")
+    # }
+    # Show no assay
+  }
+  return(invisible(x = x))
 }

@@ -3,18 +3,23 @@
 \name{WriteH5Group}
 \alias{WriteH5Group}
 \alias{WriteH5Group,ANY-method}
+\alias{WriteH5Group,array-method}
 \alias{WriteH5Group,Assay-method}
 \alias{WriteH5Group,data.frame-method}
 \alias{WriteH5Group,dgCMatrix-method}
 \alias{WriteH5Group,DimReduc-method}
 \alias{WriteH5Group,factor-method}
+\alias{WriteH5Group,Graph-method}
 \alias{WriteH5Group,list-method}
+\alias{WriteH5Group,logical-method}
 \alias{WriteH5Group,SeuratCommand-method}
 \title{Write data to an HDF5 group}
 \usage{
 WriteH5Group(x, name, hgroup, verbose = TRUE)
 
 \S4method{WriteH5Group}{ANY}(x, name, hgroup, verbose = TRUE)
+
+\S4method{WriteH5Group}{array}(x, name, hgroup, verbose = TRUE)
 
 \S4method{WriteH5Group}{Assay}(x, name, hgroup, verbose = TRUE)
 
@@ -26,7 +31,11 @@ WriteH5Group(x, name, hgroup, verbose = TRUE)
 
 \S4method{WriteH5Group}{factor}(x, name, hgroup, verbose = TRUE)
 
+\S4method{WriteH5Group}{Graph}(x, name, hgroup, verbose = TRUE)
+
 \S4method{WriteH5Group}{list}(x, name, hgroup, verbose = TRUE)
+
+\S4method{WriteH5Group}{logical}(x, name, hgroup, verbose = TRUE)
 
 \S4method{WriteH5Group}{SeuratCommand}(x, name, hgroup, verbose = TRUE)
 }
@@ -45,4 +54,50 @@ Invisibly returns \code{NULL}
 }
 \description{
 Write data to an HDF5 group
+}
+\examples{
+\donttest{
+# Setup an HDF5 file
+hfile <- hdf5r::H5File$new(filename = tempfile(fileext = '.h5'), mode = 'a')
+}
+
+\donttest{
+# Data frames are stored as either datasets or groups, depending on the
+# presence of factor columns
+df <- data.frame(
+  x = c('g1', 'g1', 'g2', 'g1', 'g2'),
+  y = 1:5,
+  stringsAsFactors = FALSE
+)
+
+# When no factor columns are present, the data frame is written as a single
+# HDF5 compound dataset
+WriteH5Group(x = df, name = 'df', hgroup = hfile)
+hfile[['df']]
+
+# When factors are present, the data frame is written as a group
+# This is because h5py does not implement HDF5 Enums, so factor level
+# information would be lost
+df$x <- factor(x = df$x)
+WriteH5Group(x = df, name = 'df.factor', hgroup = hfile)
+hfile[['df.factor']]
+}
+
+\donttest{
+# Factors turn into a group with two components: values and levels
+# This is to preserve level information for HDF5 APIs that don't implement
+# the HDF5 Enum type (eg. h5py)
+# values corresponds to the integer values of each member of a factor
+# levels is a string dataset with one entry per level
+fctr <- factor(x = c('g1', 'g1', 'g2', 'g1', 'g2'))
+WriteH5Group(x = fctr, name = 'factor', hgroup = hfile)
+hfile[['factor']]
+}
+
+\donttest{
+# Close and remove the HDF5 file
+hfile$close_all()
+file.remove(hfile$filename)
+}
+
 }

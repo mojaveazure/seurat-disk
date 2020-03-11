@@ -25,4 +25,17 @@ of the value of \code{x} at \code{i} will be made. If there is no name
 (eg. \code{nchar(x = names(x = x)[i]) == 0}), the index \code{i} will be used
 in its stead
 }
+\examples{
+\donttest{
+# Enumerate will use names if possible
+x <- list(x = 1:3, y = letters[1:3], z = c('g1', 'g2', 'g3'))
+SeuratDisk:::Enumerate(x = x)
+
+# If no (or missing) object names present, Enumerate will use the index
+# number as the name
+x <- unname(obj = x)
+SeuratDisk:::Enumerate(x = x)
+}
+
+}
 \keyword{internal}

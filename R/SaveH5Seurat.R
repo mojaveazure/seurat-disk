@@ -1,8 +1,147 @@
-#' @include generics.R
+#' @include WriteH5Group.R
 #'
 NULL
 
-#' @rdname as.h5Seurat
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Generics
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#' Save a \code{Seurat} object to an h5Seurat file
+#'
+#' @param object,x An object
+#' @param filename Name of file to save the object to
+#' @param overwrite Overwrite \code{filename} if present
+#' @param verbose Show progress updates
+#' @param ... Arguments passed to other methods
+#'
+#' @return \code{SaveH5Seurat}: Invisbly returns \code{filename}
+#'
+#' @name SaveH5Seurat
+#' @rdname SaveH5Seurat
+#'
+#' @export
+#'
+SaveH5Seurat <- function(
+  object,
+  filename,
+  overwrite = FALSE,
+  verbose = TRUE,
+  ...
+) {
+  UseMethod(generic = 'SaveH5Seurat', object = object)
+}
+
+#' @return \code{as.h5Seurat}: An \code{\link{h5Seurat}} object
+#'
+#' @rdname SaveH5Seurat
+#'
+#' @export
+#'
+as.h5Seurat <- function(x, ...) {
+  UseMethod(generic = 'as.h5Seurat', object = x)
+}
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Methods
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#' @importFrom Seurat as.Seurat Project
+#'
+#' @rdname SaveH5Seurat
+#' @method SaveH5Seurat default
+#' @export
+#'
+SaveH5Seurat.default <- function(
+  object,
+  filename,
+  overwrite = FALSE,
+  verbose = TRUE,
+  ...
+) {
+  tryCatch(
+    expr = object <- as.Seurat(object = object, verbose = verbose, ...),
+    error = function(...) {
+      stop(
+        "Unable to coerce an object of class ",
+        paste(class(x = object), collapse = ', '),
+        " to a Seurat object",
+        call. = FALSE
+      )
+    }
+  )
+  if (missing(x = filename)) {
+    filename <- paste0(Project(object = object), '.h5Seurat')
+  }
+  return(invisible(x = SaveH5Seurat(
+    object = object,
+    filename = filename,
+    overwrite = overwrite,
+    verbose = verbose,
+    ...
+  )))
+}
+
+#' @importFrom Seurat Project
+#'
+#' @rdname SaveH5Seurat
+#' @method SaveH5Seurat Seurat
+#' @export
+#'
+SaveH5Seurat.Seurat <- function(
+  object,
+  filename = paste0(Project(object = object), '.h5Seurat'),
+  overwrite = FALSE,
+  verbose = TRUE,
+  ...
+) {
+  h5seurat <- as.h5Seurat(
+    x = object,
+    filename = filename,
+    overwrite = overwrite,
+    verbose = verbose,
+    ...
+  )
+  h5seurat$close_all()
+  return(invisible(x = h5seurat$filename))
+}
+
+#' @importFrom Seurat as.Seurat Project
+#'
+#' @rdname SaveH5Seurat
+#' @method as.h5Seurat default
+#' @export
+#'
+as.h5Seurat.default <- function(
+  x,
+  filename,
+  overwrite = FALSE,
+  verbose = TRUE,
+  ...
+) {
+  tryCatch(
+    expr = x <- as.Seurat(x = x, verbose = verbose, ...),
+    error = function(...) {
+      stop(
+        "Unable to coerce an object of class ",
+        paste(class(x = x), collapse = ', '),
+        " to a Seurat object",
+        call. = FALSE
+      )
+    }
+  )
+  if (missing(x = filename)) {
+    filename <- paste0(Project(object = x), '.h5Seurat')
+  }
+  return(SaveH5Seurat(
+    object = x,
+    filename = filename,
+    overwrite = overwrite,
+    verbose = verbose,
+    ...
+  ))
+}
+
+#' @rdname SaveH5Seurat
 #' @method as.h5Seurat H5File
 #' @export
 #'
@@ -13,15 +152,11 @@ as.h5Seurat.H5File <- function(x, ...) {
   ))
 }
 
-#' @param filename Name of file to save \code{x} to
-#' @param overwrite Overwrite \code{filename} if present?
-#' @param verbose Show progress updates
-#'
 #' @importFrom tools file_ext
 #' @importFrom Seurat Project Assays Reductions DefaultAssay
 #' Idents Command Misc Tool
 #'
-#' @rdname as.h5Seurat
+#' @rdname SaveH5Seurat
 #' @method as.h5Seurat Seurat
 #' @export
 #'
@@ -85,24 +220,31 @@ as.h5Seurat.Seurat <- function(
   # Add attributes for project, default assay, and version
   Project(object = hfile) <- Project(object = x)
   DefaultAssay(object = hfile) <- DefaultAssay(object = x)
-  h5attr(x = hfile, which = 'version') <- as.character(x = slot(
-    object = x,
-    name = 'version'
-  ))
+  object.version <- as.character(x = slot(object = x, name = 'version'))
+  hfile$set.version(version = object.version)
   # TODO: Add Images
-  if (package_version(x = h5attr(x = hfile, which = 'version')) >= package_version(x = '3.2.0')) {
+  if (package_version(x = object.version) >= package_version(x = '3.1.4.9900')) {
     warning(
       "Support for spatial image data is not yet implemented",
       call. = FALSE,
       immediate. = TRUE
     )
   }
-  # Add metadata, cell names, and identity classes4
-  hfile[['meta.data']] <- x[[]]
-  hfile[['cell.names']] <- colnames(x = x)
-  hfile[['active.ident']] <- Idents(object = x)
+  # Add metadata, cell names, and identity classes
+  WriteH5Group(x = x[[]], name = 'meta.data', hgroup = hfile, verbose = verbose)
+  WriteH5Group(
+    x = colnames(x = x),
+    name = 'cell.names',
+    hgroup = hfile,
+    verbose = verbose
+  )
+  WriteH5Group(
+    x = Idents(object = x),
+    name = 'active.ident',
+    hgroup = hfile,
+    verbose = verbose
+  )
   # Add SeuratCommands
-  # browser()
   for (cmd in Command(object = x)) {
     WriteH5Group(
       x = x[[cmd]],
@@ -130,32 +272,4 @@ as.h5Seurat.Seurat <- function(
     )
   }
   return(hfile)
-}
-
-#' Save an object as an h5seurat file
-#'
-#' @inheritParams as.h5Seurat
-#' @param filename Name of file to save \code{object} to
-#'
-#' @return Invisibly returns h5seurat file name
-#'
-#' @seealso \code{\link{as.h5Seurat}}
-#'
-#' @export
-#'
-SaveH5Seurat <- function(
-  object,
-  filename = 'object.h5seurat',
-  overwrite = FALSE,
-  verbose = TRUE,
-  ...
-) {
-  h5seurat <- as.h5Seurat(
-    x = object,
-    filename = filename,
-    overwrite = overwrite,
-    verbose = verbose
-  )
-  h5seurat$close_all()
-  return(invisible(x = NULL))
 }

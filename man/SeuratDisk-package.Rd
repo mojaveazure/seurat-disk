@@ -2,10 +2,9 @@
 % Please edit documentation in R/zzz.R
 \docType{package}
 \name{SeuratDisk-pacakge}
-\alias{SeuratDisk-pacakge}
-\alias{_PACKAGE}
 \alias{SeuratDisk}
-\title{SeuratDisk: Interfaces for HDF5-based Single Cell File Formats}
+\alias{SeuratDisk-package}
+\title{SeuratDisk: Interfaces for HDF5-Based Single Cell File Formats}
 \description{
 As single-cell expression datasets grow in size, the computational
   requirements to store and handle them grow as well. To address the issues posed
@@ -14,22 +13,6 @@ As single-cell expression datasets grow in size, the computational
   disk-based computation on said files. In addition, SeuratDisk integrates with
   the Seurat framework and provides disk-based methods for Seurat's toolkit.
 }
-\section{Package options}{
-
-
-SeuratDisk uses the following options to control behaviour, users can configure
-these with \code{\link[base]{options}}:
-
-\describe{
- \item{\code{SeuratDisk.loom.encoding}, \code{SeuratDisk.loom3.encoding}}{
- Character encoding for loom files. The \code{loom3} encoding (default UTF-8)
- is used for loom files >= v3.0.0; otherwise, the \code{loom} encoding
- (default ASCII) is used}
- \item{\code{SeuratDisk.loom.string_len}}{When the loom encoding is ASCII, set
- the character width (default 7L)}
-}
-}
-
 \seealso{
 Useful links:
 \itemize{

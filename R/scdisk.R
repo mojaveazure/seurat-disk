@@ -72,6 +72,19 @@ scdisk <- R6Class(
         'ambiguous' = 'Cannot identify the dataset provided, found too many like it; please be more specific'
       ))
     },
+    # @description Check to see if a name is a dataset or group
+    # @param name Name of object in HDF5 file
+    # @param type Type object is, choose from
+    # \describe{
+    #  \item{H5D}{A HDF5 dataset}
+    #  \item{H5Group}{An HDF5 group}
+    # }
+    # @return \code{TRUE} if \code{name} exists and is of type \code{type},
+    # otherwise \code{FALSE}
+    is.data = function(name, type = c('H5D', 'H5Group')) {
+      type <- match.arg(arg = type)
+      return(self$exists(name = name) && inherits(x = self[[name]], what = type))
+    },
     # @description Validate ...
     # @param ... Ignored for \code{scdisk} method
     # @note The validation routine should be overwritten by subclasses of

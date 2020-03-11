@@ -24,7 +24,7 @@ These two situations correspond to matrices generated with either
 \code{new('matrix')} or \code{matrix()}
 }
 \examples{
-\dontrun{
+\donttest{
 SeuratDisk:::IsMatrixEmpty(new('matrix'))
 SeuratDisk:::IsMatrixEmpty(matrix())
 SeuratDisk:::IsMatrixEmpty(matrix(1:9, nrow = 3))
