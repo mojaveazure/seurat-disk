@@ -126,7 +126,19 @@ LoadH5Seurat.h5Seurat <- function(
   verbose = TRUE,
   ...
 ) {
-  return(as.Seurat(x = file, ...))
+  return(as.Seurat(
+    x = file,
+    assays = assays,
+    reductions = reductions,
+    graphs = graphs,
+    images = images,
+    meta.data = meta.data,
+    commands = commands,
+    misc = misc,
+    tools = tools,
+    verbose = verbose,
+    ...
+  ))
 }
 
 #' @importClassesFrom Seurat Seurat
@@ -222,7 +234,20 @@ as.Seurat.h5Seurat <- function(
     }
     object[[graph]] <- AssembleGraph(graph = graph, file = x, verbose = verbose)
   }
-  # TODO: Load SpatialImages
+  # Load SpatialImages
+  if (packageVersion(pkg = 'Seurat') >= numeric_version(x = '3.1.4.9900')) {
+    images <- GetImages(images = images, index = index, assays = assays)
+    for (image in images) {
+      if (verbose) {
+        message("Adding image ", image)
+      }
+      object[[image]] <- AssembleImage(
+        image = image,
+        file = x,
+        verbose = verbose
+      )
+    }
+  }
   # Load SeuratCommands
   if (commands) {
     if (verbose) {

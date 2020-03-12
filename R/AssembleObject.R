@@ -1,7 +1,7 @@
 #' @include zzz.R
 #' @importFrom hdf5r h5attr
 #' @importFrom methods slot<- new
-#' @importFrom Seurat Cells Key<- Key
+#' @importFrom Seurat Cells Key<- Key Cells
 #'
 NULL
 
@@ -214,7 +214,7 @@ AssembleDimReduc <- function(reduction, file, verbose = TRUE) {
   return(obj)
 }
 
-#' @importFrom Seurat as.sparse Cells as.Graph
+#' @importFrom Seurat as.sparse as.Graph
 #'
 #' @rdname AssembleObject
 #'
@@ -235,8 +235,15 @@ AssembleGraph <- function(graph, file, verbose = TRUE) {
 #' @rdname AssembleObject
 #'
 AssembleImage <- function(image, file, verbose = TRUE) {
-  .NotYetImplemented()
   index <- file$index()
+  obj <- as.list(x = file[['images']][[image]], row.names = Cells(x = file))
+  if (file[['images']][[image]]$attr_exists(attr_name = 'assay')) {
+    assay <- h5attr(x = file[['images']][[image]], which = 'assay')
+    if (image %in% index[[assay]]$images) {
+      DefaultAssay(object = obj) <- assay
+    }
+  }
+  return(obj)
 }
 
 #' @importClassesFrom Seurat SeuratCommand

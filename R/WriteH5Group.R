@@ -1,5 +1,5 @@
 #' @importFrom Seurat GetAssayData Key VariableFeatures Misc Embeddings Loadings
-#' DefaultAssay Stdev JS
+#' DefaultAssay IsGlobal Stdev JS
 #' @importFrom methods setOldClass setClassUnion setGeneric setMethod
 #' slotNames slot tryNew
 #'
@@ -309,7 +309,6 @@ setMethod(
   definition = SparseWrite
 )
 
-#' @importFrom Seurat IsGlobal
 #' @importClassesFrom Seurat DimReduc
 #'
 #' @rdname WriteH5Group
@@ -483,9 +482,9 @@ setMethod(
   }
 )
 
-#' @rdname WriteH5Group
-#'
 #' @importClassesFrom Seurat SeuratCommand
+#'
+#' @rdname WriteH5Group
 #'
 setMethod(
   f = 'WriteH5Group',
@@ -515,6 +514,46 @@ setMethod(
           dtype = GuessDType(x = slot.val)
         )
       }
+    }
+    return(invisible(x = NULL))
+  }
+)
+
+#' @importClassesFrom Seurat SpatialImage
+#'
+#' @rdname WriteH5Group
+#'
+#'
+setMethod(
+  f = 'WriteH5Group',
+  signature = c('x' = 'SpatialImage'),
+  definition = function(x, name, hgroup, verbose = TRUE) {
+    xgroup <- hgroup$create_group(name = name)
+    # Add assay, globality, and class information
+    xgroup$create_attr(
+      attr_name = 'assay',
+      robj = DefaultAssay(object = x),
+      dtype = GuessDType(x = DefaultAssay(object = x))
+    )
+    xgroup$create_attr(
+      attr_name = 'global',
+      robj = BoolToInt(x = IsGlobal(object = x)),
+      dtype = GuessDType(x = IsGlobal(object = x))
+    )
+    xgroup$create_attr(
+      attr_name = 's4class',
+      robj = GetClass(class = class(x = x)[1]),
+      dtype = GuessDType(x = GetClass(class = class(x = x)[1]))
+    )
+    # Write out slots other than assay
+    slots <- setdiff(x = slotNames(x = x), y = c('assay', 'global'))
+    for (slot in slots) {
+      WriteH5Group(
+        x = slot(object = x, name = slot),
+        name = slot,
+        hgroup = xgroup,
+        verbose = verbose
+      )
     }
     return(invisible(x = NULL))
   }

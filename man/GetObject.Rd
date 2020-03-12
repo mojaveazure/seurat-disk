@@ -17,7 +17,7 @@ GetDimReducs(reductions, index, assays = NULL)
 
 GetGraphs(graphs, index, assays = NULL)
 
-GetImages(images, index)
+GetImages(images, index, assays = NULL)
 }
 \arguments{
 \item{assays}{One of:

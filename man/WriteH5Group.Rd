@@ -13,6 +13,7 @@
 \alias{WriteH5Group,list-method}
 \alias{WriteH5Group,logical-method}
 \alias{WriteH5Group,SeuratCommand-method}
+\alias{WriteH5Group,SpatialImage-method}
 \title{Write data to an HDF5 group}
 \usage{
 WriteH5Group(x, name, hgroup, verbose = TRUE)
@@ -38,6 +39,8 @@ WriteH5Group(x, name, hgroup, verbose = TRUE)
 \S4method{WriteH5Group}{logical}(x, name, hgroup, verbose = TRUE)
 
 \S4method{WriteH5Group}{SeuratCommand}(x, name, hgroup, verbose = TRUE)
+
+\S4method{WriteH5Group}{SpatialImage}(x, name, hgroup, verbose = TRUE)
 }
 \arguments{
 \item{x}{An object}

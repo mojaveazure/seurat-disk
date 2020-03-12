@@ -5,7 +5,9 @@
 \alias{h5Seurat-class}
 \alias{h5Seurat}
 \title{A class for connections to h5Seurat files}
-\format{An \code{\link[R6]{R6Class}} object}
+\format{
+An \code{\link[R6]{R6Class}} object
+}
 \description{
 A class for connections to h5Seurat files
 
@@ -103,6 +105,7 @@ A class for connections to h5Seurat files
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-index"></a>}}
+\if{latex}{\out{\hypertarget{method-index}{}}}
 \subsection{Method \code{index()}}{
 Get the index for this h5Seurat file
 \subsection{Usage}{
@@ -112,6 +115,7 @@ Get the index for this h5Seurat file
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-set.version"></a>}}
+\if{latex}{\out{\hypertarget{method-set.version}{}}}
 \subsection{Method \code{set.version()}}{
 Set the version attribute
 \subsection{Usage}{
@@ -129,6 +133,7 @@ Set the version attribute
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-version"></a>}}
+\if{latex}{\out{\hypertarget{method-version}{}}}
 \subsection{Method \code{version()}}{
 Get the version attribute
 \subsection{Usage}{

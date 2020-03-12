@@ -153,7 +153,7 @@ as.h5Seurat.H5File <- function(x, ...) {
 }
 
 #' @importFrom tools file_ext
-#' @importFrom Seurat Project Assays Reductions DefaultAssay
+#' @importFrom Seurat Project Assays Reductions DefaultAssay<- DefaultAssay
 #' Idents Command Misc Tool
 #'
 #' @rdname SaveH5Seurat
@@ -222,13 +222,20 @@ as.h5Seurat.Seurat <- function(
   DefaultAssay(object = hfile) <- DefaultAssay(object = x)
   object.version <- as.character(x = slot(object = x, name = 'version'))
   hfile$set.version(version = object.version)
-  # TODO: Add Images
+  # Add Images
   if (package_version(x = object.version) >= package_version(x = '3.1.4.9900')) {
-    warning(
-      "Support for spatial image data is not yet implemented",
-      call. = FALSE,
-      immediate. = TRUE
-    )
+    # Older versions of Seurat don't have Images, call directly instead
+    for (image in Seurat::Images(object = x)) {
+      if (verbose) {
+        message("Adding image ", image)
+      }
+      WriteH5Group(
+        x = x[[image]],
+        name = image,
+        hgroup = hfile[['images']],
+        verbose = verbose
+      )
+    }
   }
   # Add metadata, cell names, and identity classes
   WriteH5Group(x = x[[]], name = 'meta.data', hgroup = hfile, verbose = verbose)

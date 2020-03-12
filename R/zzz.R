@@ -262,6 +262,7 @@ IsDType <- function(x, dtype) {
     },
     USE.NAMES = FALSE
   ))
+  dtypes <- unique(x = c(dtypes, 'H5T_COMPOUND'))
   match.arg(arg = dtype, choices = dtypes, several.ok = TRUE)
   missing.dtypes <- setdiff(x = dtype, y = dtypes)
   if (length(x = missing.dtypes)) {

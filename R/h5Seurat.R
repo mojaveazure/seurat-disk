@@ -49,7 +49,9 @@ h5Seurat <- R6Class(
       if (!grepl(pattern = version.regex, x = version)) {
         stop("Invalid version specification: ", version, call. = FALSE)
       }
-      self$attr_delete(attr_name = 'version')
+      if (self$attr_exists(attr_name = 'version')) {
+        self$attr_delete(attr_name = 'version')
+      }
       self$create_attr(
         attr_name = 'version',
         robj = version,
@@ -68,8 +70,7 @@ h5Seurat <- R6Class(
   private = list(
     # Fields
     index.internal = list(),
-    # versions = c('3.1.2', '3.1.3.9900'),
-    versions = c('3.1.2'),
+    versions = c('3.1.2', '3.1.4.9900'),
     # Methods
     build.index = function(version) {
       version <- match.arg(arg = version, choices = private$versions)
@@ -104,7 +105,8 @@ h5Seurat <- R6Class(
         if (!reduc.assay %in% names(x = index)) {
           warning(
             "Cannot find assay ",
-            reduc.assay, " in the H5Seurat file",
+            reduc.assay,
+            " in the H5Seurat file",
             call. = FALSE,
             immediate. = TRUE
           )
@@ -118,8 +120,6 @@ h5Seurat <- R6Class(
         if (check[['feature.loadings.projected']]) {
           check[['feature.loadings.projected']] <- self[['reductions']][[reduc]]$exists(name = 'projected.features')
         }
-        # check <- list(check)
-        # names(x = check) <- reduc
         index[[reduc.assay]][['reductions']][[reduc]] <- check
         if (IsGlobal(object = self[['reductions']][[reduc]])) {
           index$global$reductions <- c(index$global$reductions, reduc)
@@ -144,9 +144,30 @@ h5Seurat <- R6Class(
           index$no.assay$graphs <- c(index$no.assay$graphs, graph)
         }
       }
-      # TODO: Get images
-      if (version >= numeric_version(x = '3.1.3.9900')) {
-        warning("Image support not yet implemented", call. = FALSE, immediate. = TRUE)
+      # Get images
+      if (version >= numeric_version(x = '3.1.4.9900')) {
+        for (image in names(x = self[['images']])) {
+          img.group <- self[['images']][[image]]
+          if (!img.group$attr_exists(attr_name = 'assay') || !img.group$attr_exists(attr_name = 's4class')) {
+            next
+          }
+          img.assay <- h5attr(x = img.group, which = 'assay')
+          if (!img.assay %in% names(x = index)) {
+            warning(
+              "Cannot find assay ",
+              img.assay,
+              " in the H5Seurat file",
+              call. = FALSE,
+              immediate. = TRUE
+            )
+            index$no.assay$images <- c(index$no.assay$images, image)
+          } else {
+            index[[img.assay]]$images <- c(index[[img.assay]]$images, image)
+          }
+          if (IsGlobal(object = img.group)) {
+            index$global$images <- c(index$global$images, image)
+          }
+        }
       }
       # Get commands
       for (cmd in names(x = self[['commands']])) {
@@ -186,34 +207,33 @@ h5Seurat <- R6Class(
         stop(private$errors(type = 'mode'), call. = FALSE)
       }
       version <- ClosestVersion(query = version, targets = private$versions)
-      switch(
-        EXPR = version,
-        '3.1.2' = {
-          if (verbose) {
-            message("Creating h5Seurat file for version ", version)
+      if (verbose) {
+        message("Creating h5Seurat file for version ", version)
+      }
+      self$set.version(version = version)
+      if (numeric_version(x = version) >= numeric_version(x = '3.1.2')) {
+        for (group in c('assays', 'commands', 'graphs', 'misc', 'reductions', 'tools')) {
+          if (!private$is.data(name = group, type = 'H5Group')) {
+            self$create_group(name = group)
           }
-          for (group in c('assays', 'commands', 'graphs', 'misc', 'reductions', 'tools')) {
-            if (!private$is.data(name = group, type = 'H5Group')) {
-              self$create_group(name = group)
-            }
+        }
+        attrs <- c(
+          'active.assay' = '',
+          'project' = 'SeuratDiskProject'
+        )
+        for (i in seq_along(along.with = attrs)) {
+          if (!self$attr_exists(attr_name = names(x = attrs)[i])) {
+            self$create_attr(
+              attr_name = names(x = attrs)[i],
+              robj = attrs[i],
+              dtype = GuessDType(x = attrs[i])
+            )
           }
-          attrs <- c(
-            'active.assay' = '',
-            'project' = 'SeuratDiskProject',
-            'version' = '3.1.2'
-          )
-          for (i in seq_along(along.with = attrs)) {
-            if (!self$attr_exists(attr_name = names(x = attrs)[i])) {
-              self$create_attr(
-                attr_name = names(x = attrs)[i],
-                robj = attrs[i],
-                dtype = GuessDType(x = attrs[i])
-              )
-            }
-          }
-        },
-        stop("Unknown version ", version, call. = FALSE)
-      )
+        }
+      }
+      if (numeric_version(x = version) >= numeric_version(x = '3.1.4.9900')) {
+        self$create_group(name = 'images')
+      }
       return(invisible(x = self))
     },
     validate = function(verbose = TRUE, ...) {
@@ -235,24 +255,13 @@ h5Seurat <- R6Class(
       }
       version <- h5attr(x = self, which = 'version')
       version <- ClosestVersion(query = version, targets = private$versions)
-      if (!version %in% private$versions) {
-        stop("Unknown version ", version, call. = FALSE)
-      }
       version <- numeric_version(x = version)
       if (version >= numeric_version(x = '3.1.2')) {
         private$v3.1.2()
       }
       if (version >= numeric_version(x = '3.1.3.9900')) {
-        ''
-        # private$v3.2.0()
+        private$v3.2.0()
       }
-      # switch(
-      #   EXPR = ClosestVersion(query = version, targets = private$versions),
-      #   '3.1.2' = {
-      #     private$v3.1.2()
-      #   },
-      #   stop("Unknown version ", version, call. = FALSE)
-      # )
       private$build.index()
       return(invisible(x = NULL))
     },
@@ -261,7 +270,7 @@ h5Seurat <- R6Class(
       attrs <- c('project', 'active.assay', 'version')
       for (attr in attrs) {
         if (!self$attr_exists(attr_name = attr)) {
-          stop("")
+          stop("Missing attribute ", attr, call. = FALSE)
         }
       }
       # TODO: Check cell.names and meta.data
@@ -272,9 +281,6 @@ h5Seurat <- R6Class(
       if (length(x = ncells) != 1) {
         stop("Cell names must be one-dimensional", call. = FALSE)
       }
-      # if (!private$is.data(name = 'meta.data')) {
-      #   stop("Cannot find cell-level metadata", call. = FALSE)
-      # }
       if (private$is.data(name = 'meta.data')) {
         if (length(x = self[['meta.data']]$dims) != 1) {
           stop("Cell-level metadata must be one-dimensional")
@@ -316,6 +322,7 @@ h5Seurat <- R6Class(
       return(invisible(x = NULL))
     },
     v3.2.0 = function() {
+      return(invisible(x = NULL))
       .NotYetImplemented()
     }
   )
@@ -425,17 +432,15 @@ print.h5SI <- function(x, ...) {
     # Show graph information
     if (!is.null(x = x[[assay]]$graphs)) {
       catn("Graphs:")
-      catn(paste0(
-        ' ',
-        symbol$line,
-        ' ',
-        x[[assay]]$graphs,
-        collapse = '\n'
-      ))
+      catn(paste0(' ', symbol$line, ' ', x[[assay]]$graphs, collapse = '\n'))
     }
-    # TODO: Show image information
+    # Show image information
+    if (!is.null(x = x[[assay]]$images)) {
+      catn("Images:")
+      catn(paste0(' ', symbol$line, ' ', x[[assay]]$images, collapse = '\n'))
+    }
     # TODO: Show command information
-    # Show globals
+    # TODO: Show globals
     # if (!is.null(x = x$global)) {
     #   catn("Globally available information:")
     # }

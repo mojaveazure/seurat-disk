@@ -25,7 +25,7 @@ setMethod(
   f = 'IsDataFrame',
   signature = c('x' = 'H5D'),
   definition = function(x) {
-    return(inherits(x = x, what = 'H5T_COMPOUND'))
+    return(inherits(x = x$get_type(), what = 'H5T_COMPOUND'))
   }
 )
 
@@ -43,7 +43,7 @@ setMethod(
             return(x[[i]][['values']]$dims)
           }
         } else {
-          return(x[[i]]$dims)
+          return(ifelse(test = x[[i]]$dims == 1, yes = NA_real_, no = x[[i]]$dims))
         }
         return(NA_real_)
       },

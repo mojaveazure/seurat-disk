@@ -131,6 +131,8 @@ setMethod(
   }
 )
 
+#' @importFrom withr with_package
+#'
 #' @return \code{as.list}: returns a \code{\link[base]{list}} with the data from
 #' the HDF5 group
 #'
@@ -172,26 +174,44 @@ setMethod(
     for (i in list.names) {
       if (inherits(x = x[[i]], what = 'H5D')) {
         data[[i]] <- if (IsDataFrame(x = x[[i]])) {
-          as.data.frame(x = x[[i]])
+          as.data.frame(x = x[[i]], ...)
         } else if (IsMatrix(x = x[[i]])) {
-          as.matrix(x = x[[i]])
+          as.matrix(x = x[[i]], ...)
         } else {
           x[[i]]$read()
         }
       } else {
         data[[i]] <- if (IsDataFrame(x = x[[i]])) {
-          as.data.frame(x = x[[i]])
+          as.data.frame(x = x[[i]], ...)
         } else if (IsFactor(x = x[[i]])) {
           as.factor(x = x[[i]])
         } else if (IsMatrix(x = x[[i]])) {
-          as.matrix(x = x[[i]])
+          as.matrix(x = x[[i]], ...)
         } else {
-          as.list(x = x[[i]])
+          as.list(x = x[[i]], ...)
         }
       }
     }
     if (x$attr_exists(attr_name = 's3class')) {
       data <- structure(.Data = data, class = h5attr(x = x, which = 's3class'))
+    } else if (x$attr_exists(attr_name = 's4class')) {
+      class <- h5attr(x = x, which = 's4class')
+      if (grepl(pattern = ':', x = class)) {
+        classdef <- unlist(x = strsplit(x = class, split = ':'))
+        classpkg <- classdef[1]
+        class <- classdef[2]
+        try(
+          expr = class <- with_package(
+            package = classpkg,
+            code = getClass(Class = class)
+          ),
+          silent = TRUE
+        )
+      }
+      try(
+        expr = data <- do.call(what = 'new', args = c('Class' = class, data)),
+        silent = TRUE
+      )
     }
     return(data)
   }

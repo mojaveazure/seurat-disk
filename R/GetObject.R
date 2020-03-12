@@ -170,6 +170,26 @@ GetGraphs <- function(graphs, index, assays = NULL) {
 #'
 #' @rdname GetObject
 #'
-GetImages <- function(images, index) {
-  .NotYetImplemented()
+GetImages <- function(images, index, assays = NULL) {
+  if (isFALSE(x = images)) {
+    return(NULL)
+  } else if (!is.null(x = images) && all(is.na(x = images))) {
+    return(index$global$images)
+  } else if (is.null(x = images)) {
+    images <- unique(x = unlist(x = lapply(
+      X = names(x = index),
+      FUN = function(x) {
+        return(index[[x]]$images)
+      }
+    )))
+  }
+  assays <- GetAssays(assays = assays, index = index)
+  assays.images <- lapply(
+    X = names(x = assays),
+    FUN = function(x) {
+      return(index[[x]]$images)
+    }
+  )
+  assays.images <- unique(x = c(unlist(x = assays.images, index$global$images)))
+  return(intersect(x = images, y = assays.images))
 }

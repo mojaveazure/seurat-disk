@@ -5,7 +5,9 @@
 \alias{scdisk-class}
 \alias{scdisk}
 \title{A disk-based object for single-cell analysis}
-\format{An \code{\link[R6]{R6Class}} object}
+\format{
+An \code{\link[R6]{R6Class}} object
+}
 \description{
 A disk-based object for single-cell analysis
 
@@ -100,6 +102,7 @@ A disk-based object for single-cell analysis
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{scdisk} object
 \subsection{Usage}{
@@ -134,6 +137,7 @@ Create a new \code{scdisk} object
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-finalizer"></a>}}
+\if{latex}{\out{\hypertarget{method-finalizer}{}}}
 \subsection{Method \code{finalizer()}}{
 Handle the loss of reference to this \code{scdisk} object
 \subsection{Usage}{
