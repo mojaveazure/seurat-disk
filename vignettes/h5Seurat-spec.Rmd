@@ -1,0 +1,71 @@
+---
+title: "h5Seurat File Format Specification"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{h5Seurat File Format Specification}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(hdf5r)
+```
+
+## Overall File Structure
+
+### Required Attributes
+
+There are three required top-level HDF5 attributes: `project`, `active.assay`, and `version`. Each of these must be a single [string](#string-representation). The `project` attribute corresponds to the project value of a `Seurat` object; the `active.assay` attribute is the name of the default assay and must be present in the [`assays` group](#assay-expression-data). The `version` corresponds to the version of Seurat that the h5Seurat file is based on.
+
+### Top-Level Datasets and Groups
+
+There are two required top-level HDF5 datasets: `cell.names` and `meta.data`. The `cell.names` dataset should be a one-dimensional [string](#string-representation) dataset, with a length equal to the number of cells present in the data. Cell names are not stored anywhere else in the h5Seurat file.
+
+The `meta.data` dataset contains cell-level metadata. It should be a one-dimensional [HDF5 compound type](#data-frame-representation), with a length equal to the number of cells present in the data. Each component dataset in the compound corresponds to a column of metadata information (eg. number of UMIs per cell/`nFeature`) and should be a one-dimensional dataset corresponding to the nearest R type.
+
+## Assay Expression Data
+
+`Assay` objects are stored in the top-level group `assays`; each assay is stored as its own group within the `assays` group.
+
+## Dimensional Reductions
+
+## Nearest-Neighbor Graphs
+
+## Spatial Image Data
+
+## Cell-Level Metadata
+
+## Command Logs
+
+## Miscellaneous Information
+
+## Tool-Specific Results
+
+## Common Data Structures
+
+### String Representation
+
+All string values should be encoding as variable-length UTF-8 characters
+
+```{r utf8, echo=FALSE}
+H5T_STRING$new(size = Inf)$set_cset(cset = h5const$H5T_CSET_UTF8)
+```
+
+### Dense Matrix Representation
+
+### Sparse Matrix Representation
+
+### Factor Representation
+
+```{r factor, echo=FALSE}
+```
+
+### Data Frame Representation
+
+`data.frames` should be stored 
+
+### Generic S4 Object Representation

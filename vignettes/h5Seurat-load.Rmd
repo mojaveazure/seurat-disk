@@ -1,0 +1,87 @@
+---
+title: "Saving and Loading Data from an h5Seurat File"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Saving and Loading Data from an h5Seurat File}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  tidy = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+```{r setup}
+library(Seurat)
+library(SeuratDisk)
+library(SeuratData)
+```
+
+```{r install_data}
+InstallData(ds = "pbmc3k")
+data("pbmc3k")
+pbmc3k
+```
+
+```{r process_data}
+pbmc3k <- UpdateSeuratObject(pbmc3k)
+pbmc3k <- PercentageFeatureSet(pbmc3k, pattern = "^MT-", col.name = "percent.mt")
+pbmc3k <- SCTransform(
+  pbmc3k,
+  assay = "RNA",
+  vars.to.regress = "percent.mt",
+  verbose = FALSE
+)
+pbmc3k <- RunPCA(pbmc3k)
+pbmc3k <- FindNeighbors(pbmc3k, dims = 1:30)
+pbmc3k <- FindClusters(pbmc3k, verbose = FALSE)
+pbmc3k <- RunUMAP(pbmc3k, dims = 1:30)
+pbmc3k
+```
+
+```{r save_data}
+# Can also use SaveH5Seurat to close file after writing
+hfile <- as.h5Seurat(x = pbmc3k, overwrite = TRUE)
+hfile
+```
+
+```{r structure}
+hfile[["assays"]]
+hfile[["assays/SCT"]]
+hfile[["reductions"]]
+hfile[["reductions/umap"]]
+```
+
+```{r}
+hfile$index()
+```
+
+```{r load_data}
+p2 <- LoadH5Seurat(hfile)
+p2
+```
+
+```{r load_partial}
+p2 <- LoadH5Seurat(hfile, assays = "SCT", reductions = FALSE, graphs = FALSE)
+p2
+```
+
+```{r append_partial}
+p2 <- AppendData(hfile, p2, assays = FALSE, reductions = NA, graphs = FALSE)
+p2
+```
+
+```{r append_full}
+p2 <- AppendData(hfile, p2)
+p2
+```
+
+```{r close}
+hfile$close_all()
+```
