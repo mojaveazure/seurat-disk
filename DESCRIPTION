@@ -13,7 +13,7 @@ Description: As single-cell expression datasets grow in size, the computational
   oriented HDF5-based file formats and provides infrastructure to perform
   disk-based computation on said files. In addition, SeuratDisk integrates with
   the Seurat framework and provides disk-based methods for Seurat's toolkit.
-URL: https://github.com/mojaveazure/seurat-disk
+URL: https://mojaveazure.github.io/seurat-disk/, https://github.com/mojaveazure/seurat-disk
 BugReports: https://github.com/mojaveazure/seurat-disk/issues
 License: GPL-3 | file LICENSE
 Encoding: UTF-8

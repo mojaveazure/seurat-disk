@@ -1,5 +1,7 @@
 pandoc: 2.3.1
 pkgdown: 1.4.1
 pkgdown_sha: ~
-articles: []
+articles:
+  h5Seurat-load: h5Seurat-load.html
+  h5Seurat-spec: h5Seurat-spec.html
 

@@ -115,7 +115,7 @@
 <a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt;  1 other assay present: RNA</span></a>
 <a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt;  2 dimensional reductions calculated: pca, umap</span></a></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># Can also use SaveH5Seurat to close file after writing</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">hfile &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/SeuratDisk/man/SaveH5Seurat.html">as.h5Seurat</a></span>(<span class="dt">x =</span> pbmc3k, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">hfile &lt;-<span class="st"> </span><span class="kw"><a href="../reference/SaveH5Seurat.html">as.h5Seurat</a></span>(<span class="dt">x =</span> pbmc3k, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3">hfile</a>
 <a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; Class: h5Seurat</span></a>
 <a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; Filename: /home/paul/software/seurat-disk/vignettes/pbmc3k.h5seurat</span></a>
@@ -187,25 +187,25 @@
 <a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt; Data for assay RNA</span></a>
 <a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt;    counts      data    scale.data</span></a>
 <a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt;      ✓          ✓          x</span></a></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">p2 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/SeuratDisk/man/LoadH5Seurat.html">LoadH5Seurat</a></span>(hfile)</a>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">p2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(hfile)</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">p2</a>
 <a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt; An object of class Seurat </span></a>
 <a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt; 26286 features across 2700 samples within 2 assays </span></a>
 <a class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">#&gt; Active assay: SCT (12572 features, 3000 variable features)</span></a>
 <a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">#&gt;  1 other assay present: RNA</span></a>
 <a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co">#&gt;  2 dimensional reductions calculated: pca, umap</span></a></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">p2 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/SeuratDisk/man/LoadH5Seurat.html">LoadH5Seurat</a></span>(hfile, <span class="dt">assays =</span> <span class="st">"SCT"</span>, <span class="dt">reductions =</span> <span class="ot">FALSE</span>, <span class="dt">graphs =</span> <span class="ot">FALSE</span>)</a>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">p2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(hfile, <span class="dt">assays =</span> <span class="st">"SCT"</span>, <span class="dt">reductions =</span> <span class="ot">FALSE</span>, <span class="dt">graphs =</span> <span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">p2</a>
 <a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">#&gt; An object of class Seurat </span></a>
 <a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">#&gt; 12572 features across 2700 samples within 1 assay </span></a>
 <a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co">#&gt; Active assay: SCT (12572 features, 3000 variable features)</span></a></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">p2 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/SeuratDisk/man/AppendData.html">AppendData</a></span>(hfile, p2, <span class="dt">assays =</span> <span class="ot">FALSE</span>, <span class="dt">reductions =</span> <span class="ot">NA</span>, <span class="dt">graphs =</span> <span class="ot">FALSE</span>)</a>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">p2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/AppendData.html">AppendData</a></span>(hfile, p2, <span class="dt">assays =</span> <span class="ot">FALSE</span>, <span class="dt">reductions =</span> <span class="ot">NA</span>, <span class="dt">graphs =</span> <span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb9-2" data-line-number="2">p2</a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">#&gt; An object of class Seurat </span></a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">#&gt; 12572 features across 2700 samples within 1 assay </span></a>
 <a class="sourceLine" id="cb9-5" data-line-number="5"><span class="co">#&gt; Active assay: SCT (12572 features, 3000 variable features)</span></a>
 <a class="sourceLine" id="cb9-6" data-line-number="6"><span class="co">#&gt;  1 dimensional reduction calculated: umap</span></a></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">p2 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/SeuratDisk/man/AppendData.html">AppendData</a></span>(hfile, p2)</a>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">p2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/AppendData.html">AppendData</a></span>(hfile, p2)</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">p2</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#&gt; An object of class Seurat </span></a>
 <a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co">#&gt; 26286 features across 2700 samples within 2 assays </span></a>

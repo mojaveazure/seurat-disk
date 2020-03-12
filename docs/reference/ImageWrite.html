@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Test HDF5 datasets and groups to see what kind of data they are — TestH5 • SeuratDisk</title>
+<title>Write a SpatialImage object to an HDF5 dataset — ImageWrite • SeuratDisk</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Test HDF5 datasets and groups to see what kind of data they are — TestH5" />
-<meta property="og:description" content="Test HDF5 datasets and groups to see what kind of data they are" />
+<meta property="og:title" content="Write a SpatialImage object to an HDF5 dataset — ImageWrite" />
+<meta property="og:description" content="Write a SpatialImage object to an HDF5 dataset" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,52 +120,49 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Test HDF5 datasets and groups to see what kind of data they are</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/TestH5.R'><code>R/TestH5.R</code></a></small>
-    <div class="hidden name"><code>TestH5.Rd</code></div>
+    <h1>Write a SpatialImage object to an HDF5 dataset</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/WriteH5Group.R'><code>R/WriteH5Group.R</code></a></small>
+    <div class="hidden name"><code>ImageWrite.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Test HDF5 datasets and groups to see what kind of data they are</p>
+    <p>Write a SpatialImage object to an HDF5 dataset</p>
     </div>
 
-    <pre class="usage"><span class='co'># S4 method for H5D</span>
-<span class='fu'><a href='TestObject.html'>IsDataFrame</a></span>(<span class='no'>x</span>)
-
-<span class='co'># S4 method for H5Group</span>
-<span class='fu'><a href='TestObject.html'>IsDataFrame</a></span>(<span class='no'>x</span>)
-
-<span class='co'># S4 method for H5Group</span>
-<span class='fu'><a href='TestObject.html'>IsFactor</a></span>(<span class='no'>x</span>)
-
-<span class='co'># S4 method for H5Group</span>
-<span class='fu'><a href='TestObject.html'>IsList</a></span>(<span class='no'>x</span>)
-
-<span class='co'># S4 method for H5D</span>
-<span class='fu'><a href='TestObject.html'>IsMatrix</a></span>(<span class='no'>x</span>)
-
-<span class='co'># S4 method for H5Group</span>
-<span class='fu'><a href='TestObject.html'>IsMatrix</a></span>(<span class='no'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>ImageWrite</span>(<span class='no'>x</span>, <span class='no'>name</span>, <span class='no'>hgroup</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An HDF5 dataset or group</p></td>
+      <td><p>An object</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>Name to save data as</p></td>
+    </tr>
+    <tr>
+      <th>hgroup</th>
+      <td><p>An HDF5 file or group (<code>H5File</code> or <code>H5Group</code> objects
+from hdf5r)</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Show progress updates</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <div class='dont-index'><p><code><a href='TestObject.html'>TestObject</a></code></p></div>
+    <p>Invisibly returns <code>NULL</code></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#see-also">See also</a></li>
+      <li><a href="#value">Value</a></li>
     </ul>
 
   </div>

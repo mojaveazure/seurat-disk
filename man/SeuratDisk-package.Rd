@@ -16,6 +16,7 @@ As single-cell expression datasets grow in size, the computational
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://mojaveazure.github.io/seurat-disk/}
   \item \url{https://github.com/mojaveazure/seurat-disk}
   \item Report bugs at \url{https://github.com/mojaveazure/seurat-disk/issues}
 }
