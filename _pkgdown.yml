@@ -1,0 +1,23 @@
+destination: docs
+
+template:
+  params:
+    bootswatch: flatly
+
+development:
+  mode: auto
+
+reference:
+  - title: Package Information
+    contents:
+      - SeuratDisk
+      - scdisk
+  - title: h5Seurat
+    contents:
+      - matches("h5Seurat")
+      - matches("H5Seurat")
+      - AppendData
+  - title: Utility Functions
+    contents:
+      - ReadH5
+      - WriteH5Group
