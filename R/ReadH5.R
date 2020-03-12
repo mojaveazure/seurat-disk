@@ -99,6 +99,7 @@ as.data.frame.H5Group <- function(x, row.names = NULL, optional = FALSE, ...) {
   return(as.data.frame(x = df, row.names = row.names, optional = optional, ...))
 }
 
+#' @importFrom stats na.omit
 #' @importFrom methods setMethod
 #'
 #' @return \code{as.factor}: returns a \code{\link[base]{factor}} with the data
@@ -124,7 +125,7 @@ setMethod(
     }
     values <- x[['values']][]
     levels <- x[['levels']][]
-    if (length(x = unique(x = values)) != length(x = levels)) {
+    if (length(x = unique(x = na.omit(object = values))) != length(x = levels)) {
       stop("Mismatch between unique values and number of levels", call. = FALSE)
     }
     return(factor(x = levels[values], levels = levels))

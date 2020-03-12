@@ -1,6 +1,5 @@
 #' @importFrom rlang %||%
 #' @importFrom methods setOldClass
-#' @importFrom hdf5r h5const H5T_STRING
 #'
 NULL
 
@@ -36,11 +35,6 @@ default.options <- list()
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Global constants
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-string.types <- list(
-  'ascii7' = H5T_STRING$new(size = 7L),
-  'utf8' = H5T_STRING$new(size = Inf)$set_cset(cset = h5const$H5T_CSET_UTF8)
-)
 
 modes <- list(
   'new' = c('w', 'w-', 'x'),
@@ -180,12 +174,8 @@ GetClass <- function(class, packages = 'Seurat') {
 #' for the customization of string types rather than defaulting to
 #' variable-length ASCII-encoded strings
 #'
+#' @inheritParams StringType
 #' @inheritParams hdf5r::guess_dtype
-#' @param stype Type of string encoding to use, choose from:
-#' \describe{
-#'  \item{utf8}{Variable-width, UTF-8}
-#'  \item{ascii7}{Fixed-width (7 bits), ASCII}
-#' }
 #' @inheritDotParams hdf5r::guess_dtype
 #'
 #' @return An object of class \code{\link[hdf5r]{H5T}}
@@ -215,15 +205,14 @@ GetClass <- function(class, packages = 'Seurat') {
 #' }
 #'
 GuessDType <- function(x, stype = 'utf8', ...) {
-  stype <- match.arg(arg = stype, choices = names(x = string.types))
   dtype <- guess_dtype(x = x, ...)
   if (inherits(x = dtype, what = 'H5T_STRING')) {
-    dtype <- string.types[[stype]]
+    dtype <- StringType(stype = stype)
   } else if (inherits(x = dtype, what = 'H5T_COMPOUND')) {
     cpd.dtypes <- dtype$get_cpd_types()
     for (i in seq_along(along.with = cpd.dtypes)) {
       if (inherits(x = cpd.dtypes[[i]], what = 'H5T_STRING')) {
-        cpd.dtypes[[i]] <- string.types[[stype]]
+        cpd.dtypes[[i]] <- StringType(stype = stype)
       }
     }
     dtype <- H5T_COMPOUND$new(
@@ -336,6 +325,29 @@ IsMatrixEmpty <- function(x) {
 #'
 MakeSpace <- function(n) {
   return(paste(rep_len(x = ' ', length.out = n), collapse = ''))
+}
+
+#' Generate an HDF5 string dtype
+#'
+#' @param stype Type of string encoding to use, choose from:
+#' \describe{
+#'  \item{utf8}{Variable-width, UTF-8}
+#'  \item{ascii7}{Fixed-width (7 bits), ASCII}
+#' }
+#'
+#' @return An \code{\link[hdf5r]{H5T_STRING}} object
+#'
+#' @importFrom hdf5r h5const H5T_STRING
+#'
+#' @keywords internal
+#'
+StringType <- function(stype = c('utf8', 'ascii7')) {
+  stype <- match.arg(arg = stype)
+  return(switch(
+    EXPR = stype,
+    'utf8' = H5T_STRING$new(size = Inf)$set_cset(cset = h5const$H5T_CSET_UTF8),
+    'ascii7' = H5T_STRING$new(size = 7L)
+  ))
 }
 
 #' Update slots in an object

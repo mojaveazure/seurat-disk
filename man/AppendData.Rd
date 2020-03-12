@@ -18,7 +18,7 @@ AppendData(
   extras = "commands",
   overwrite = FALSE,
   verbose = TRUE,
-  ..
+  ...
 )
 
 \method{AppendData}{character}(

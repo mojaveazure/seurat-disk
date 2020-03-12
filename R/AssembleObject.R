@@ -31,12 +31,7 @@ NULL
 #'
 #' @aliases AssembleAssay
 #'
-AssembleAssay <- function(
-  assay,
-  file,
-  slots = NULL,
-  verbose = TRUE
-) {
+AssembleAssay <- function(assay, file, slots = NULL, verbose = TRUE) {
   index <- file$index()
   if (!assay %in% names(x = index)) {
     stop("Cannot find assay ", assay, " in this h5Seurat file", call. = FALSE)

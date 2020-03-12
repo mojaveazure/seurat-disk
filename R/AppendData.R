@@ -46,7 +46,7 @@ AppendData <- function(
   extras = 'commands',
   overwrite = FALSE,
   verbose = TRUE,
-  ..
+  ...
 ) {
   if (!inherits(x = object, what = 'Seurat')) {
     stop("'object' must be a Seurat object", call. = FALSE)
@@ -168,7 +168,7 @@ AppendData.h5Seurat <- function(
       message("Adding data for ", length(x = assays), " assays")
     }
     for (assay in names(x = assays)) {
-      object[[assays]] <- AssembleAssay(
+      object[[assay]] <- AssembleAssay(
         assay = assay,
         file = file,
         slots = assays[[assay]],
