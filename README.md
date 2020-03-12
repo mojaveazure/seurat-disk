@@ -39,3 +39,4 @@ packages:
 | Seurat  | [CRAN](https://cran.r-project.org/package=Seurat) |  [GitHub](https://github.com/satijalab/seurat)   |   [Website](http://www.satijalab.org/seurat)    |
 |  tools  |                         –                         |                        –                         |                        –                        |
 |  utils  |                         –                         |                        –                         |                        –                        |
+|  withr  | [CRAN](https://cran.r-project.org/package=withr)  |                        –                         |        [Website](http://withr.r-lib.org)        |
