@@ -22,6 +22,10 @@ ghurl <- function(x) {
 }
 ```
 
+```{r cran.cannoncial, echo=FALSE}
+cran.cannoncial <- "https://cran.r-project.org/package="
+```
+
 ```{r parse.description, echo=FALSE}
 description <- read.dcf(file = "DESCRIPTION")
 # Get package name
@@ -44,10 +48,23 @@ deps <- gsub(pattern = ",$", replacement = "", x = deps)
 deps <- deps[deps != "R"]
 ```
 
+```{r parse.version, echo=FALSE}
+pkg.version <- packageVersion(pkg)
+stage <- if (pkg.version >= package_version(x = "1.0.0")) {
+  "stable"
+} else if (pkg.version >= package_version(x = "0.1.0")) {
+  "maturing"
+} else {
+  "experimental"
+}
+color <- c("experimental" = "orange", "maturing" = "blue", "stable" = "brightgreen")[stage]
+```
+
 # `r pkg` v`r packageVersion(pkg)`
 
 <!-- badges: start -->
-![CRAN/METACRAN](https://img.shields.io/cran/v/`r pkg`)
+[![CRAN/METACRAN](https://img.shields.io/cran/v/`r pkg`)](`r paste0(cran.cannoncial, pkg)`)
+[![Lifecycle](https://img.shields.io/badge/lifecycle-`r stage`-`r color`.svg)](`r github.url`)
 <!-- badges: end -->
 
 Interfaces for HDF5-based Single Cell File Formats
@@ -71,7 +88,6 @@ remotes::install_github("mojaveazure/seurat-disk")
 | Package | CRAN Webpage | Source | Website |
 |:-------:|:------------:|:------:|:-------:|
 ```{r dependencies, echo=FALSE, results='asis'}
-cran.cannoncial <- "https://cran.r-project.org/package="
 cran.pkgs <- tools::CRAN_package_db()
 cran.pkgs <- subset(x = cran.pkgs, subset = Package %in% deps)
 deps.md <- vector(mode = "character", length = length(x = deps))
