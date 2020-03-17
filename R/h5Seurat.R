@@ -262,7 +262,7 @@ h5Seurat <- R6Class(
       if (version >= numeric_version(x = '3.1.3.9900')) {
         private$v3.2.0()
       }
-      private$build.index()
+      private$build.index(version = as.character(x = version))
       return(invisible(x = NULL))
     },
     v3.1.2 = function() {

@@ -84,7 +84,18 @@ LoadH5Seurat.character <- function(
 ) {
   hfile <- h5Seurat$new(filename = file, mode = 'r')
   on.exit(expr = hfile$close_all())
-  return(LoadH5Seurat(file = hfile, ...))
+  return(LoadH5Seurat(
+    file = hfile,assays = assays,
+    reductions = reductions,
+    graphs = graphs,
+    images = images,
+    meta.data = meta.data,
+    commands = commands,
+    misc = misc,
+    tools = tools,
+    verbose = verbose,
+    ...
+  ))
 }
 
 #' @rdname LoadH5Seurat
@@ -104,7 +115,19 @@ LoadH5Seurat.H5File <- function(
   verbose = TRUE,
   ...
 ) {
-  return(LoadH5Seurat(file = as.h5Seurat(x = file), ...))
+  return(LoadH5Seurat(
+    file = as.h5Seurat(x = file),
+    assays = assays,
+    reductions = reductions,
+    graphs = graphs,
+    images = images,
+    meta.data = meta.data,
+    commands = commands,
+    misc = misc,
+    tools = tools,
+    verbose = verbose,
+    ...
+  ))
 }
 
 #' @importFrom Seurat as.Seurat
