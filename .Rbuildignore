@@ -8,3 +8,4 @@
 ^Meta$
 ^README\.Rmd$
 ^cran-comments\.md$
+^.*\.h5Seurat$
