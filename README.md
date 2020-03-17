@@ -1,12 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-SeuratDisk v0.0.0.9000
+SeuratDisk v0.0.0.9001
 ======================
 
 <!-- badges: start -->
 [![CRAN/METACRAN](https://img.shields.io/cran/v/SeuratDisk)](https://cran.r-project.org/package=SeuratDisk) [![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://github.com/mojaveazure/seurat-disk) <!-- badges: end -->
 
-Interfaces for HDF5-based Single Cell File Formats
+<!-- Interfaces for HDF5-based Single Cell File Formats -->
+As single-cell expression datasets grow in size, the computational requirements to store and handle them grow as well. To address the issues posed by large datasets, SeuratDisk provides an interface to various single-cell oriented HDF5-based file formats and provides infrastructure to perform disk-based computation on said files. In addition, SeuratDisk integrates with the Seurat framework and provides disk-based methods for Seurat's toolkit.
 
 Installation
 ------------

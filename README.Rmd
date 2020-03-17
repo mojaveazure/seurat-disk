@@ -67,7 +67,11 @@ color <- c("experimental" = "orange", "maturing" = "blue", "stable" = "brightgre
 [![Lifecycle](https://img.shields.io/badge/lifecycle-`r stage`-`r color`.svg)](`r github.url`)
 <!-- badges: end -->
 
-Interfaces for HDF5-based Single Cell File Formats
+<!-- Interfaces for HDF5-based Single Cell File Formats -->
+
+```{r description, echo=FALSE, results='asis'}
+cat(gsub(pattern = '\n', replacement = ' ', x = description[, "Description"]))
+```
 
 ## Installation
 

@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9001</span>
       </span>
     </div>
 
@@ -86,20 +86,21 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="seuratdisk-v0-0-0-9000" class="section level1">
+<div id="seuratdisk-v0-0-0-9001" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#seuratdisk-v0-0-0-9000" class="anchor"></a>SeuratDisk v0.0.0.9000</h1></div>
+<a href="#seuratdisk-v0-0-0-9001" class="anchor"></a>SeuratDisk v0.0.0.9001</h1></div>
 <!-- badges: start -->
 
-<p>Interfaces for HDF5-based Single Cell File Formats</p>
+<!-- Interfaces for HDF5-based Single Cell File Formats -->
+<p>As single-cell expression datasets grow in size, the computational requirements to store and handle them grow as well. To address the issues posed by large datasets, SeuratDisk provides an interface to various single-cell oriented HDF5-based file formats and provides infrastructure to perform disk-based computation on said files. In addition, SeuratDisk integrates with the Seurat framework and provides disk-based methods for Seurat’s toolkit.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>SeuratDisk is not currently available on CRAN. You can install it from <a href="https://github.com/mojaveazure/seurat-disk">GitHub</a> with:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if (!<span class="kw"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"remotes"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"remotes"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {
   <span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"remotes"</span>)
 }
-remotes::<span class="kw">install_github</span>(<span class="st">"mojaveazure/seurat-disk"</span>)</code></pre></div>
+remotes<span class="op">::</span><span class="kw"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"mojaveazure/seurat-disk"</span>)</code></pre></div>
 </div>
 <div id="dependencies" class="section level2">
 <h2 class="hasAnchor">
