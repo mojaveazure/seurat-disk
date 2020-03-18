@@ -42,6 +42,7 @@ Collate:
     'AppendData.R'
     'scdisk.R'
     'h5Seurat.R'
+    'Connect.R'
     'LoadH5Seurat.R'
     'TestObject.R'
     'TestH5.R'
