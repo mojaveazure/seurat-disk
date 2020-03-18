@@ -20,8 +20,13 @@ NULL
 BasicWrite <- function(x, name, hgroup, verbose = TRUE) {
   if (is.list(x = x) && !is.data.frame(x = x)) {
     xgroup <- hgroup$create_group(name = name)
-    for (i in Enumerate(x = x)) {
-      WriteH5Group(x = i$value, name = i$name, hgroup = xgroup)
+    for (i in seq_along(along.with = x)) {
+      WriteH5Group(
+        x = x[[i]],
+        name = names(x = x)[i],
+        hgroup = xgroup,
+        verbose = verbose
+      )
     }
     if (!is.null(x = names(x = x))) {
       xgroup$create_attr(

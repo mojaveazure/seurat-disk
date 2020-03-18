@@ -25,4 +25,9 @@ The version from \code{targets} that is closest to \code{query} as a
 \description{
 Find the closest version
 }
+\examples{
+\donttest{
+}
+
+}
 \keyword{internal}

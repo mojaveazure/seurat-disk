@@ -84,9 +84,13 @@ GetAssays <- function(assays, index) {
     slots.use <- as.character(x = na.omit(object = slots.use[index[[i]]$slots]))
     assays[[i]] <- slots.use
   }
-  for (i in Enumerate(x = assays)) {
-    if (!any(c('counts', 'data') %in% i$value)) {
-      stop("All assays must have either a counts or data slot, missing for ", i$name, call. = FALSE)
+  for (i in seq_along(along.with = assays)) {
+    if (!any(c('counts', 'data') %in% assays[[i]])) {
+      stop(
+        "Call assays must have either a 'counts' or 'data' slot, missing for ",
+        names(x = assays)[i],
+        call. = FALSE
+      )
     }
   }
   return(assays)

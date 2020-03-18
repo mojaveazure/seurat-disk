@@ -13,12 +13,29 @@ BoolToInt(x)
 An integer vector
 }
 \description{
-Convert a logical to an integer
+Unlike most programming languages, R has three possible \link[base]{logical}
+(boolean) values: \code{TRUE}, \code{FALSE}, and \code{\link[base]{NA}};
+moreover, the \code{NA} value has representations in other data types, such
+as \code{NA_integer_}, \code{NA_real_}, and \code{NA_character_}. Simply
+writing out the logical values to an HDF5 file would cause issues when trying
+to read the data in to another language, such as Python. To encode these three
+logical values for other languages, we can encode the logicals as integers:
+\itemize{
+ \item \code{FALSE} becomes \code{0L}
+ \item \code{TRUE} becomes \code{1L}
+ \item \code{NA} becomes \code{2L}
+}
+This encoding scheme allows other languages to handle \code{NA}s in their own
+manner while preserving all three logicals for R
 }
 \examples{
 \donttest{
 SeuratDisk:::BoolToInt(x = c(TRUE, FALSE, NA))
 }
 
+}
+\seealso{
+\link[base]{integer} \link[base]{logical} \code{\link[base]{NA}}
+\code{\link{WriteH5Seurat}}
 }
 \keyword{internal}

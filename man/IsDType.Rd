@@ -18,6 +18,11 @@ A logical
 \description{
 Check the datatype of an HDF5 dataset
 }
+\examples{
+\donttest{
+}
+
+}
 \seealso{
 \code{\link[hdf5r]{h5types}}
 }

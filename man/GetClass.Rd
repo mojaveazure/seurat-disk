@@ -9,12 +9,20 @@ GetClass(class, packages = "Seurat")
 \arguments{
 \item{class}{Class name}
 
-\item{packages}{A vector of packages to exclude from resulting class information}
+\item{packages}{A vector of packages to exclude from resulting class
+information}
 }
 \value{
 A character vector with the class
 }
 \description{
 Get a class string with package information
+}
+\examples{
+\donttest{
+SeuratDisk:::GetClass('Seurat')
+SeuratDisk:::GetClass('Matrix')
+}
+
 }
 \keyword{internal}

@@ -20,9 +20,9 @@ NULL
 #  \item{\code{SeuratDisk.loom.string_len}}{When the loom encoding is ASCII, set
 #  the character width (default 7L)}
 # }
-#
-# @aliases SeuratDisk
-#
+#'
+#' @aliases SeuratDisk
+#'
 "_PACKAGE"
 
 
@@ -49,9 +49,27 @@ version.regex <- '^\\d+(\\.\\d+){2}(\\.9\\d{3})?$'
 
 #' Convert a logical to an integer
 #'
+#' Unlike most programming languages, R has three possible \link[base]{logical}
+#' (boolean) values: \code{TRUE}, \code{FALSE}, and \code{\link[base]{NA}};
+#' moreover, the \code{NA} value has representations in other data types, such
+#' as \code{NA_integer_}, \code{NA_real_}, and \code{NA_character_}. Simply
+#' writing out the logical values to an HDF5 file would cause issues when trying
+#' to read the data in to another language, such as Python. To encode these three
+#' logical values for other languages, we can encode the logicals as integers:
+#' \itemize{
+#'  \item \code{FALSE} becomes \code{0L}
+#'  \item \code{TRUE} becomes \code{1L}
+#'  \item \code{NA} becomes \code{2L}
+#' }
+#' This encoding scheme allows other languages to handle \code{NA}s in their own
+#' manner while preserving all three logicals for R
+#'
 #' @param x A logical vector
 #'
 #' @return An integer vector
+#'
+#' @seealso \link[base]{integer} \link[base]{logical} \code{\link[base]{NA}}
+#' \code{\link{WriteH5Seurat}}
 #'
 #' @keywords internal
 #'
@@ -82,6 +100,10 @@ BoolToInt <- function(x) {
 #'
 #' @keywords internal
 #'
+#' @examples
+#' \donttest{
+#' }
+#'
 ClosestVersion <- function(query, targets, direction = c('min', 'max')) {
   direction <- match.arg(arg = direction)
   query <- numeric_version(x = query)
@@ -104,58 +126,23 @@ ClosestVersion <- function(query, targets, direction = c('min', 'max')) {
   return(as.character(x = targets[index]))
 }
 
-#' Enumerate a list or vector
-#'
-#' @param x A list or a vector
-#'
-#' @return A list of length \code{x} with the following named values:
-#' \describe{
-#'   \item{\code{name}}{The name of \code{x} at a given index}
-#'   \item{\code{value}}{The value of \code{x} at the corresponding index}
-#' }
-#'
-#' @note For any given index \code{i} in \code{x}, all attempts to use the name
-#' of the value of \code{x} at \code{i} will be made. If there is no name
-#' (eg. \code{nchar(x = names(x = x)[i]) == 0}), the index \code{i} will be used
-#' in its stead
-#'
-#' @keywords internal
-#'
-#' @examples
-#' \donttest{
-#' # Enumerate will use names if possible
-#' x <- list(x = 1:3, y = letters[1:3], z = c('g1', 'g2', 'g3'))
-#' SeuratDisk:::Enumerate(x = x)
-#'
-#' # If no (or missing) object names present, Enumerate will use the index
-#' # number as the name
-#' x <- unname(obj = x)
-#' SeuratDisk:::Enumerate(x = x)
-#' }
-#'
-Enumerate <- function(x) {
-  indices <- seq_along(along.with = x)
-  keys <- names(x = x) %||% as.character(x = indices)
-  keys[nchar(x = keys) == 0] <- indices[nchar(x = keys) == 0]
-  vals <- lapply(
-    X = indices,
-    FUN = function(i) {
-      return(c('name' = keys[i], 'value' = unname(obj = x[i])))
-    }
-  )
-  return(vals)
-}
-
 #' Get a class string with package information
 #'
 #' @param class Class name
-#' @param packages A vector of packages to exclude from resulting class information
+#' @param packages A vector of packages to exclude from resulting class
+#' information
 #'
 #' @return A character vector with the class
 #'
 #' @importFrom methods getClass slot
 #'
 #' @keywords internal
+#'
+#' @examples
+#' \donttest{
+#' SeuratDisk:::GetClass('Seurat')
+#' SeuratDisk:::GetClass('Matrix')
+#' }
 #'
 GetClass <- function(class, packages = 'Seurat') {
   class <- class[1]
@@ -239,6 +226,10 @@ GuessDType <- function(x, stype = 'utf8', ...) {
 #' @seealso \code{\link[hdf5r]{h5types}}
 #'
 #' @keywords internal
+#'
+#' @examples
+#' \donttest{
+#' }
 #'
 IsDType <- function(x, dtype) {
   if (!inherits(x = x, what = 'H5D')) {
@@ -395,7 +386,8 @@ UpdateSlots <- function(object) {
 
 .onLoad <- function(libname, pkgname) {
   # Make the classes defined in SeuratDisk compatible with S4 generics/methods
-  setOldClass(Classes = c('scdisk', 'h5Seurat', 'loom'))
+  # setOldClass(Classes = c('scdisk', 'h5Seurat', 'loom'))
+  setOldClass(Classes = c('scdisk', 'h5Seurat'))
   # Set some default options
   op <- options()
   toset <- !names(x = default.options) %in% names(x = op)
