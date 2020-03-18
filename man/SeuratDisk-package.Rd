@@ -2,8 +2,9 @@
 % Please edit documentation in R/zzz.R
 \docType{package}
 \name{SeuratDisk-pacakge}
+\alias{SeuratDisk-pacakge}
+\alias{_PACKAGE}
 \alias{SeuratDisk}
-\alias{SeuratDisk-package}
 \title{SeuratDisk: Interfaces for HDF5-Based Single Cell File Formats}
 \description{
 As single-cell expression datasets grow in size, the computational
