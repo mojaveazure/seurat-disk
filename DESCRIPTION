@@ -1,8 +1,8 @@
 Package: SeuratDisk
 Type: Package
 Title: Interfaces for HDF5-Based Single Cell File Formats
-Version: 0.0.0.9001
-Date: 2020-02-01
+Version: 0.0.0.9002
+Date: 2020-03-18
 Authors@R: c(
   person(given = 'Paul', family = 'Hoffman', email = 'phoffman@nygenome.org', role = c('aut', 'cre'), comment = c(ORCID = '0000-0002-7693-8957')),
   person(given = 'Rahul', family = 'Satija', email = 'rsatija@nygenome.org', role = 'ctb', comment = c(ORCID = '0000-0001-9448-8833'))
@@ -40,14 +40,14 @@ Collate:
     'zzz.R'
     'AssembleObject.R'
     'AppendData.R'
+    'scdisk.R'
+    'h5Seurat.R'
     'LoadH5Seurat.R'
     'TestObject.R'
     'TestH5.R'
     'ReadH5.R'
     'WriteH5Group.R'
     'SaveH5Seurat.R'
-    'scdisk.R'
-    'h5Seurat.R'
     'h5Seurat_bindings.R'
 Suggests:
     knitr,

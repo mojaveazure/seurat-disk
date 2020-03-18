@@ -4,30 +4,48 @@
 \alias{ClosestVersion}
 \title{Find the closest version}
 \usage{
-ClosestVersion(query, targets, direction = c("min", "max"))
+ClosestVersion(
+  query,
+  targets,
+  direction = c("min", "max"),
+  inclusive = direction == "min"
+)
 }
 \arguments{
-\item{query}{A query version (\code{character} or \code{numeric_version})}
+\item{query}{A query version (\code{\link[base]{character}} or
+\code{\link[base]{numeric_version}})}
 
-\item{targets}{A vector of target versions (\code{character} or
-\code{numeric_version})}
+\item{targets}{A vector of target versions (\code{\link[base]{character}} or
+\code{\link[base]{numeric_version}})}
 
 \item{direction}{Which way should we check for closest version? Choose from:
 \describe{
  \item{min}{Closest version less than or equal to \code{query}}
  \item{max}{Closest version greater than or equal to \code{query}}
 }}
+
+\item{inclusive}{Perform an inclusive comparison (eg. \code{>=} or \code{<=}
+versus to \code{>} or \code{<}) for "rounding"}
 }
 \value{
 The version from \code{targets} that is closest to \code{query} as a
-\code{character} vector
+\code{\link[base]{character}} vector
 }
 \description{
-Find the closest version
+API changes happen at set versions, and knowing how a current running version
+relates to versions introducing API changes is important.
+\code{ClosestVersion} approximages both "rounding down" (eg. to determine
+minimum version with new API addition) and "rounding up" (eg. to determine
+maximum version before API deletion) for semantic versions.
 }
 \examples{
 \donttest{
+SeuratDisk:::ClosestVersion('3.1.0', targets = c('3.0.0', '1.4.9', '4.3.2'))
+SeuratDisk:::ClosestVersion('3.1.0', targets = c('3.0.0', '1.4.9', '4.3.2'), direction = 'max')
 }
 
+}
+\seealso{
+\code{\link[base]{numeric_version}}
 }
 \keyword{internal}

@@ -13,7 +13,8 @@ MakeSpace(n)
 A space (' ') of length \code{n}
 }
 \description{
-Make a space
+Generate a blank space \code{n} characters long; useful for aligning text to
+be printed to console
 }
 \examples{
 \donttest{

@@ -16,12 +16,8 @@ IsDType(x, dtype)
 A logical
 }
 \description{
-Check the datatype of an HDF5 dataset
-}
-\examples{
-\donttest{
-}
-
+Effectively, an implementation of \code{\link[methods]{is}} for HDF5 datasets;
+useful to ensure HDF5 validity for specific file structures
 }
 \seealso{
 \code{\link[hdf5r]{h5types}}

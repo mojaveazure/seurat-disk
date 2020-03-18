@@ -34,7 +34,10 @@ An object of class \code{\link[hdf5r]{H5T}}
 \description{
 Wrapper around \code{\link[hdf5r:guess_dtype]{hdf5r::guess_dtype}}, allowing
 for the customization of string types rather than defaulting to
-variable-length ASCII-encoded strings
+variable-length ASCII-encoded strings. Also encodes logicals as
+\code{\link[hdf5r]{H5T_INTEGER}} instead of \code{\link[hdf5r]{H5T_LOGICAL}}
+to ensure cross-language compatibility (controlled via
+\link[=SeuratDisk-package]{package options})
 }
 \examples{
 \donttest{
@@ -49,13 +52,14 @@ df <- data.frame(x = c('g1', 'g2', 'g3'), y = 1, 2, 3, stringsAsFactors = FALSE)
 SeuratDisk:::GuessDType(x = df)
 SeuratDisk:::GuessDType(x = df, stype = 'ascii7')
 
-# Logicals are turned into integers to ensure compatability with Python
+# Logicals are turned into integers to ensure compatibility with Python
 # TRUE evaluates to 1, FALSE to 0, and NA to 2
 SeuratDisk:::GuessDType(x = c(TRUE, FALSE, NA))
 }
 
 }
 \seealso{
-\code{\link[hdf5r]{guess_dtype}}
+\code{\link[hdf5r]{guess_dtype}} \code{\link{BoolToInt}}
+\code{\link{StringType}}
 }
 \keyword{internal}

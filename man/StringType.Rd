@@ -17,6 +17,17 @@ StringType(stype = c("utf8", "ascii7"))
 An \code{\link[hdf5r]{H5T_STRING}} object
 }
 \description{
-Generate an HDF5 string dtype
+Presets for encoding variations of \code{\link[hdf5r]{H5T_STRING}}; used to
+generate HDF5 datatype specifications with specific string encodings
+}
+\examples{
+\donttest{
+SeuratDisk:::StringType()
+SeuratDisk:::StringType('ascii7')
+}
+
+}
+\seealso{
+\code{\link[hdf5r]{H5T_STRING}}
 }
 \keyword{internal}

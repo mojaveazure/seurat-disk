@@ -4,33 +4,31 @@
 NULL
 
 #' @docType package
-#' @name SeuratDisk-pacakge
+#' @name SeuratDisk-package
 #' @rdname SeuratDisk-package
 #'
-# @section Package options:
-#
-# SeuratDisk uses the following options to control behaviour, users can configure
-# these with \code{\link[base]{options}}:
-#
-# \describe{
-#  \item{\code{SeuratDisk.loom.encoding}, \code{SeuratDisk.loom3.encoding}}{
-#  Character encoding for loom files. The \code{loom3} encoding (default UTF-8)
-#  is used for loom files >= v3.0.0; otherwise, the \code{loom} encoding
-#  (default ASCII) is used}
-#  \item{\code{SeuratDisk.loom.string_len}}{When the loom encoding is ASCII, set
-#  the character width (default 7L)}
-# }
+#' @section Package options:
+#'
+#' SeuratDisk uses the following options to control behaviour, users can configure
+#' these with \code{\link[base]{options}}:
+#'
+#' \describe{
+#'  \item{\code{SeuratDisk.dtypes.logical_to_int}}{When writing
+#'  \link[base]{logical} vectors, coerce to integer types to ensure
+#'  compatibility across languages (see \code{\link{BoolToInt}} for more details)}
+#' }
 #'
 #' @aliases SeuratDisk
 #'
 "_PACKAGE"
 
-
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Options
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-default.options <- list()
+default.options <- list(
+  "SeuratDisk.dtypes.logical_to_int" = TRUE
+)
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Global constants
@@ -86,33 +84,61 @@ BoolToInt <- function(x) {
 
 #' Find the closest version
 #'
-#' @param query A query version (\code{character} or \code{numeric_version})
-#' @param targets A vector of target versions (\code{character} or
-#' \code{numeric_version})
+#' API changes happen at set versions, and knowing how a current running version
+#' relates to versions introducing API changes is important.
+#' \code{ClosestVersion} approximages both "rounding down" (eg. to determine
+#' minimum version with new API addition) and "rounding up" (eg. to determine
+#' maximum version before API deletion) for semantic versions.
+#'
+#' @param query A query version (\code{\link[base]{character}} or
+#' \code{\link[base]{numeric_version}})
+#' @param targets A vector of target versions (\code{\link[base]{character}} or
+#' \code{\link[base]{numeric_version}})
 #' @param direction Which way should we check for closest version? Choose from:
 #' \describe{
 #'  \item{min}{Closest version less than or equal to \code{query}}
 #'  \item{max}{Closest version greater than or equal to \code{query}}
 #' }
+#' @param inclusive Perform an inclusive comparison (eg. \code{>=} or \code{<=}
+#' versus to \code{>} or \code{<}) for "rounding"
 #'
 #' @return The version from \code{targets} that is closest to \code{query} as a
-#' \code{character} vector
+#' \code{\link[base]{character}} vector
+#'
+#' @seealso \code{\link[base]{numeric_version}}
 #'
 #' @keywords internal
 #'
 #' @examples
 #' \donttest{
+#' SeuratDisk:::ClosestVersion('3.1.0', targets = c('3.0.0', '1.4.9', '4.3.2'))
+#' SeuratDisk:::ClosestVersion('3.1.0', targets = c('3.0.0', '1.4.9', '4.3.2'), direction = 'max')
 #' }
 #'
-ClosestVersion <- function(query, targets, direction = c('min', 'max')) {
+ClosestVersion <- function(
+  query,
+  targets,
+  direction = c('min', 'max'),
+  inclusive = direction == 'min'
+) {
   direction <- match.arg(arg = direction)
   query <- numeric_version(x = query)
   targets <- sort(x = numeric_version(x = targets))
-  index <- suppressWarnings(expr = switch(
+  switch(
     EXPR = direction,
-    'min' = max(which(x = targets <= query)),
-    'max' = min(which(x = targets >= query))
-  ))
+    'min' = {
+      compare <- ifelse(test = inclusive, yes = `<=`, no = `<`)
+      collapse <- max
+    },
+    'max' = {
+      compare <- ifelse(test = inclusive, yes = `>=`, no = `>`)
+      collapse <- min
+    }
+  )
+  index <- suppressWarnings(expr = collapse(which(x = compare(
+    e1 = targets,
+    e2 = query
+  ))))
   if (is.infinite(x = index)) {
     stop(
       "All target versions ",
@@ -127,6 +153,11 @@ ClosestVersion <- function(query, targets, direction = c('min', 'max')) {
 }
 
 #' Get a class string with package information
+#'
+#' S4 classes are useful in the context of their defining package (benefits of
+#' stricter typing). In order to ensure class information is properly retained
+#' in HDF5 files, S4 class names are written as "package:classname" with certain
+#' exceptions (eg. S4 classes defined by \link[Seurat:Seurat-package]{Seurat})
 #'
 #' @param class Class name
 #' @param packages A vector of packages to exclude from resulting class
@@ -159,7 +190,10 @@ GetClass <- function(class, packages = 'Seurat') {
 #'
 #' Wrapper around \code{\link[hdf5r:guess_dtype]{hdf5r::guess_dtype}}, allowing
 #' for the customization of string types rather than defaulting to
-#' variable-length ASCII-encoded strings
+#' variable-length ASCII-encoded strings. Also encodes logicals as
+#' \code{\link[hdf5r]{H5T_INTEGER}} instead of \code{\link[hdf5r]{H5T_LOGICAL}}
+#' to ensure cross-language compatibility (controlled via
+#' \link[=SeuratDisk-package]{package options})
 #'
 #' @inheritParams StringType
 #' @inheritParams hdf5r::guess_dtype
@@ -169,7 +203,8 @@ GetClass <- function(class, packages = 'Seurat') {
 #'
 #' @importFrom hdf5r guess_dtype H5T_COMPOUND
 #'
-#' @seealso \code{\link[hdf5r]{guess_dtype}}
+#' @seealso \code{\link[hdf5r]{guess_dtype}} \code{\link{BoolToInt}}
+#' \code{\link{StringType}}
 #'
 #' @keywords internal
 #'
@@ -186,7 +221,7 @@ GetClass <- function(class, packages = 'Seurat') {
 #' SeuratDisk:::GuessDType(x = df)
 #' SeuratDisk:::GuessDType(x = df, stype = 'ascii7')
 #'
-#' # Logicals are turned into integers to ensure compatability with Python
+#' # Logicals are turned into integers to ensure compatibility with Python
 #' # TRUE evaluates to 1, FALSE to 0, and NA to 2
 #' SeuratDisk:::GuessDType(x = c(TRUE, FALSE, NA))
 #' }
@@ -208,12 +243,17 @@ GuessDType <- function(x, stype = 'utf8', ...) {
       size = dtype$get_size()
     )
   } else if (inherits(x = dtype, what = 'H5T_LOGICAL')) {
-    dtype <- guess_dtype(x = BoolToInt(x = x), ...)
+    if (getOption(x = "SeuratDisk.dtypes.logical_to_int", default = TRUE)) {
+      dtype <- guess_dtype(x = BoolToInt(x = x), ...)
+    }
   }
   return(dtype)
 }
 
 #' Check the datatype of an HDF5 dataset
+#'
+#' Effectively, an implementation of \code{\link[methods]{is}} for HDF5 datasets;
+#' useful to ensure HDF5 validity for specific file structures
 #'
 #' @param x An HDF5 dataset (object of type \code{\link[hdf5r]{H5D}})
 #' @param dtype A character vector of HDF5 datatype names, must be present in
@@ -226,10 +266,6 @@ GuessDType <- function(x, stype = 'utf8', ...) {
 #' @seealso \code{\link[hdf5r]{h5types}}
 #'
 #' @keywords internal
-#'
-#' @examples
-#' \donttest{
-#' }
 #'
 IsDType <- function(x, dtype) {
   if (!inherits(x = x, what = 'H5D')) {
@@ -258,14 +294,6 @@ IsDType <- function(x, dtype) {
       )
     }
   }
-  # dtype <- vapply(
-  #   X = dtype,
-  #   FUN = function(i) {
-  #     return(class(x = h5types[[i]])[1])
-  #   },
-  #   FUN.VALUE = character(length = 1L),
-  #   USE.NAMES = FALSE
-  # )
   return(inherits(x = x$get_type(), what = dtype))
 }
 
@@ -302,9 +330,14 @@ IsMatrixEmpty <- function(x) {
 
 #' Make a space
 #'
+#' Generate a blank space \code{n} characters long; useful for aligning text to
+#' be printed to console
+#'
 #' @param n Length space should be
 #'
 #' @return A space (' ') of length \code{n}
+#'
+#' @keywords internal
 #'
 #' @examples
 #' \donttest{
@@ -312,13 +345,14 @@ IsMatrixEmpty <- function(x) {
 #' cat('hello', SeuratDisk:::MakeSpace(n = 10), 'world\n', sep = '')
 #' }
 #'
-#' @keywords internal
-#'
 MakeSpace <- function(n) {
   return(paste(rep_len(x = ' ', length.out = n), collapse = ''))
 }
 
 #' Generate an HDF5 string dtype
+#'
+#' Presets for encoding variations of \code{\link[hdf5r]{H5T_STRING}}; used to
+#' generate HDF5 datatype specifications with specific string encodings
 #'
 #' @param stype Type of string encoding to use, choose from:
 #' \describe{
@@ -330,7 +364,15 @@ MakeSpace <- function(n) {
 #'
 #' @importFrom hdf5r h5const H5T_STRING
 #'
+#' @seealso \code{\link[hdf5r]{H5T_STRING}}
+#'
 #' @keywords internal
+#'
+#' @examples
+#' \donttest{
+#' SeuratDisk:::StringType()
+#' SeuratDisk:::StringType('ascii7')
+#' }
 #'
 StringType <- function(stype = c('utf8', 'ascii7')) {
   stype <- match.arg(arg = stype)
