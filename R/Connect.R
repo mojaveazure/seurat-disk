@@ -24,7 +24,7 @@ NULL
 #' @export
 #'
 Connect <- function(filename, type = NULL, mode = c('r', 'r+')) {
-  type <- tolower(x =  mode %||% file_ext(x = filename))
+  type <- tolower(x =  type %||% file_ext(x = filename))
   type <- match.arg(arg = type, choices = c('h5seurat'))
   mode <- match.arg(arg = mode)
   if (!file.exists(filename)) {
