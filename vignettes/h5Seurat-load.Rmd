@@ -159,7 +159,7 @@ Finally, passing `NULL` to `assays` (the default behavior) loads all assays and 
 The second of the main parameters is the `reductions` parameter; this parameter controls which dimensional reductions are loaded. As dimensional reductions are tied to assays, the data request needs to be either associated to a loaded assay or marked as global to be loaded (see details below). For example, trying to load the "pca" reduction with the "Spatial" assay won't work as the "pca" reduction is associated with the "SCT" assay and not marked as global.
 
 ```{r bad_reduc}
-brain2 <- LoadH5Seurat("anterior1.h5Seurat", assays = "SCT", reductions = "pca")
+brain2 <- LoadH5Seurat("anterior1.h5Seurat", assays = "Spatial", reductions = "pca")
 brain2
 ```
 
@@ -197,7 +197,7 @@ brain2
 `AppendData` takes the h5Seurat file, the `Seurat` object generated from `LoadH5Seurat` and uses the four main paramters from `LoadH5Seurat` (`assays`, `reductions`, `graphs`, and `images`). These parameters are used in the same way as `LoadH5Seurat` with one exception: `assays` can now take `FALSE` as a value. By passing `FALSE`, we prevent other assay information from being loaded; this is useful if we only want to add other bits of data to our `Seurat` object. For example, we can choose to add only _global_ dimensional reductions to the already existing `Seurat` object.
 
 ```{r append_partial}
-brain2 <- AppendData("anterior1.h5Seurat", brain2, assays = FALSE, reductions = NA, graphs = FALSE, images = FALSE)
+brain2 <- AppendData("anterior1.h5Seurat", brain2, assays = FALSE, reductions = NA, graphs = FALSE, images = NULL)
 brain2
 ```
 
@@ -205,6 +205,7 @@ The only limits to the number of times `AppendData` can be run is when the `h5Se
 
 ```{r append_parital2}
 brain2 <- AppendData("anterior1.h5Seurat", brain2, assays = "SCT", reductions = FALSE, graphs = FALSE, images = FALSE)
+brain2
 ```
 
 If we want to perform a "full append" (loading all bits of data of a `Seurat` object from an h5Seurat file), we can set the four parameters to `NULL`, which happens to be the default values for these parmaters. This loads the rest of the `Seurat` object from the h5Seurat file into memory.

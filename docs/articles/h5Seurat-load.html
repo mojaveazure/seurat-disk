@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9001</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9002</span>
       </span>
     </div>
 
@@ -246,12 +246,11 @@ brain2
 <span class="co">#&gt;  2 dimensional reductions calculated: pca, umap</span></code></pre></div>
 <p>Finally, passing <code>NULL</code> to <code>assays</code> (the default behavior) loads all assays and all slots.</p>
 <p>The second of the main parameters is the <code>reductions</code> parameter; this parameter controls which dimensional reductions are loaded. As dimensional reductions are tied to assays, the data request needs to be either associated to a loaded assay or marked as global to be loaded (see details below). For example, trying to load the “pca” reduction with the “Spatial” assay won’t work as the “pca” reduction is associated with the “SCT” assay and not marked as global.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="dt">assays =</span> <span class="st">"SCT"</span>, <span class="dt">reductions =</span> <span class="st">"pca"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="dt">assays =</span> <span class="st">"Spatial"</span>, <span class="dt">reductions =</span> <span class="st">"pca"</span>)
 brain2
 <span class="co">#&gt; An object of class Seurat </span>
-<span class="co">#&gt; 17668 features across 2696 samples within 1 assay </span>
-<span class="co">#&gt; Active assay: SCT (17668 features, 3000 variable features)</span>
-<span class="co">#&gt;  1 dimensional reduction calculated: pca</span></code></pre></div>
+<span class="co">#&gt; 31053 features across 2696 samples within 1 assay </span>
+<span class="co">#&gt; Active assay: Spatial (31053 features, 0 variable features)</span></code></pre></div>
 <p>There are three special values the <code>reductions</code> parameter can take: <code>NULL</code> for all dimensional reductions that can be loaded (the default behavior), <code>NA</code> for <em>global</em> dimensional reductions only, or <code>FALSE</code> for no dimensional reduction information.</p>
 <p>The <code>graphs</code> parameter is the third main parameter; this parameter controls which nearest-neighbor graphs to load. Just like dimensional reduction information, nearest-neighbor graphs are tied to assays, and thus are only loaded when their associated assay is loaded as well. There are two special values the <code>graphs</code> parameter can take: <code>NULL</code> for all graphs that can be loaded (the default behavior) or <code>FALSE</code> for no nearest-neighbor graphs.</p>
 <p>The final main parameter is the <code>images</code> parameter; this parameter controls which spatial image data is loaded. All spatial image data are marked global by default, so they are loaded whether or not their associated assays are loaded as well. The <code>images</code> parameter has three special values: <code>NULL</code> for all spatial image data (the default), <code>NA</code> for <em>global</em> spatial image data (typically the same as <code>NULL</code>), or <code>FALSE</code> for no spatial image data.</p>
@@ -275,7 +274,7 @@ brain2
 <span class="co">#&gt; Active assay: SCT (17668 features, 3000 variable features)</span></code></pre></div>
 <p><code>AppendData</code> takes the h5Seurat file, the <code>Seurat</code> object generated from <code>LoadH5Seurat</code> and uses the four main paramters from <code>LoadH5Seurat</code> (<code>assays</code>, <code>reductions</code>, <code>graphs</code>, and <code>images</code>). These parameters are used in the same way as <code>LoadH5Seurat</code> with one exception: <code>assays</code> can now take <code>FALSE</code> as a value. By passing <code>FALSE</code>, we prevent other assay information from being loaded; this is useful if we only want to add other bits of data to our <code>Seurat</code> object. For example, we can choose to add only <em>global</em> dimensional reductions to the already existing <code>Seurat</code> object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/AppendData.html">AppendData</a></span>(<span class="st">"anterior1.h5Seurat"</span>, brain2, <span class="dt">assays =</span> <span class="ot">FALSE</span>, <span class="dt">reductions =</span> <span class="ot">NA</span>, 
-    <span class="dt">graphs =</span> <span class="ot">FALSE</span>, <span class="dt">images =</span> <span class="ot">FALSE</span>)
+    <span class="dt">graphs =</span> <span class="ot">FALSE</span>, <span class="dt">images =</span> <span class="ot">NULL</span>)
 brain2
 <span class="co">#&gt; An object of class Seurat </span>
 <span class="co">#&gt; 17668 features across 2696 samples within 1 assay </span>
@@ -283,7 +282,12 @@ brain2
 <span class="co">#&gt;  1 dimensional reduction calculated: umap</span></code></pre></div>
 <p>The only limits to the number of times <code>AppendData</code> can be run is when the <code>h5Seurat</code> file has run out of data not present in the <code>Seurat</code> object. Otherwise, it can be run multiple times, adding new bits of data to our <code>Seurat</code> object. Here, we fill out the rest of the “SCT” assay, but load no other information</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/AppendData.html">AppendData</a></span>(<span class="st">"anterior1.h5Seurat"</span>, brain2, <span class="dt">assays =</span> <span class="st">"SCT"</span>, <span class="dt">reductions =</span> <span class="ot">FALSE</span>, 
-    <span class="dt">graphs =</span> <span class="ot">FALSE</span>, <span class="dt">images =</span> <span class="ot">FALSE</span>)</code></pre></div>
+    <span class="dt">graphs =</span> <span class="ot">FALSE</span>, <span class="dt">images =</span> <span class="ot">FALSE</span>)
+brain2
+<span class="co">#&gt; An object of class Seurat </span>
+<span class="co">#&gt; 17668 features across 2696 samples within 1 assay </span>
+<span class="co">#&gt; Active assay: SCT (17668 features, 3000 variable features)</span>
+<span class="co">#&gt;  1 dimensional reduction calculated: umap</span></code></pre></div>
 <p>If we want to perform a “full append” (loading all bits of data of a <code>Seurat</code> object from an h5Seurat file), we can set the four parameters to <code>NULL</code>, which happens to be the default values for these parmaters. This loads the rest of the <code>Seurat</code> object from the h5Seurat file into memory.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/AppendData.html">AppendData</a></span>(<span class="st">"anterior1.h5Seurat"</span>, brain2)
 brain2
