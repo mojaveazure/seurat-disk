@@ -261,11 +261,11 @@ as.h5Seurat.Seurat <- function(
     )
   }
   # Add miscellaneous data
-  if (length(x = Misc(object = x))) {
+  for (misc in names(x = Misc(object = x))) {
     WriteH5Group(
-      x = Misc(object = x),
-      name = 'misc',
-      hgroup = hfile,
+      x = Misc(object = x, slot = misc),
+      name = misc,
+      hgroup = hfile[['misc']],
       verbose = verbose
     )
   }
