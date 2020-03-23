@@ -19,5 +19,6 @@ reference:
       - AppendData
   - title: Utility Functions
     contents:
+      - Connect
       - ReadH5
       - WriteH5Group

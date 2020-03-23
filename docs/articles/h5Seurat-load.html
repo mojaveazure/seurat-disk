@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9002</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9003</span>
       </span>
     </div>
 
@@ -133,7 +133,7 @@ brain &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pk
 <p>Unlike most data formats, HDF5 files can be connected to and explored without loading the data into memory. To facilitate this, we’ve built an <a href="https://mojaveazure.github.io/seurat-disk/reference/h5Seurat-class.html"><code>h5Seurat</code> object</a> to serve as an interface to h5Seurat files in R. <code>h5Seurat</code> objects are built off of the <a href="https://hhoeflin.github.io/hdf5r/reference/H5File-class.html"><code>H5File</code> object</a> from <a href="https://hhoeflin.github.io/hdf5r/">hdf5r</a>.</p>
 <p><details><summary><code>h5Seurat</code> objects and R6 classes</summary> One thing to note, <code>h5Seurat</code> and <code>H5File</code> objects are R6 objects. Unlike most R objects (called S3 and S4), and more like objects in Python, R6 objects are <em>encapsulated</em> objects; this means that methods are attached directly to the object instead of to a generic function. <br> In Seurat, most functions take an object as input and return an object as output. These functions actually run differently depending on the class of the object passed to them. For example, <code>RunUMAP</code> has 3 different modes of operation, depending on the type of object that’s passed to it. One can see which objects trigger different routines by using the <a href="https://stat.ethz.ch/R-manual/R-patched/library/utils/html/methods.html"><code>methods</code></a> function. Functions that change behavior are known as “generics” and the exact implementations are known as “methods”; these methods are associated with the generic instead of with the object itself. <br> R6 objects, however, have their methods attached directly to the object. Calling an R6 method is done similarly to data access in R’s S3 and S4 object system: using the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> operator. For example, creating a new Seurat object is done with <code>CreateSeuratObject</code> or <code>new(Class = "Seurat")</code> (for advanced users), while initializing a new <code>h5Seurat</code> object is done with <code>h5Seurat$new()</code> <br> For more details about R6 objects, please see the <a href="https://r6.r-lib.org/">R6 website and documentation</a> </details></p>
 <p>Connecting to an h5Seurat file is as simple as instantiating an <code>h5Seurat</code> object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hfile &lt;-<span class="st"> </span>h5Seurat<span class="op">$</span><span class="kw">new</span>(<span class="dt">filename =</span> <span class="st">"anterior1.h5Seurat"</span>, <span class="dt">mode =</span> <span class="st">"r"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hfile &lt;-<span class="st"> </span><span class="kw"><a href="../reference/Connect.html">Connect</a></span>(<span class="st">"anterior1.h5Seurat"</span>)
 hfile
 <span class="co">#&gt; Class: h5Seurat</span>
 <span class="co">#&gt; Filename: /home/paul/software/seurat-disk/vignettes/anterior1.h5Seurat</span>
