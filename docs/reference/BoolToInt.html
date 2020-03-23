@@ -36,7 +36,18 @@
 
 
 <meta property="og:title" content="Convert a logical to an integer — BoolToInt" />
-<meta property="og:description" content="Convert a logical to an integer" />
+<meta property="og:description" content="Unlike most programming languages, R has three possible logical
+(boolean) values: TRUE, FALSE, and NA;
+moreover, the NA value has representations in other data types, such
+as NA_integer_, NA_real_, and NA_character_. Simply
+writing out the logical values to an HDF5 file would cause issues when trying
+to read the data in to another language, such as Python. To encode these three
+logical values for other languages, we can encode the logicals as integers:
+FALSE becomes 0L
+TRUE becomes 1L
+NA becomes 2L
+This encoding scheme allows other languages to handle NAs in their own
+manner while preserving all three logicals for R" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -69,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9001</span>
       </span>
     </div>
 
@@ -126,7 +137,18 @@
     </div>
 
     <div class="ref-description">
-    <p>Convert a logical to an integer</p>
+    <p>Unlike most programming languages, R has three possible <a href='https://rdrr.io/r/base/logical.html'>logical</a>
+(boolean) values: <code>TRUE</code>, <code>FALSE</code>, and <code><a href='https://rdrr.io/r/base/NA.html'>NA</a></code>;
+moreover, the <code>NA</code> value has representations in other data types, such
+as <code>NA_integer_</code>, <code>NA_real_</code>, and <code>NA_character_</code>. Simply
+writing out the logical values to an HDF5 file would cause issues when trying
+to read the data in to another language, such as Python. To encode these three
+logical values for other languages, we can encode the logicals as integers:</p><ul>
+<li><p><code>FALSE</code> becomes <code>0L</code></p></li>
+<li><p><code>TRUE</code> becomes <code>1L</code></p></li>
+<li><p><code>NA</code> becomes <code>2L</code></p></li>
+</ul><p>This encoding scheme allows other languages to handle <code>NA</code>s in their own
+manner while preserving all three logicals for R</p>
     </div>
 
     <pre class="usage"><span class='fu'>BoolToInt</span>(<span class='no'>x</span>)</pre>
@@ -143,6 +165,10 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>An integer vector</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><a href='https://rdrr.io/r/base/integer.html'>integer</a> <a href='https://rdrr.io/r/base/logical.html'>logical</a> <code><a href='https://rdrr.io/r/base/NA.html'>NA</a></code>
+<code>WriteH5Seurat</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
@@ -155,6 +181,7 @@
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 

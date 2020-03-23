@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9001</span>
       </span>
     </div>
 
@@ -140,7 +140,8 @@
     </tr>
     <tr>
       <th>packages</th>
-      <td><p>A vector of packages to exclude from resulting class information</p></td>
+      <td><p>A vector of packages to exclude from resulting class
+information</p></td>
     </tr>
     </table>
 
@@ -148,12 +149,18 @@
 
     <p>A character vector with the class</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'><a href='https://rdrr.io/pkg/SeuratDisk/man/GetClass.html'>GetClass</a></span>(<span class='st'>'Seurat'</span>)</div><div class='output co'>#&gt; [1] "Seurat"</div><div class='input'><span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'><a href='https://rdrr.io/pkg/SeuratDisk/man/GetClass.html'>GetClass</a></span>(<span class='st'>'Matrix'</span>)</div><div class='output co'>#&gt; [1] "Matrix:Matrix"</div><div class='input'># }
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
