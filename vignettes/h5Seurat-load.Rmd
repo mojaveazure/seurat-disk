@@ -95,7 +95,7 @@ Unlike most data formats, HDF5 files can be connected to and explored without lo
 Connecting to an h5Seurat file is as simple as instantiating an `h5Seurat` object.
 
 ```{r hfile}
-hfile <- h5Seurat$new(filename = "anterior1.h5Seurat", mode = "r")
+hfile <- Connect("anterior1.h5Seurat")
 hfile
 ```
 
