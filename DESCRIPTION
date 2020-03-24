@@ -51,6 +51,7 @@ Collate:
     'SaveH5Seurat.R'
     'h5Seurat_bindings.R'
 Suggests:
+    httr,
     knitr,
     rmarkdown,
     SeuratData

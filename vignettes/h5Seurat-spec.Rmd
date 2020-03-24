@@ -7,33 +7,130 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
   collapse = TRUE,
   comment = "#>"
 )
+library(httr)
 library(hdf5r)
+library(Matrix)
+library(SeuratDisk)
+```
+
+```{r hfile, echo=FALSE}
+hfile <- H5File$new(filename = tempfile(fileext = ".h5"), mode = "a")
+```
+
+```{r link_functions, echo=FALSE}
+arg.match <- function(arg, choices) {
+  arg <- tryCatch(
+    expr = match.arg(arg = arg, choices = choices),
+    error = function(e) {
+      if (sum(grepl(pattern = arg, x = choices)) == 1) {
+        return(grep(pattern = arg, x = choices, value = TRUE))
+      }
+      stop(e$message, "; got ", arg, call. = FALSE)
+    }
+  )
+  return(arg)
+}
+
+hlink <- function(arg) {
+  choices <- c(
+    paste0(
+      unique(x = c(
+        "H5T_COMPOUND",
+        sapply(
+          X = grep(pattern = '^H5T_', x = names(x = h5types), value = TRUE),
+          FUN = function(i) {
+            return(class(x = h5types[[i]])[1])
+          },
+          USE.NAMES = FALSE
+        )
+      )),
+      "-class"
+    )
+  )
+  arg <- arg.match(arg = arg, choices = choices)
+  return(paste0("https://hhoeflin.github.io/hdf5r/reference/", arg, ".html"))
+}
+
+plink <- function(arg) {
+  eth <- function(pkg, f = NULL) {
+    if (is.null(x = f)) {
+      f <- paste0(pkg, "-package")
+    }
+    return(paste0(
+      "https://stat.ethz.ch/R-manual/R-devel/library/",
+      pkg,
+      "/html/",
+      f,
+      ".html"
+    ))
+  }
+  rdrr <- function(pkg, f) {
+    return(paste0("https://rdrr.io/cran/", pkg, "/man/", f, ".html"))
+  }
+  if (grepl(pattern = "-package$", x = arg)) {
+    pkg <- gsub(pattern = "-package$", replacement = "", x = arg)
+  } else if (grepl(pattern = "-class$", x = arg)) {
+    cls <- gsub(pattern = "-class$", replacement = "", x = arg)
+    pkg <- getClass(Class = cls)@package
+  } else {
+    pkg <- grep(pattern = "package", x = getAnywhere(x = arg)$where, value = TRUE)[1]
+    if (is.na(x = pkg)) {
+      stop("not found")
+    }
+    pkg <- gsub(pattern = "^package:", replacement = "", x = pkg)
+  }
+  if (GET(url = eth(pkg = pkg))$status_code == 200L) {
+    return(eth(pkg = pkg,f = arg))
+  }
+  return(rdrr(pkg = pkg, f = arg))
+}
+
+vlink <- function(arg) {
+  choices <- c(
+    "character-representation",
+    "dense-matrix-representation",
+    "sparse-matrix-representation",
+    "factor-representation",
+    "logical-representation",
+    "data-frame-representation",
+    "data-frame-datasets",
+    "data-frame-groups",
+    "generic-s3-object-representation",
+    "generic-s4-object-representation"
+  )
+  arg <- arg.match(arg = arg, choices = choices)
+  return(paste0("#", arg))
+}
 ```
 
 ## Overall File Structure
 
 ### Required Attributes
 
-There are three required top-level HDF5 attributes: `project`, `active.assay`, and `version`. Each of these must be a single [string](#string-representation). The `project` attribute corresponds to the project value of a `Seurat` object; the `active.assay` attribute is the name of the default assay and must be present in the [`assays` group](#assay-expression-data). The `version` corresponds to the version of Seurat that the h5Seurat file is based on.
+There are three required top-level HDF5 attributes: "project", "active.assay", and "version". Each of these must be a single <a href=`r vlink("char")`>character</a>. The "project" attribute corresponds to the project value of a `Seurat` object; the "active.assay" attribute is the name of the default assay and must be present in the <a href="#assay-expression-data">"assays" group</a>. The "version" corresponds to the version of Seurat that the h5Seurat file is based on.
 
 ### Top-Level Datasets and Groups
 
-There are two required top-level HDF5 datasets: `cell.names` and `meta.data`. The `cell.names` dataset should be a one-dimensional [string](#string-representation) dataset, with a length equal to the number of cells present in the data. Cell names are not stored anywhere else in the h5Seurat file.
+There are two required top-level HDF5 datasets: "cell.names" and "meta.data". The "cell.names" dataset should be a one-dimensional <a href=`r vlink("char")`>character</a> dataset, with a length equal to the number of cells present in the data. Cell names are not stored anywhere else in the h5Seurat file.
 
-The `meta.data` dataset contains cell-level metadata. It should be a one-dimensional [HDF5 compound type](#data-frame-representation), with a length equal to the number of cells present in the data. Each component dataset in the compound corresponds to a column of metadata information (eg. number of UMIs per cell/`nFeature`) and should be a one-dimensional dataset corresponding to the nearest R type.
+The "meta.data" dataset contains cell-level metadata. It should be stored as either an <a href=`r vlink("data-frame-rep")`>HDF5 dataset or group</a>, depending on the contents of the meta data. See the <a href=`r vlink("data-frame-rep")`>data frame representation</a> for more details.
 
 ## Assay Expression Data
 
-`Assay` objects are stored in the top-level group `assays`; each assay is stored as its own group within the `assays` group.
+<a href=`r plink("Assay-class")`>`Assay`</a> objects are stored in the top-level group "assays"; each assay is stored as its own group within the "assays" group.
 
 ## Dimensional Reductions
 
 ## Nearest-Neighbor Graphs
+
+<a href=`r plink("Graph-class")`>Nearest-neighbor graphs</a> are stored in the top-level group "graphs"; each graph is stored as its own group within the "graphs" group. Graph names become graph group names. Graphs are stored as <a href=`r vlink("sparse")`>sparse matrices</a> with an additional HDF5 attribute: "assay.used". This HDF5 attribute should be a single <a href=`r vlink("char")`>character</a> value.
 
 ## Spatial Image Data
 
@@ -47,25 +144,156 @@ The `meta.data` dataset contains cell-level metadata. It should be a one-dimensi
 
 ## Common Data Structures
 
-### String Representation
+Some data types are found commonly throughout `Seurat` objects
 
-All string values should be encoding as variable-length UTF-8 characters
+### Character Representation
+
+All <a href=`r plink("character")`>character</a> values (strings in other languages) should be encoding as variable-length UTF-8 strings; this applies to HDF5 datasets (including standalone <a href=`r hlink("STRING")`>string</a> datasets as well as parts of <a href=`r hlink("COMPOUND")`>compound</a> datasets) and HDF5 attributes.
 
 ```{r utf8, echo=FALSE}
-H5T_STRING$new(size = Inf)$set_cset(cset = h5const$H5T_CSET_UTF8)
+SeuratDisk:::StringType(stype = "utf8")
 ```
 
 ### Dense Matrix Representation
 
+Dense matrices should be stored as a two-dimensional dataset of any type. Datasets should be written in a [column-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order) order. For column-major implementations (eg. R, Fortran), dataset dimensions on-disk should be the same as dimensions in-memory (eg. $m_{diskrow} x n_{diskcol} \sim m_{memrow} x n_{memcol}$). For row-major implmentations (eg. C/C++, Python), dataset dimensions on-disk should appear _transposed_ to dimensions in-memory (eg. $m_{diskrow} x n_{diskcol} \sim n_{memrow} x m_{memcol}$); row-major implmemetnations transpose datasets prior to reading and writing data.
+
+```{r densemat, echo=FALSE}
+vals <- c(0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0)
+mat <- matrix(data = vals, nrow = 3)
+WriteH5Group(x = mat, name = "densemat", hgroup = hfile, verbose = FALSE)
+mat
+hfile[["densemat"]]
+hfile[["densemat"]][,]
+```
+
 ### Sparse Matrix Representation
+
+Sparse matrices are stored as an HDF5 group with three datasets: "indices", "indptr", and "data"; the "indices" and "data" datasets must be the same length. "data" represents each non-zero element of the matrix. "indices" represents the $0$-based row numbers for each value in "data"
+
+```{r sparsemat, echo=FALSE}
+mat <- Matrix(data = vals, nrow = 3, sparse = TRUE)
+WriteH5Group(x = mat, name = "sparsemat", hgroup = hfile, verbose = FALSE)
+mat
+hfile[["sparsemat"]]
+hfile[["sparsemat/indices"]]
+hfile[["sparsemat/indices"]][]
+hfile[["sparsemat/data"]]
+hfile[["sparsemat/data"]][]
+```
+
+"indptr" represents the points in "data" at which a new column is started. This dataset is $0$-based and should be $n_{columns} + 1$ in length.
+
+```{r sparsemat_indptr, echo=FALSE}
+hfile[["sparsemat/indptr"]]
+hfile[["sparsemat/indptr"]][]
+```
+
+The "indices", "indptr", and "data" datasets correspond to the "i", "p", and "x" slots in a <a href=`r plink("dgCMatrix-class")`>`dgCMatrix`</a>, respectively.
+
+There may optionally be an HDF5 attribute called "dims"; this attribute should be a two <a href=`r hlink("INTEGER")`>integer</a> values corresponding to the number of rows and number of columns, in that order, in the sparse matrix.
+
+```{r sparsemat_dims, echo=FALSE}
+hfile[["sparsemat"]]$attr_open(attr_name = "dims")$read()
+```
 
 ### Factor Representation
 
+<a href=`r plink("factor")`>Factors</a> should be stored as an HDF5 group with two datasets: "levels" and "values"
+
 ```{r factor, echo=FALSE}
+fctr <- factor(x = c("g1", "g2", "g1", "g1", "g2"))
+WriteH5Group(x = fctr, name = "factor", hgroup = hfile, verbose = FALSE)
+fctr
+hfile[["factor"]]
 ```
+
+The "levels" dataset should be a <a href=`r vlink("char")`>character</a> dataset with one entry per <a href=`r plink("levels")`>level</a>
+
+```{r factor_levels, echo=FALSE}
+hfile[["factor/levels"]]
+hfile[["factor/levels"]][]
+```
+
+The "values" dataset should be an integer dataset with one entry per value in the original factor. These integers should correspond to the factor level they had in R
+
+```{r factor_values, echo=FALSE}
+hfile[["factor/values"]]
+hfile[["factor/values"]][]
+```
+
+The number of unique entries in "values" should not exceed the number of unique entries in "levels"
+
+<details>
+  <summary>Rationale</summary>
+  Storing factors in this manner seems excessive from an R perspective. HDF5 has the concept of <a href=`r hlink("ENUM")`>enumerated datasets (enums)</a> which are an efficient way to store R factors on-disk. However, [some implementations of HDF5 do not support enums](http://docs.h5py.org/en/stable/special.html#enumerated-types) and thus lose factor level information. In order to make h5Seurat as cross-language as possible, we’ve opted to store factors as HDF5 groups instead of HDF5 enums.
+</details>
+
+### Logical Representation
+
+<a href=`r plink("logical")`>Logical</a> values (booleans in other languages) are encoded as integers in the following manner: `FALSE` is encoded as `0`, `TRUE` is encoded as `1`, and `NA` is encoded as `2`
+
+```{r logicals, echo=FALSE}
+vals <- c(TRUE, FALSE, NA)
+WriteH5Group(x = vals, name = "logicals", hgroup = hfile, verbose = FALSE)
+vals
+hfile[["logicals"]]
+hfile[["logicals"]][]
+```
+
+An optional HDF5 attribute named "s3class" with the value "logical" is allowed to enforce reading in the dataset as logical values. This HDF5 attribute is a single <a href=`r vlink("char")`>character</a> value.
+
+<details>
+  <summary>Rationale</summary>
+  Unlike most languages, <a href=`r plink("logical")`>logicals</a> (or booleans) can take one of _three_ values: `TRUE`, `FALSE`, or [`NA`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/NA.html); as such, an extra integer value is needed to handle the additional logical value. Typically, these values are stored as <a href=`r hlink("ENUM")`>enums</a> with mappings between the logical representation and integer value. However, [some implementations of HDF5 do not support enums](http://docs.h5py.org/en/stable/special.html#enumerated-types) and thus lose the logical representation. Since the mappings are lost, all logicals are stored as integers instead.
+</details>
 
 ### Data Frame Representation
 
-`data.frames` should be stored 
+There are two ways of storing <a href=`r plink("data.frame")`>data frames</a> in h5Seurat files: as <a href=`r vlink("datasets")`>datasets</a> or as <a href=`r vlink("groups")`>groups</a>. Data frame groups are required when data frames contain <a href=`r plink("factor")`>factors</a>; if no factors are present, data frames can be stored in either type.
+
+<details>
+  <summary>Rationale</summary>
+  <a href=`r vlink("factor")`>Storing factors</a> on-disk in an HDF5 file poses a unique set of challenges. Namely, <a href=`r hlink("ENUM")`>enumerated datasets (enums)</a>, which are an ideal method of storing mapping values, [are not supported in some implementations of HDF5](http://docs.h5py.org/en/stable/special.html#enumerated-types). As factor level information is lost under implementations that do not support HDF5 enums, we need a method of storing factors in a cross-language manner. Two options were presented: groups or <a href=`r hlink("COMPOUND")`>compound datasets</a>. While the former seems excessive, the latter presents issues with unequal dataset length. Therefore, to accomodate factor level information in data frames, we utilize HDF5 groups to store data frames when one or more columns are <a href=`r plink("factor")`>factors</a>.
+</details>
+
+#### Data Frame Datasets
+
+Data frames stored as datasets should be a one-dimensional <a href=`r hlink("COMPOUND")`>compound dataset</a>. The single dimension should be equal to the number of observations (number of rows) in the data frame. Each data type in the compound dataset must adhere to the same requirements as standard datasets (eg. <a href=`r vlink("char")`>character encodings</a>, <a href=`r vlink("log")`>logical mapping</a>, etc). The compound labels should correspond to the data frame column names.
+
+```{r dfdataset, echo=FALSE}
+df <- data.frame(
+  x = c("g1", "g1", "g2", "g1", "g2"),
+  y = 1:5,
+  stringsAsFactors = FALSE
+)
+df
+WriteH5Group(x = df, name = "dfdataset", hgroup = hfile)
+hfile[["dfdataset"]]
+hfile[["dfdataset"]][]
+```
+
+Row names are not stored with the dataset itself, but may be stored elsewhere in the h5Seurat file, typically named `dataset_name.row.names`; an optional HDF5 attribute called "logicals" containing the names of <a href=`r plink("logical")`>logical</a> columns is allowed. This attribute consists of <a href=`r vlink("char")`>character values</a>.
+
+#### Data Frame Groups
+
+Data frames stored as groups are used when <a href=`r plink("factor")`>factors</a> are present in the data frame. Within the data frame group, there should be one dataset or group per column. Columns that are factors are <a href=`r vlink("factor")`>stored as groups</a> while all other columns are stored as one-dimensional datasets. Each dataset within the group must adhere to the same requirements as standard datasets (eg. <a href=`r vlink("char")`>character encodings</a>, <a href=`r vlink("log")`>logical mapping</a>, etc). The names of the datasets within the group correspond to the data frame column names
+
+```{r dfgroup, echo=FALSE}
+df$x <- factor(x = df$x)
+WriteH5Group(x = df, name = "dfgroup", hgroup = hfile)
+hfile[["dfgroup"]]
+```
+
+Data frame row names may be stored in a dataset called "row.names" within the group; this dataset should be a one-dimensional <a href=`r vlink("char")`>character</a> dataset. There are two optional attributes allowed: "colnames" and "logicals"; the "colnames" attribute contains the column names in the same order as was present in the in-memory <a href=`r plink("data.frame")`>data frame</a> as <a href=`r vlink("char")`>character values</a>. This is used to control column order when reading the data frame back into memory. Note, the "colnames" attribute does not need to contain the name of every dataset.
+
+The "logicals" attribute contains the names of <a href=`r plink("logical")`>logical</a> columns; this attribute should consist of <a href=`r vlink("char")`>character values</a>.
+
+### Generic S3 Object Representation
 
 ### Generic S4 Object Representation
+
+```{r cleanup, echo=FALSE, results='hide'}
+hfile$close_all()
+file.remove(hfile$filename)
+```

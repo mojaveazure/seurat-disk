@@ -2,7 +2,7 @@
 % Please edit documentation in R/WriteH5Group.R
 \name{BasicWrite}
 \alias{BasicWrite}
-\title{Write data to an HDF5 dataset}
+\title{Write lists and other data to an HDF5 dataset}
 \usage{
 BasicWrite(x, name, hgroup, verbose = TRUE)
 }
@@ -20,6 +20,6 @@ from hdf5r)}
 Invisibly returns \code{NULL}
 }
 \description{
-Write data to an HDF5 dataset
+Write lists and other data to an HDF5 dataset
 }
 \keyword{internal}

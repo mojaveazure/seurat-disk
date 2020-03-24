@@ -53,7 +53,14 @@ from hdf5r)}
 Invisibly returns \code{NULL}
 }
 \description{
-Write data to an HDF5 group
+Writing data to HDF5 files can be done simply with usually sensible defaults.
+However, when wanting any semblance of control over how an R object is
+written out, the code constructs get complicated quickly. \code{WriteH5Group}
+provides a wrapper with sensible defaults over some of these complex code
+constructs to provide greater control over how data are written to disk.
+These defaults were chosen to fit best with \link{h5Seurat} files, see
+\code{\href{../doc/h5Seurat-spec.html}{vignette("h5Seurat-spec")}} for more
+details
 }
 \examples{
 \donttest{
@@ -92,6 +99,18 @@ hfile[['df.factor']]
 fctr <- factor(x = c('g1', 'g1', 'g2', 'g1', 'g2'))
 WriteH5Group(x = fctr, name = 'factor', hgroup = hfile)
 hfile[['factor']]
+}
+
+\donttest{
+# Logicals get encoded as integers with the following mapping
+# FALSE becomes 0L
+# TRUE becomes 1L
+# NA becomes 2L
+# These are stored as H5T_INTEGERS instead of H5T_LOGICALS
+# Additionally, an attribute called "s3class" is written with the value of "logical"
+WriteH5Group(c(TRUE, FALSE, NA), name = "logicals", hgroup = hfile)
+hfile[["logicals"]]
+hfile[["logicals"]]$attr_open("s3class")$read()
 }
 
 \donttest{

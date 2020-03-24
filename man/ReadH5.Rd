@@ -84,5 +84,5 @@ HDF5 allows storing data in an arbitrary fashion, which makes reading data
 into memory a hassle. The methods here serve as convenience functions for
 reading data stored in a certain format back into a certain R object. For
 details regarding how data should be stored on disk, please see the
-\url{h5Seurat file specification}.
+\href{../doc/h5Seurat-spec.html}{h5Seurat file specification}.
 }

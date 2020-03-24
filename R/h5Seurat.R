@@ -294,7 +294,8 @@ h5Seurat <- R6Class(
           stop("Cell-level metadata must be a data frame", call. = FALSE)
         }
       } else if (private$is.data(name = 'meta.data', type = 'H5Group')) {
-        warning("Validation for group meta data not yet implemented", call. = FALSE, immediate. = TRUE)
+        # warning("Validation for group meta data not yet implemented", call. = FALSE, immediate. = TRUE)
+        ''
       } else {
         stop("Cannot find cell-level metadata")
       }

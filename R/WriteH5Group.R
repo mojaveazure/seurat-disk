@@ -1,7 +1,8 @@
+#' @include zzz.R
+#' @importFrom methods setOldClass setClassUnion setGeneric setMethod slotNames
+#' slot tryNew
 #' @importFrom Seurat GetAssayData Key VariableFeatures Misc Embeddings Loadings
 #' DefaultAssay IsGlobal Stdev JS
-#' @importFrom methods setOldClass setClassUnion setGeneric setMethod
-#' slotNames slot tryNew
 #'
 NULL
 
@@ -9,7 +10,7 @@ NULL
 # Internal utility functions
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#' Write data to an HDF5 dataset
+#' Write lists and other data to an HDF5 dataset
 #'
 #' @inheritParams WriteH5Group
 #'
@@ -18,7 +19,9 @@ NULL
 #' @keywords internal
 #'
 BasicWrite <- function(x, name, hgroup, verbose = TRUE) {
-  if (is.list(x = x) && !is.data.frame(x = x)) {
+  if (is.data.frame(x = x)) {
+    WriteH5Group(x = x, name = name, hgroup = hgroup, verbose = verbose)
+  } else if (is.list(x = x)) {
     xgroup <- hgroup$create_group(name = name)
     for (i in seq_along(along.with = x)) {
       WriteH5Group(
@@ -42,7 +45,7 @@ BasicWrite <- function(x, name, hgroup, verbose = TRUE) {
         dtype = GuessDType(x = class(x = x)[1])
       )
     }
-  } else {
+  } else if (!is.null(x = x)) {
     hgroup$create_dataset(name = name, robj = x, dtype = GuessDType(x = x))
   }
   return(invisible(x = NULL))
@@ -121,10 +124,19 @@ SparseWrite <- function(x, name, hgroup, verbose = TRUE) {
 }
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-# WriteH5Group definitions
+# WriteH5Group generic
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #' Write data to an HDF5 group
+#'
+#' Writing data to HDF5 files can be done simply with usually sensible defaults.
+#' However, when wanting any semblance of control over how an R object is
+#' written out, the code constructs get complicated quickly. \code{WriteH5Group}
+#' provides a wrapper with sensible defaults over some of these complex code
+#' constructs to provide greater control over how data are written to disk.
+#' These defaults were chosen to fit best with \link{h5Seurat} files, see
+#' \code{\href{../doc/h5Seurat-spec.html}{vignette("h5Seurat-spec")}} for more
+#' details
 #'
 #' @param x An object
 #' @param name Name to save data as
@@ -155,6 +167,10 @@ setGeneric(
   },
   signature = c('x')
 )
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# WriteH5Group definitions
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #' @rdname WriteH5Group
 #'
@@ -337,6 +353,14 @@ setMethod(
       FUN.VALUE = logical(length = 1L),
       USE.NAMES = FALSE
     )
+    bool.cols <- vapply(
+      X = colnames(x = x),
+      FUN = function(i) {
+        return(is.logical(x = x[, i, drop = TRUE]))
+      },
+      FUN.VALUE = logical(length = 1L),
+      USE.NAMES = FALSE
+    )
     if (any(factor.cols)) {
       xgroup <- hgroup$create_group(name = name)
       for (i in colnames(x = x)) {
@@ -352,9 +376,30 @@ setMethod(
         robj = intersect(x = colnames(x = x), y = names(x = xgroup)),
         dtype = GuessDType(x = colnames(x = x))
       )
+      if (any(bool.cols)) {
+        xgroup$create_attr(
+          attr_name = 'logicals',
+          robj = intersect(x = colnames(x = x)[bool.cols], y = names(x = xgroup)),
+          dtype = GuessDType(x = colnames(x = x))
+        )
+      }
     } else {
-      BasicWrite(x = x, name = name, hgroup = hgroup, verbose = verbose)
+      for (i in colnames(x = x)[bool.cols]) {
+        x[[i]] <- BoolToInt(x = x[[i]])
+      }
+      hgroup$create_dataset(name = name, robj = x, dtype = GuessDType(x = x))
+      if (any(bool.cols)) {
+        hgroup[[name]]$create_attr(
+          attr_name = 'logicals',
+          robj = intersect(
+            x = colnames(x = x)[bool.cols],
+            y = hgroup[[name]]$get_type()$get_cpd_labels()
+          ),
+          dtype = GuessDType(x = colnames(x = x))
+        )
+      }
     }
+    return(invisible(x = NULL))
   }
 )
 
@@ -526,6 +571,19 @@ setMethod(
 
 #' @rdname WriteH5Group
 #'
+#' @examples
+#' \donttest{
+#' # Logicals get encoded as integers with the following mapping
+#' # FALSE becomes 0L
+#' # TRUE becomes 1L
+#' # NA becomes 2L
+#' # These are stored as H5T_INTEGERS instead of H5T_LOGICALS
+#' # Additionally, an attribute called "s3class" is written with the value of "logical"
+#' WriteH5Group(c(TRUE, FALSE, NA), name = "logicals", hgroup = hfile)
+#' hfile[["logicals"]]
+#' hfile[["logicals"]]$attr_open("s3class")$read()
+#' }
+#'
 setMethod(
   f = 'WriteH5Group',
   signature = c('x' = 'logical'),
@@ -536,6 +594,12 @@ setMethod(
       hgroup = hgroup,
       verbose = verbose
     )
+    hgroup[[name]]$create_attr(
+      attr_name = 's3class',
+      robj = 'logical',
+      dtype = GuessDType(x = 'logical')
+    )
+    return(invisible(x = NULL))
   }
 )
 

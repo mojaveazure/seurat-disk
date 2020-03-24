@@ -35,7 +35,6 @@ NULL
 #'
 #' @export
 #'
-#'
 AppendData <- function(
   file,
   object,
