@@ -287,6 +287,14 @@ as.sparse.H5Group <- function(x, ...) {
       stop("'", i, "' must be integer values", call. = FALSE)
     }
   }
+  if (x$attr_exists(attr_name = 'dims')) {
+    return(sparseMatrix(
+      i = x[['indices']][] + 1,
+      p = x[['indptr']][],
+      x = x[['data']][],
+      dims = h5attr(x = x, which = 'dims')
+    ))
+  }
   if (x$attr_exists(attr_name = 'h5sparse_shape')) {
     return(sparseMatrix(
       i = x[['indices']][] + 1,

@@ -112,6 +112,11 @@ SparseWrite <- function(x, name, hgroup, verbose = TRUE) {
       dtype = GuessDType(x = ds.i)
     )
   }
+  xgroup$create_attr(
+    attr_name = 'dims',
+    robj = dim(x = x),
+    dtype = GuessDType(dim(x = x))
+  )
   return(invisible(x = NULL))
 }
 
