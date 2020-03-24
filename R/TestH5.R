@@ -59,15 +59,29 @@ setMethod(
   f = 'IsFactor',
   signature = c('x' = 'H5Group'),
   definition = function(x) {
-    slots <- c('levels', 'values')
-    check <- vapply(
-      X = slots,
-      FUN = function(i) {
-        return(x$exists(name = i) && inherits(x = x[[i]], what = 'H5D'))
-      },
-      FUN.VALUE = logical(length = 1L),
-      USE.NAMES = FALSE
+    check <- x$exists(name = 'levels') && IsDType(
+      x = x[['levels']],
+      dtype = 'H5T_STRING'
     )
+    check <- c(
+      check,
+      x$exists(name = 'values') && IsDType(
+        x = x[['values']],
+        dtype = 'H5T_INTEGER'
+      )
+    )
+    if (all(check)) {
+      check <- vapply(
+        X = c('levels', 'values'),
+        FUN = function(i) {
+          return(length(x = x[[i]]$dims) == 1)
+        },
+        FUN.VALUE = logical(length = 1L)
+      )
+    }
+    if (all(check)) {
+      check <- length(x = unique(x = x[['values']]$read())) <= x[['levels']]$dims
+    }
     return(all(check))
   }
 )

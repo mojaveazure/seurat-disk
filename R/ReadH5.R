@@ -9,7 +9,7 @@ NULL
 #' into memory a hassle. The methods here serve as convenience functions for
 #' reading data stored in a certain format back into a certain R object. For
 #' details regarding how data should be stored on disk, please see the
-#' [h5Seurat file specification]().
+#' \href{../doc/h5Seurat-spec.html}{h5Seurat file specification}.
 #'
 #' @param x An HDF5 dataset or group
 #' @param ... Arguments passed to other methods
@@ -53,6 +53,18 @@ as.data.frame.H5D <- function(x, row.names = NULL, optional = FALSE, ...) {
   if (!optional) {
     colnames(x = df) <- make.names(names = x$get_type()$get_cpd_labels())
   }
+  if (x$attr_exists(attr_name = 'logicals')) {
+    bool.cols <- intersect(
+      x = h5attr(x = x, which = 'logicals'),
+      y = colnames(x = df)
+    )
+    for (i in bool.cols) {
+      bools <- df[, i, drop = TRUE]
+      bools[bools == 2] <- NA_integer_
+      bools <- as.logical(x = bools)
+      df[[i]] <- bools
+    }
+  }
   return(df)
 }
 
@@ -87,9 +99,18 @@ as.data.frame.H5Group <- function(x, row.names = NULL, optional = FALSE, ...) {
   }
   df <- vector(mode = 'list', length = length(x = df.names))
   names(x = df) <- df.names
+  bool.cols <- if (x$attr_exists(attr_name = 'logicals')) {
+    intersect(x = h5attr(x = x, which = 'logicals'), y = colnames(x = df))
+  } else {
+    character(length = 0L)
+  }
   for (i in df.names) {
     if (inherits(x = x[[i]], what = 'H5D')) {
-      df[[i]] <- x[[i]][]
+      df[[i]] <- if (i %in% bool.cols) {
+        as.logical(x = x[[i]])
+      } else {
+        x[[i]][]
+      }
     } else if (inherits(x = x[[i]], what = 'H5Group')) {
       df[[i]] <- as.factor(x = x[[i]])
     } else {
@@ -125,8 +146,8 @@ setMethod(
     }
     values <- x[['values']][]
     levels <- x[['levels']][]
-    if (length(x = unique(x = na.omit(object = values))) != length(x = levels)) {
-      stop("Mismatch between unique values and number of levels", call. = FALSE)
+    if (length(x = unique(x = na.omit(object = values))) > length(x = levels)) {
+      stop("Too many values for levels provided", call. = FALSE)
     }
     return(factor(x = levels[values], levels = levels))
   }
