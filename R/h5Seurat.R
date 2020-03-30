@@ -49,6 +49,7 @@ h5Seurat <- R6Class(
       if (!grepl(pattern = version.regex, x = version)) {
         stop("Invalid version specification: ", version, call. = FALSE)
       }
+      ClosestVersion(query = version, targets = private$versions)
       if (self$attr_exists(attr_name = 'version')) {
         self$attr_delete(attr_name = 'version')
       }

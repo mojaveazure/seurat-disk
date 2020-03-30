@@ -184,6 +184,26 @@ as.h5Seurat.Seurat <- function(
     }
   }
   hfile <- h5Seurat$new(filename = filename, mode = 'w')
+  # Set the version
+  object.version <- as.character(x = slot(object = x, name = 'version'))
+  tryCatch(
+    expr = hfile$set.version(version = object.version),
+    error = function(err) {
+      file.remove(hfile$filename)
+      test.message <- paste0(
+        "All target versions greater than query version (",
+        object.version,
+        ")"
+      )
+      if (err$message == test.message) {
+        stop(
+          "Object too old to save, please update your Seurat object to at least v3.1.2 using UpdateSeuratObject",
+          call. = FALSE
+        )
+      }
+      stop(err$message, call. = FALSE)
+    }
+  )
   # Add Assays
   for (assay in Assays(object = x)) {
     WriteH5Group(
@@ -217,11 +237,9 @@ as.h5Seurat.Seurat <- function(
       verbose = verbose
     )
   }
-  # Add attributes for project, default assay, and version
+  # Add attributes for project and default assay
   Project(object = hfile) <- Project(object = x)
   DefaultAssay(object = hfile) <- DefaultAssay(object = x)
-  object.version <- as.character(x = slot(object = x, name = 'version'))
-  hfile$set.version(version = object.version)
   # Add Images
   if (package_version(x = object.version) >= package_version(x = '3.1.4.9900')) {
     # Older versions of Seurat don't have Images, call directly instead
