@@ -49,7 +49,7 @@ deps <- deps[deps != "R"]
 ```
 
 ```{r parse.version, echo=FALSE}
-pkg.version <- packageVersion(pkg)
+pkg.version <- package_version(x = description[1, 'Version'])
 stage <- if (pkg.version >= package_version(x = "1.0.0")) {
   "stable"
 } else if (pkg.version >= package_version(x = "0.1.0")) {
@@ -60,7 +60,7 @@ stage <- if (pkg.version >= package_version(x = "1.0.0")) {
 color <- c("experimental" = "orange", "maturing" = "blue", "stable" = "brightgreen")[stage]
 ```
 
-# `r pkg` v`r packageVersion(pkg)`
+# `r pkg` v`r pkg.version`
 
 <!-- badges: start -->
 [![CRAN/METACRAN](https://img.shields.io/cran/v/`r pkg`)](`r paste0(cran.cannoncial, pkg)`)
