@@ -57,6 +57,16 @@ setMethod(
 #'
 setMethod(
   f = 'IsFactor',
+  signature = c('x' = 'H5D'),
+  definition = function(x) {
+    return(FALSE)
+  }
+)
+
+#' @rdname TestH5
+#'
+setMethod(
+  f = 'IsFactor',
   signature = c('x' = 'H5Group'),
   definition = function(x) {
     check <- x$exists(name = 'levels') && IsDType(
