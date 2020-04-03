@@ -16,22 +16,38 @@ NULL
 #'  \item{r}{Open existing dataset in read-only mode}
 #'  \item{r+}{Open existing dataset in read/write mode}
 #' }
+#' @param force Force a connection if validation steps fail; returns a
+#' \code{\link[hdf5r]{H5File}} object
 #'
 #' @return An object of class \code{type}, opened in mode \code{mode}
 #'
-#' @importFrom tools file_ext
+#' @importFrom hdf5r H5File
 #'
 #' @export
 #'
-Connect <- function(filename, type = NULL, mode = c('r', 'r+')) {
-  type <- tolower(x =  type %||% file_ext(x = filename))
-  type <- match.arg(arg = type, choices = c('h5seurat'))
+Connect <- function(
+  filename,
+  type = NULL,
+  mode = c('r', 'r+'),
+  force = FALSE
+) {
+  type <- type %||% FileType(file = filename)
   mode <- match.arg(arg = mode)
   if (!file.exists(filename)) {
     stop("Cannot find ", type, " file ", filename, call. = FALSE)
   }
-  return(switch(
-    EXPR = type,
-    'h5seurat' = h5Seurat$new(filename = filename, mode = mode)
+  return(tryCatch(
+    expr = switch(
+      EXPR = type,
+      'h5seurat' = h5Seurat$new(filename = filename, mode = mode),
+      stop("Unknown file type: ", type, call. = FALSE)
+    ),
+    error = function(err) {
+      if (!force) {
+        stop(err$message, call. = FALSE)
+      }
+      warning(err$message, call. = FALSE, immediate. = TRUE)
+      return(H5File$new(filename = filename, mode = mode))
+    }
   ))
 }
