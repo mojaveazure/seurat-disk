@@ -1,4 +1,5 @@
 #' @importFrom rlang %||%
+#' @importFrom hdf5r H5T_COMPOUND
 #' @importFrom methods setOldClass
 #'
 NULL
@@ -82,6 +83,40 @@ BoolToInt <- function(x) {
   return(x)
 }
 
+#' Generate chunk points
+#'
+#' @param dsize Size of data being chunked
+#' @param csize Size of chunk; if \code{NA}, assumes single chunk
+#'
+#' @return A matrix where each row is a chunk, column 1 is start points, column
+#' 2 is end points
+#'
+#' @examples
+#' \donttest{
+#' SeuratDisk:::ChunkPoints(100, 3)
+#' SeuratDisk:::ChunkPoints(100, NA)
+#' }
+#'
+ChunkPoints <- function(dsize, csize) {
+  if (is.na(x = csize)) {
+    return(matrix(
+      data = c(1, dsize),
+      ncol = 2,
+      dimnames = list(NULL, c('start', 'end'))
+    ))
+  }
+  return(t(x = vapply(
+    X = seq.default(from = 1L, to = ceiling(dsize / csize)),
+    FUN = function(i) {
+      return(c(
+        start = (csize * (i - 1L)) + 1L,
+        end = min(csize * i, dsize)
+      ))
+    },
+    FUN.VALUE = numeric(length = 2L)
+  )))
+}
+
 #' Find the closest version
 #'
 #' API changes happen at set versions, and knowing how a current running version
@@ -152,6 +187,91 @@ ClosestVersion <- function(
   return(as.character(x = targets[index]))
 }
 
+#' Convert an HDF5 compound dataset to a group
+#'
+#' @param src An HDF5 dataset (\code{\link[hdf5r]{H5D}}) of type
+#' \code{\link[hdf5r]{H5T_COMPOUND}}
+#' @param dest An HDF5 file (\code{\link[hdf5r]{H5File}}) or group
+#' (\code{\link[hdf5r]{H5Group}})
+#' @param dst.name Name of group in \code{dest}
+#' @param order Name of HDF5 attribute to store column order as
+#' @param index Integer values of which values to pull; defaults to all values
+#' @param overwrite Overwrite existing group \code{dst.name} in \code{dest}
+#'
+#' @return Invisibly returns \code{NULL}
+#'
+#'
+#' @keywords internal
+#'
+CompoundToGroup <- function(
+  src,
+  dest,
+  dst.name = basename(path = src$get_obj_name()),
+  order = c('colnames', 'column-order'),
+  index = NULL,
+  overwrite = FALSE
+) {
+  order <- match.arg(arg = order)
+  if (!IsDType(src, 'H5T_COMPOUND')) {
+    stop("'src' must be an HDF5 compound dataset", call. = FALSE)
+  } else if (!inherits(x = dest, what = c('H5File', 'H5Group'))) {
+    stop("'dest' must be a HDF5 file or group", call. = FALSE)
+  }
+  if (dest$exists(name = dst.name)) {
+    if (overwrite) {
+      dest$link_delete(name = dst.name)
+    } else {
+      stop(dst.name, " already exists in the destination", call. = FALSE)
+    }
+  }
+  index <- index %||% seq.default(from = 1, to = src$dims)
+  group <- dest$create_group(name = dst.name)
+  cpd <- src$get_type()
+  for (i in seq_along(along.with = cpd$get_cpd_labels())) {
+    name <- cpd$get_cpd_labels()[i]
+    dtype <- cpd$get_cpd_types()[[i]]
+    group$create_dataset(
+      name = name,
+      robj = unlist(
+        x = src$read_low_level(mem_type = H5T_COMPOUND$new(
+          labels = name,
+          dtypes = dtype
+        )),
+        use.names = FALSE
+      )[index],
+      dtype = dtype
+    )
+  }
+  group$create_attr(
+    attr_name = order,
+    robj = cpd$get_cpd_labels(),
+    dtype = GuessDType(x = cpd$get_cpd_labels())
+  )
+  return(invisible(x = NULL))
+}
+
+#' Determine a filetype based on its extension
+#'
+#' @param file Name of file
+#'
+#' @return The extension, all lowercase
+#'
+#' @importFrom tools file_ext
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \donttest{
+#' SeuratDisk:::FileType('pbmc3k.h5Seurat')
+#' SeuratDisk:::FileType('h5ad')
+#' }
+#'
+FileType <- function(file) {
+  ext <- file_ext(x = file)
+  ext <- ifelse(test = nchar(x = ext), yes = ext, no = basename(path = file))
+  return(tolower(x = ext))
+}
+
 #' Get a class string with package information
 #'
 #' S4 classes are useful in the context of their defining package (benefits of
@@ -201,7 +321,7 @@ GetClass <- function(class, packages = 'Seurat') {
 #'
 #' @return An object of class \code{\link[hdf5r]{H5T}}
 #'
-#' @importFrom hdf5r guess_dtype H5T_COMPOUND
+#' @importFrom hdf5r guess_dtype
 #'
 #' @seealso \code{\link[hdf5r]{guess_dtype}} \code{\link{BoolToInt}}
 #' \code{\link{StringType}}
@@ -349,6 +469,38 @@ MakeSpace <- function(n) {
   return(paste(rep_len(x = ' ', length.out = n), collapse = ''))
 }
 
+#' Create a progress bar
+#'
+#' Progress bars are useful ways of getting updates on how close a task is to
+#' completion. However, they can get in the way of RMarkdown documents with
+#' lots of unnecesssary printing. \code{PB} is a convenience function that
+#' creates progress bars with the following defaults
+#' \itemize{
+#'  \item \code{char = '='}
+#'  \item \code{style = 3}
+#'  \item \code{file = stderr()}
+#' }
+#'
+#' @return An object of class \code{\link[utils]{txtProgressBar}}
+#'
+#' @importFrom utils txtProgressBar
+#'
+#' @seealso \code{\link[utils]{txtProgressBar}} \code{\link[base]{stderr}}
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \donttest{
+#' pb <- SeuratDisk:::PB()
+#' for (i in 1:10) {
+#'   utils::setTxtProgressBar(pb, i / 10)
+#' }
+#' close(pb)
+#' }
+PB <- function() {
+  return(txtProgressBar(char = '=', style = 3, file = stderr()))
+}
+
 #' Generate an HDF5 string dtype
 #'
 #' Presets for encoding variations of \code{\link[hdf5r]{H5T_STRING}}; used to
@@ -420,6 +572,24 @@ UpdateSlots <- function(object) {
     }
   }
   return(object)
+}
+
+#' Get the proper HDF5 connection mode for writing depending on overwrite status
+#'
+#' @param overwrite Overwrite a file
+#'
+#' @return \code{w} if \code{overwrite} else \code{w-}
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \donttest{
+#' SeuratDisk:::WriteMode(TRUE)
+#' SeuratDisk:::WriteMode(FALSE)
+#' }
+#'
+WriteMode <- function(overwrite = FALSE) {
+  return(ifelse(test = overwrite, yes = 'w', no = 'w-'))
 }
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

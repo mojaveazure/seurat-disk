@@ -52,6 +52,38 @@ scdisk <- R6Class(
     #' @description Handle the loss of reference to this \code{scdisk} object
     finalizer = function() {
       self$close_all(close_self = TRUE)
+    },
+    #' @description Generate chunk points for a dataset
+    #' @param dataset Name of dataset
+    #' @param MARGIN Direction to chunk in; defaults to last dimension of dataset
+    #' @param csize Size of chunk; defaults to hdf5r-suggested chunk size
+    #' @return A matrix where each row is a chunk, column 1 is start points,
+    #' column 2 is end points
+    chunk.points = function(
+      dataset,
+      MARGIN = NULL,
+      csize = NULL
+    ) {
+      if (!self$exists(name = dataset)) {
+        stop(
+          "Cannot find dataset ",
+          dataset,
+          " in this ",
+          class(x = self),
+          " file",
+          call. = FALSE)
+      } else if (!inherits(x = self[[dataset]], what = 'H5D')) {
+        stop("'dataset' must be an HDF5 dataset", call. = FALSE)
+      }
+      MARGIN <- MARGIN %||% length(x = self[[dataset]]$dims)
+      if (!MARGIN %in% seq.int(from = 1, to = length(x = self[[dataset]]$dims))) {
+        stop(
+          "'MARGIN' must be within the dimensions of the dataset",
+          call. = FALSE
+        )
+      }
+      csize <- csize %||% self[[dataset]]$chunk_dims[MARGIN]
+      return(ChunkPoints(dsize = self[[dataset]]$dims[MARGIN], csize = csize))
     }
   ),
   private = list(
