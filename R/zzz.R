@@ -91,6 +91,8 @@ BoolToInt <- function(x) {
 #' @return A matrix where each row is a chunk, column 1 is start points, column
 #' 2 is end points
 #'
+#' @keywords internal
+#'
 #' @examples
 #' \donttest{
 #' SeuratDisk:::ChunkPoints(100, 3)
