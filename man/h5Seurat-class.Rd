@@ -98,6 +98,7 @@ A class for connections to h5Seurat files
 \item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="path_valid">}\href{../../hdf5r/html/H5File.html#method-path_valid}{\code{hdf5r::H5File$path_valid()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="print">}\href{../../hdf5r/html/H5File.html#method-print}{\code{hdf5r::H5File$print()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="unmount">}\href{../../hdf5r/html/H5File.html#method-unmount}{\code{hdf5r::H5File$unmount()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="chunk.points">}\href{../../SeuratDisk/html/scdisk.html#method-chunk.points}{\code{SeuratDisk::scdisk$chunk.points()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="finalizer">}\href{../../SeuratDisk/html/scdisk.html#method-finalizer}{\code{SeuratDisk::scdisk$finalizer()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="initialize">}\href{../../SeuratDisk/html/scdisk.html#method-initialize}{\code{SeuratDisk::scdisk$initialize()}}\out{</span>}
 }

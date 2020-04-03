@@ -4,6 +4,7 @@
 \alias{TestH5}
 \alias{IsDataFrame,H5D-method}
 \alias{IsDataFrame,H5Group-method}
+\alias{IsFactor,H5D-method}
 \alias{IsFactor,H5Group-method}
 \alias{IsList,H5Group-method}
 \alias{IsMatrix,H5D-method}
@@ -13,6 +14,8 @@
 \S4method{IsDataFrame}{H5D}(x)
 
 \S4method{IsDataFrame}{H5Group}(x)
+
+\S4method{IsFactor}{H5D}(x)
 
 \S4method{IsFactor}{H5Group}(x)
 

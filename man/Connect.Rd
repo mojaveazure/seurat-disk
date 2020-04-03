@@ -4,7 +4,7 @@
 \alias{Connect}
 \title{Connect to a single-cell HDF5 dataset}
 \usage{
-Connect(filename, type = NULL, mode = c("r", "r+"))
+Connect(filename, type = NULL, mode = c("r", "r+"), force = FALSE)
 }
 \arguments{
 \item{filename}{Name of on-disk file}
@@ -20,6 +20,9 @@ Leave as \code{NULL} to guess type from file extension}
  \item{r}{Open existing dataset in read-only mode}
  \item{r+}{Open existing dataset in read/write mode}
 }}
+
+\item{force}{Force a connection if validation steps fail; returns a
+\code{\link[hdf5r]{H5File}} object}
 }
 \value{
 An object of class \code{type}, opened in mode \code{mode}

@@ -24,6 +24,7 @@ A disk-based object for single-cell analysis
 \itemize{
 \item \href{#method-new}{\code{scdisk$new()}}
 \item \href{#method-finalizer}{\code{scdisk$finalizer()}}
+\item \href{#method-chunk.points}{\code{scdisk$chunk.points()}}
 }
 }
 \if{html}{
@@ -144,5 +145,30 @@ Handle the loss of reference to this \code{scdisk} object
 \if{html}{\out{<div class="r">}}\preformatted{scdisk$finalizer()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-chunk.points"></a>}}
+\if{latex}{\out{\hypertarget{method-chunk.points}{}}}
+\subsection{Method \code{chunk.points()}}{
+Generate chunk points for a dataset
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{scdisk$chunk.points(dataset, MARGIN = NULL, csize = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dataset}}{Name of dataset}
+
+\item{\code{MARGIN}}{Direction to chunk in; defaults to last dimension of dataset}
+
+\item{\code{csize}}{Size of chunk; defaults to hdf5r-suggested chunk size}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A matrix where each row is a chunk, column 1 is start points,
+column 2 is end points
+}
 }
 }
