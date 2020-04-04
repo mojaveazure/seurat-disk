@@ -13,6 +13,12 @@ NULL
 
 #' Convert an on-disk single-cell dataset to another format
 #'
+#' HDF5-based single-cell datasets can be converted from one format to another
+#' using minimal memory. Details about conversion formats implemented are
+#' provided below
+#'
+#' @inheritSection H5SeuratToH5AD h5Seurat to AnnData/H5AD
+#'
 #' @param source Source dataset
 #' @param dest Name of destination dataset
 #' @param assay Converting from \code{\link{h5Seurat}}: name of assay to write
@@ -137,6 +143,52 @@ Convert.h5Seurat <- function(
 #' Convert h5Seurat files to H5AD files
 #'
 #' @inheritParams Convert
+#'
+#' @return Returns a handle to \code{dest} as a \code{\link[hdf5r]{H5File}}
+#'
+#' @section h5Seurat to AnnData/H5AD:
+#' The h5Seurat to AnnData/H5AD conversion will try to automatically fill in
+#' datasets based on data presence. Data presense is determined by the h5Seurat
+#' index (\code{source$index()}). It works in the following manner:
+#' \subsection{Assay data:}{
+#'  \itemize{
+#'   \item \code{X} will be filled with \code{scale.data} if \code{scale.data}
+#'   is present; otherwise, it will be filled with \code{data}
+#'   \item \code{var} will be filled with \code{meta.features} \strong{only} for
+#'   the features present in \code{X}; for example, if \code{X} is filled with
+#'   \code{scale.data}, then \code{var} will contain only features that have
+#'   been scaled
+#'   \item \code{raw.X} will be filled with \code{data} if \code{X} is filled
+#'   with \code{scale.data}; otherwise, it will be filled with \code{counts}. If
+#'   \code{counts} is not present, then \code{raw} will not be filled
+#'   \item \code{raw.var} will be filled with \code{meta.features} with the
+#'   features present in \code{raw.X}; if \code{raw.X} is not filled, then
+#'   \code{raw.var} will not be filled
+#'  }
+#' }
+#' \subsection{Cell-level metadata:}{
+#'  Cell-level metadata is added to \code{obs}
+#' }
+#' \subsection{Dimensional reduction information}{
+#'  Only dimensional reductions associated with \code{assay} or marked as
+#'  \link[Seurat:IsGlobal]{global} will be transfered to the H5AD file. For
+#'  every reduction \code{reduc}:
+#'  \itemize{
+#'   \item cell embeddings are placed in \code{obsm} and renamed to
+#'   \code{X_reduc}
+#'   \item feature loadings, if present, are placed in \code{varm} and renamed
+#'   to either \code{PCs} if \code{reduc} is "pca" otherwise \code{reduc} in all
+#'    caps
+#'  }
+#'  For example, if \code{reduc} is "ica", then cell embeddings will be "X_ica"
+#'  in \code{obsm} and feature loaodings, if present, will be "ICA" in
+#'  \code{varm}
+#' }
+#' \subsection{Nearest-neighbor graphs}{
+#'  If a nearest-neighbor graph is associated with \code{assay}, it will be
+#'  added to \code{uns/neighbors/distances}; if more than one graph is present,
+#'  then \strong{only} the last graph according to the index will be added.
+#' }
 #'
 #' @keywords internal
 #'
@@ -376,6 +428,19 @@ H5SeuratToH5AD <- function(
         )
       )
     }
+  }
+  # Add global dimensional reduction information
+  global.reduc <- source$index()[['globals']][['reductions']]
+  for (reduc in global.reduc) {
+    if (reduc %in% names(x = reductions)) {
+      next
+    } else if (verbose) {
+      message("Adding dimensional reduction information for ", reduc, " (global)")
+    }
+    TransferMatrix(
+      src = source[['reductions']][[reduc]][['cell.embeddings']],
+      dname = paste0('obsm/X_', reduc)
+    )
   }
   # Create uns
   dfile$create_group(name = 'uns')
