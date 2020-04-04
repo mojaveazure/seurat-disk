@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9003</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9005</span>
       </span>
     </div>
 
@@ -167,7 +167,7 @@
 #&gt; [3,]    1    1    0    0
 #&gt; Class: H5D
 #&gt; Dataset: /densemat
-#&gt; Filename: /tmp/RtmpWJvouL/file3d45705114e.h5
+#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_IEEE_F64LE
 #&gt; Space: Type=Simple     Dims=3 x 4     Maxdims=Inf x Inf
@@ -187,7 +187,7 @@
 #&gt; [2,] . 1 1 1
 #&gt; [3,] 1 1 . .
 #&gt; Class: H5Group
-#&gt; Filename: /tmp/RtmpWJvouL/file3d45705114e.h5
+#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
 #&gt; Group: /sparsemat
 #&gt; Attributes: dims
 #&gt; Listing:
@@ -197,7 +197,7 @@
 #&gt;   indptr H5I_DATASET            5        H5T_INTEGER
 #&gt; Class: H5D
 #&gt; Dataset: /sparsemat/indices
-#&gt; Filename: /tmp/RtmpWJvouL/file3d45705114e.h5
+#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_STD_I32LE
 #&gt; Space: Type=Simple     Dims=6     Maxdims=Inf
@@ -205,7 +205,7 @@
 #&gt; [1] 2 1 2 1 0 1
 #&gt; Class: H5D
 #&gt; Dataset: /sparsemat/data
-#&gt; Filename: /tmp/RtmpWJvouL/file3d45705114e.h5
+#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_IEEE_F64LE
 #&gt; Space: Type=Simple     Dims=6     Maxdims=Inf
@@ -214,7 +214,7 @@
 <p>“indptr” represents the points in “data” at which a new column is started. This dataset is <span class="math inline">\(0\)</span>-based and should be <span class="math inline">\(n_{columns} + 1\)</span> in length.</p>
 <pre><code>#&gt; Class: H5D
 #&gt; Dataset: /sparsemat/indptr
-#&gt; Filename: /tmp/RtmpWJvouL/file3d45705114e.h5
+#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_STD_I32LE
 #&gt; Space: Type=Simple     Dims=5     Maxdims=Inf
@@ -231,7 +231,7 @@
 <pre><code>#&gt; [1] g1 g2 g1 g1 g2
 #&gt; Levels: g1 g2
 #&gt; Class: H5Group
-#&gt; Filename: /tmp/RtmpWJvouL/file3d45705114e.h5
+#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
 #&gt; Group: /factor
 #&gt; Listing:
 #&gt;    name    obj_type dataset.dims dataset.type_class
@@ -240,7 +240,7 @@
 <p>The “levels” dataset should be a <a href="#character-representation">character</a> dataset with one entry per <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/levels.html">level</a></p>
 <pre><code>#&gt; Class: H5D
 #&gt; Dataset: /factor/levels
-#&gt; Filename: /tmp/RtmpWJvouL/file3d45705114e.h5
+#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_STRING {
 #&gt;       STRSIZE H5T_VARIABLE;
@@ -254,7 +254,7 @@
 <p>The “values” dataset should be an integer dataset with one entry per value in the original factor. These integers should correspond to the factor level they had in R</p>
 <pre><code>#&gt; Class: H5D
 #&gt; Dataset: /factor/values
-#&gt; Filename: /tmp/RtmpWJvouL/file3d45705114e.h5
+#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_STD_I32LE
 #&gt; Space: Type=Simple     Dims=5     Maxdims=Inf
@@ -270,7 +270,7 @@
 <pre><code>#&gt; [1]  TRUE FALSE    NA
 #&gt; Class: H5D
 #&gt; Dataset: /logicals
-#&gt; Filename: /tmp/RtmpWJvouL/file3d45705114e.h5
+#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Attributes: s3class
 #&gt; Datatype: H5T_STD_I32LE
@@ -297,7 +297,7 @@
 #&gt; 5 g2 5
 #&gt; Class: H5D
 #&gt; Dataset: /dfdataset
-#&gt; Filename: /tmp/RtmpWJvouL/file3d45705114e.h5
+#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_COMPOUND {
 #&gt;       H5T_STRING {
@@ -323,7 +323,7 @@
 <a href="#data-frame-groups" class="anchor"></a>Data Frame Groups</h4>
 <p>Data frames stored as groups are used when <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/factor.html">factors</a> are present in the data frame. Within the data frame group, there should be one dataset or group per column. Columns that are factors are <a href="#factor-representation">stored as groups</a> while all other columns are stored as one-dimensional datasets. Each dataset within the group must adhere to the same requirements as standard datasets (eg. <a href="#character-representation">character encodings</a>, <a href="#logical-representation">logical mapping</a>, etc). The names of the datasets within the group correspond to the data frame column names</p>
 <pre><code>#&gt; Class: H5Group
-#&gt; Filename: /tmp/RtmpWJvouL/file3d45705114e.h5
+#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
 #&gt; Group: /dfgroup
 #&gt; Attributes: colnames
 #&gt; Listing:

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SeuratDisk: Interfaces for HDF5-Based Single Cell File Formats — SeuratDisk-pacakge • SeuratDisk</title>
+<title>SeuratDisk: Interfaces for HDF5-Based Single Cell File Formats — SeuratDisk-package • SeuratDisk</title>
 
 
 <!-- jquery -->
@@ -35,7 +35,7 @@
 
 
 
-<meta property="og:title" content="SeuratDisk: Interfaces for HDF5-Based Single Cell File Formats — SeuratDisk-pacakge" />
+<meta property="og:title" content="SeuratDisk: Interfaces for HDF5-Based Single Cell File Formats — SeuratDisk-package" />
 <meta property="og:description" content="As single-cell expression datasets grow in size, the computational
   requirements to store and handle them grow as well. To address the issues posed
   by large datasets, SeuratDisk provides an interface to various single-cell
@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9001</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9005</span>
       </span>
     </div>
 
@@ -141,6 +141,20 @@
 
 
 
+    <h2 class="hasAnchor" id="package-options"><a class="anchor" href="#package-options"></a>Package options</h2>
+
+    
+
+
+<p>SeuratDisk uses the following options to control behaviour, users can configure
+these with <code><a href='https://rdrr.io/r/base/options.html'>options</a></code>:</p>
+<dl class='dl-horizontal'>
+ <dt><code>SeuratDisk.dtypes.logical_to_int</code></dt><dd><p>When writing
+ <a href='https://rdrr.io/r/base/logical.html'>logical</a> vectors, coerce to integer types to ensure
+ compatibility across languages (see <code><a href='BoolToInt.html'>BoolToInt</a></code> for more details)</p></dd>
+
+</dl>
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Useful links:</p><ul>
@@ -155,6 +169,7 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#package-options">Package options</a></li>
       <li><a href="#see-also">See also</a></li>
     </ul>
 

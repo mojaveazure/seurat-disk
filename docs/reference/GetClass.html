@@ -36,7 +36,10 @@
 
 
 <meta property="og:title" content="Get a class string with package information — GetClass" />
-<meta property="og:description" content="Get a class string with package information" />
+<meta property="og:description" content="S4 classes are useful in the context of their defining package (benefits of
+stricter typing). In order to ensure class information is properly retained
+in HDF5 files, S4 class names are written as &quot;package:classname&quot; with certain
+exceptions (eg. S4 classes defined by Seurat)" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -69,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9001</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9005</span>
       </span>
     </div>
 
@@ -126,7 +129,10 @@
     </div>
 
     <div class="ref-description">
-    <p>Get a class string with package information</p>
+    <p>S4 classes are useful in the context of their defining package (benefits of
+stricter typing). In order to ensure class information is properly retained
+in HDF5 files, S4 class names are written as "package:classname" with certain
+exceptions (eg. S4 classes defined by <a href='https://rdrr.io/pkg/Seurat/man/Seurat-package.html'>Seurat</a>)</p>
     </div>
 
     <pre class="usage"><span class='fu'>GetClass</span>(<span class='no'>class</span>, <span class='kw'>packages</span> <span class='kw'>=</span> <span class='st'>"Seurat"</span>)</pre>

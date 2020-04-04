@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Assemble an object from an h5Seurat file — AssembleObject • SeuratDisk</title>
+<title>Convert an on-disk single-cell dataset to another format — Convert • SeuratDisk</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Assemble an object from an h5Seurat file — AssembleObject" />
-<meta property="og:description" content="Assemble an object from an h5Seurat file" />
+<meta property="og:title" content="Convert an on-disk single-cell dataset to another format — Convert" />
+<meta property="og:description" content="Convert an on-disk single-cell dataset to another format" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,51 +120,69 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Assemble an object from an h5Seurat file</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/AssembleObject.R'><code>R/AssembleObject.R</code></a></small>
-    <div class="hidden name"><code>AssembleObject.Rd</code></div>
+    <h1>Convert an on-disk single-cell dataset to another format</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/Convert.R'><code>R/Convert.R</code></a></small>
+    <div class="hidden name"><code>Convert.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Assemble an object from an h5Seurat file</p>
+    <p>Convert an on-disk single-cell dataset to another format</p>
     </div>
 
-    <pre class="usage"><span class='fu'>AssembleAssay</span>(<span class='no'>assay</span>, <span class='no'>file</span>, <span class='kw'>slots</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="usage"><span class='fu'>Convert</span>(<span class='no'>source</span>, <span class='no'>dest</span>, <span class='no'>assay</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
-<span class='fu'>AssembleDimReduc</span>(<span class='no'>reduction</span>, <span class='no'>file</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='co'># S3 method for character</span>
+<span class='fu'>Convert</span>(<span class='no'>source</span>, <span class='no'>dest</span>, <span class='no'>assay</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
-<span class='fu'>AssembleGraph</span>(<span class='no'>graph</span>, <span class='no'>file</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='co'># S3 method for H5File</span>
+<span class='fu'>Convert</span>(<span class='no'>source</span>, <span class='no'>dest</span>, <span class='no'>assay</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
-<span class='fu'>AssembleImage</span>(<span class='no'>image</span>, <span class='no'>file</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
-<span class='fu'>AssembleSeuratCommand</span>(<span class='no'>cmd</span>, <span class='no'>file</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+<span class='co'># S3 method for h5Seurat</span>
+<span class='fu'>Convert</span>(
+  <span class='no'>source</span>,
+  <span class='kw'>dest</span> <span class='kw'>=</span> <span class='st'>"h5ad"</span>,
+  <span class='kw'>assay</span> <span class='kw'>=</span> <span class='fu'><a href='h5Seurat-bindings.html'>DefaultAssay</a></span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='no'>source</span>),
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>assay, reduction, graph, image, cmd</th>
-      <td><p>Name of assay, reduction, graph,
-image, or command to load</p></td>
+      <th>source</th>
+      <td><p>Source dataset</p></td>
     </tr>
     <tr>
-      <th>file</th>
-      <td><p>A connected h5Seurat file to pull the data from</p></td>
+      <th>dest</th>
+      <td><p>Name of destination dataset</p></td>
     </tr>
     <tr>
-      <th>slots</th>
-      <td><p>Optional vector of assay slots to load, defaults to all slots
-present in assay</p></td>
+      <th>assay</th>
+      <td><p>Converting from <code><a href='h5Seurat-class.html'>h5Seurat</a></code>: name of assay to write
+out; converting to <code><a href='h5Seurat-class.html'>h5Seurat</a></code>: name to store assay data as</p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p>Overwrite existing <code>dest</code></p></td>
     </tr>
     <tr>
       <th>verbose</th>
       <td><p>Show progress updates</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed to other methods</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>AssembleAssay</code>: An <code>Assay</code> object</p>
+    <p>If <code>source</code> is a <code>character</code>, invisibly returns <code>dest</code>;
+otherwise, returns an <code><a href='http://hhoeflin.github.io/hdf5r/reference/H5File-class.html'>H5File</a></code>, or filetype-specific
+subclass of <code>H5File</code> (eg. <code><a href='h5Seurat-class.html'>h5Seurat</a></code>), connection to
+<code>dest</code></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

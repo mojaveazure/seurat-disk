@@ -36,7 +36,8 @@
 
 
 <meta property="og:title" content="Check the datatype of an HDF5 dataset — IsDType" />
-<meta property="og:description" content="Check the datatype of an HDF5 dataset" />
+<meta property="og:description" content="Effectively, an implementation of is for HDF5 datasets;
+useful to ensure HDF5 validity for specific file structures" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -69,7 +70,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9001</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9005</span>
       </span>
     </div>
 
@@ -126,7 +127,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Check the datatype of an HDF5 dataset</p>
+    <p>Effectively, an implementation of <code><a href='https://rdrr.io/r/methods/is.html'>is</a></code> for HDF5 datasets;
+useful to ensure HDF5 validity for specific file structures</p>
     </div>
 
     <pre class="usage"><span class='fu'>IsDType</span>(<span class='no'>x</span>, <span class='no'>dtype</span>)</pre>
@@ -152,11 +154,6 @@
 
     <div class='dont-index'><p><code><a href='http://hhoeflin.github.io/hdf5r/reference/h5types.html'>h5types</a></code></p></div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'># \donttest{
-# }
-
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -164,7 +161,6 @@
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
       <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

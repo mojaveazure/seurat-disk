@@ -14,11 +14,14 @@ reference:
       - scdisk
   - title: h5Seurat
     contents:
-      - matches("h5Seurat")
-      - matches("H5Seurat")
       - AppendData
+      - LoadH5Seurat
+      - SaveH5Seurat
+      - "h5Seurat-bindings"
+      - "h5Seurat-class"
   - title: Utility Functions
     contents:
       - Connect
+      - Convert
       - ReadH5
       - WriteH5Group

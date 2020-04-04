@@ -70,7 +70,7 @@ A disk-based object for single-cell analysis" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9005</span>
       </span>
     </div>
 
@@ -150,6 +150,7 @@ A disk-based object for single-cell analysis" />
 <ul>
 <li><p><a href='#method-new'><code>scdisk$new()</code></a></p></li>
 <li><p><a href='#method-finalizer'><code>scdisk$finalizer()</code></a></p></li>
+<li><p><a href='#method-chunk.points'><code>scdisk$chunk.points()</code></a></p></li>
 </ul>
 <p><details ><summary>Inherited methods</summary>
 <ul>
@@ -256,6 +257,23 @@ A disk-based object for single-cell analysis" />
 <p>Handle the loss of reference to this <code>scdisk</code> object</p><h3>Usage</h3>
 <p><div class="r"></p><pre>scdisk$finalizer()</pre><p></div></p>
 
+<p><hr>
+<a id="method-chunk.points"></a></p><h3>Method <code>chunk.points()</code></h3>
+<p>Generate chunk points for a dataset</p><h3>Usage</h3>
+<p><div class="r"></p><pre>scdisk$chunk.points(dataset, MARGIN = NULL, csize = NULL)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>dataset</code></dt><dd><p>Name of dataset</p></dd>
+
+<dt><code>MARGIN</code></dt><dd><p>Direction to chunk in; defaults to last dimension of dataset</p></dd>
+
+<dt><code>csize</code></dt><dd><p>Size of chunk; defaults to hdf5r-suggested chunk size</p></dd>
+
+</dl><p></div></p>
+<h3>Returns</h3>
+<p>A matrix where each row is a chunk, column 1 is start points,
+column 2 is end points</p>
 
 
 

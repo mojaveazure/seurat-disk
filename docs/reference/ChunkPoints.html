@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Assemble an object from an h5Seurat file — AssembleObject • SeuratDisk</title>
+<title>Generate chunk points — ChunkPoints • SeuratDisk</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Assemble an object from an h5Seurat file — AssembleObject" />
-<meta property="og:description" content="Assemble an object from an h5Seurat file" />
+<meta property="og:title" content="Generate chunk points — ChunkPoints" />
+<meta property="og:description" content="Generate chunk points" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,58 +120,82 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Assemble an object from an h5Seurat file</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/AssembleObject.R'><code>R/AssembleObject.R</code></a></small>
-    <div class="hidden name"><code>AssembleObject.Rd</code></div>
+    <h1>Generate chunk points</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/zzz.R'><code>R/zzz.R</code></a></small>
+    <div class="hidden name"><code>ChunkPoints.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Assemble an object from an h5Seurat file</p>
+    <p>Generate chunk points</p>
     </div>
 
-    <pre class="usage"><span class='fu'>AssembleAssay</span>(<span class='no'>assay</span>, <span class='no'>file</span>, <span class='kw'>slots</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
-<span class='fu'>AssembleDimReduc</span>(<span class='no'>reduction</span>, <span class='no'>file</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
-<span class='fu'>AssembleGraph</span>(<span class='no'>graph</span>, <span class='no'>file</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
-<span class='fu'>AssembleImage</span>(<span class='no'>image</span>, <span class='no'>file</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
-<span class='fu'>AssembleSeuratCommand</span>(<span class='no'>cmd</span>, <span class='no'>file</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>ChunkPoints</span>(<span class='no'>dsize</span>, <span class='no'>csize</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>assay, reduction, graph, image, cmd</th>
-      <td><p>Name of assay, reduction, graph,
-image, or command to load</p></td>
+      <th>dsize</th>
+      <td><p>Size of data being chunked</p></td>
     </tr>
     <tr>
-      <th>file</th>
-      <td><p>A connected h5Seurat file to pull the data from</p></td>
-    </tr>
-    <tr>
-      <th>slots</th>
-      <td><p>Optional vector of assay slots to load, defaults to all slots
-present in assay</p></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>Show progress updates</p></td>
+      <th>csize</th>
+      <td><p>Size of chunk; if <code>NA</code>, assumes single chunk</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>AssembleAssay</code>: An <code>Assay</code> object</p>
+    <p>A matrix where each row is a chunk, column 1 is start points, column
+2 is end points</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'><a href='https://rdrr.io/pkg/SeuratDisk/man/ChunkPoints.html'>ChunkPoints</a></span>(<span class='fl'>100</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;       start end
+#&gt;  [1,]     1   3
+#&gt;  [2,]     4   6
+#&gt;  [3,]     7   9
+#&gt;  [4,]    10  12
+#&gt;  [5,]    13  15
+#&gt;  [6,]    16  18
+#&gt;  [7,]    19  21
+#&gt;  [8,]    22  24
+#&gt;  [9,]    25  27
+#&gt; [10,]    28  30
+#&gt; [11,]    31  33
+#&gt; [12,]    34  36
+#&gt; [13,]    37  39
+#&gt; [14,]    40  42
+#&gt; [15,]    43  45
+#&gt; [16,]    46  48
+#&gt; [17,]    49  51
+#&gt; [18,]    52  54
+#&gt; [19,]    55  57
+#&gt; [20,]    58  60
+#&gt; [21,]    61  63
+#&gt; [22,]    64  66
+#&gt; [23,]    67  69
+#&gt; [24,]    70  72
+#&gt; [25,]    73  75
+#&gt; [26,]    76  78
+#&gt; [27,]    79  81
+#&gt; [28,]    82  84
+#&gt; [29,]    85  87
+#&gt; [30,]    88  90
+#&gt; [31,]    91  93
+#&gt; [32,]    94  96
+#&gt; [33,]    97  99
+#&gt; [34,]   100 100</div><div class='input'><span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'><a href='https://rdrr.io/pkg/SeuratDisk/man/ChunkPoints.html'>ChunkPoints</a></span>(<span class='fl'>100</span>, <span class='fl'>NA</span>)</div><div class='output co'>#&gt;      start end
+#&gt; [1,]     1 100</div><div class='input'># }
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
