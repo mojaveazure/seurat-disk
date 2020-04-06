@@ -11,7 +11,7 @@ Convert(source, dest, assay, overwrite = FALSE, verbose = TRUE, ...)
 
 \method{Convert}{character}(source, dest, assay, overwrite = FALSE, verbose = TRUE, ...)
 
-\method{Convert}{H5File}(source, dest, assay, overwrite = FALSE, verbose = TRUE, ...)
+\method{Convert}{H5File}(source, dest, assay = "RNA", overwrite = FALSE, verbose = TRUE, ...)
 
 \method{Convert}{h5Seurat}(
   source,
@@ -37,10 +37,10 @@ out; converting to \code{\link{h5Seurat}}: name to store assay data as}
 \item{...}{Arguments passed to other methods}
 }
 \value{
-If \code{source} is a \code{character}, invisibly returns \code{dest};
-otherwise, returns an \code{\link[hdf5r]{H5File}}, or filetype-specific
-subclass of \code{H5File} (eg. \code{\link{h5Seurat}}), connection to
-\code{dest}
+If \code{source} is a \code{character}, invisibly returns
+\code{dest}; otherwise, returns an \code{\link[hdf5r]{H5File}}, or
+filetype-specific subclass of \code{H5File} (eg. \code{\link{h5Seurat}}),
+connection to \code{dest}
 }
 \description{
 HDF5-based single-cell datasets can be converted from one format to another

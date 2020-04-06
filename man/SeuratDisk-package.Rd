@@ -24,6 +24,9 @@ these with \code{\link[base]{options}}:
  \item{\code{SeuratDisk.dtypes.logical_to_int}}{When writing
  \link[base]{logical} vectors, coerce to integer types to ensure
  compatibility across languages (see \code{\link{BoolToInt}} for more details)}
+ \item{\code{SeuratDisk.dtypes.dataframe_as_group}}{When writing
+ \link[base]{data.frame}s, always write out as a group regardless of factor
+ presence}
 }
 }
 

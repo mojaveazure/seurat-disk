@@ -25,7 +25,8 @@ out; converting to \code{\link{h5Seurat}}: name to store assay data as}
 \item{verbose}{Show progress updates}
 }
 \value{
-Returns a handle to \code{dest} as a \code{\link[hdf5r]{H5File}}
+Returns a handle to \code{dest} as an \code{\link[hdf5r]{H5File}}
+object
 }
 \description{
 Convert h5Seurat files to H5AD files

@@ -17,6 +17,7 @@ NULL
 #' using minimal memory. Details about conversion formats implemented are
 #' provided below
 #'
+# @inheritSection H5ADToH5Seurat AnnData/H5AD to h5Seurat
 #' @inheritSection H5SeuratToH5AD h5Seurat to AnnData/H5AD
 #'
 #' @param source Source dataset
@@ -27,10 +28,10 @@ NULL
 #' @param verbose Show progress updates
 #' @param ... Arguments passed to other methods
 #'
-#' @return If \code{source} is a \code{character}, invisibly returns \code{dest};
-#' otherwise, returns an \code{\link[hdf5r]{H5File}}, or filetype-specific
-#' subclass of \code{H5File} (eg. \code{\link{h5Seurat}}), connection to
-#' \code{dest}
+#' @return If \code{source} is a \code{character}, invisibly returns
+#' \code{dest}; otherwise, returns an \code{\link[hdf5r]{H5File}}, or
+#' filetype-specific subclass of \code{H5File} (eg. \code{\link{h5Seurat}}),
+#' connection to \code{dest}
 #'
 #' @name Convert
 #' @rdname Convert
@@ -83,7 +84,7 @@ Convert.character <- function(
 Convert.H5File <- function(
   source,
   dest,
-  assay,
+  assay = 'RNA',
   overwrite = FALSE,
   verbose = TRUE,
   ...
@@ -140,11 +141,134 @@ Convert.h5Seurat <- function(
 # Implementations
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+#' Convert AnnData/H5AD files to h5Seurat files
+#'
+#' @inheritParams Convert
+#'
+#' @return Returns a handle to \code{dest} as an \code{\link{h5Seurat}} object
+#'
+#' @section AnnData/H5AD to h5Seurat:
+#' The AnnData/H5AD to h5Seurat conversion will try to automatically fill in
+#' datasets based on data presence. It works in the following manner:
+#' \subsection{Expression data:}{
+#'  The expression matrices \code{counts}, \code{data}, and \code{scale.data}
+#'  are filled by \code{/X} and \code{/raw/X} in the following manner:
+#'  \itemize{
+#'   \item \code{counts} will be filled with \code{/raw/X} if present;
+#'   otherwise, it will be filled with \code{/X}
+#'   \item \code{data} will be filled with \code{/raw/X} if \code{/raw/X} is
+#'   present and \code{/X} is dense; otherwise, it will be filled with \code{/X}
+#'   \item \code{scale.data} will be filled with \code{/X} if it dense;
+#'   otherwise, it will be empty
+#'  }
+#'  TODO: note about meta.features
+#' }
+#' \subsection{Cell-level metadata:}{
+#' Cell-level metadata is added to \code{meta.data}; the row names of the
+#' metadata (as determined by the value of the "_index" attribute or the "index"
+#' dataset, in that order) are added to the "cell.names" dataset instead. If the
+#' \code{__categories} dataset is present, each dataset within
+#' \code{__categories} will be stored as a factor group. Cell-level metadata
+#' will be added as an HDF5 group unless factors are \strong{not} present and
+#' \code{\link[SeuratDisk]{SeuratDisk.dtype.dataframe_as_group}} is \code{FALSE}
+#' }
+#' \subsection{Dimensional reduction information:}{
+#'  TODO: this
+#' }
+#' \subsection{Nearest-neighbor graph:}{
+#' If a nearest neighbor graph is present in \code{/uns/neighbors/distances}, it
+#' will be added as a graph dataset in the h5Seurat file and associated with
+#' \code{assay}; if a value is present in \code{/uns/neighbors/params/metric},
+#' the name of the graph will be \code{assay_metric}, otherwise, it will be
+#' \code{assay_anndata}}
+#'
+#' @keywords internal
+#'
+H5ADToH5Seurat <- function(
+  source,
+  dest,
+  assay = 'RNA',
+  overwrite = FALSE,
+  verbose = TRUE
+) {
+  .NotYetImplemented()
+  if (file.exists(dest)) {
+    if (overwrite) {
+      file.remove(dest)
+    } else {
+      stop("Destination h5Seurat file exists", call. = FALSE)
+    }
+  }
+  dfile <- h5Seurat$new(filename = dest, mode = WriteMode(overwrite = FALSE))
+  GetRownames <- function(dset) {
+    if (!IsDataFrame(x = source[[dset]])) {
+      stop("'", dset, "' is not a data frame", call. = FALSE)
+    }
+    if (inherits(x = source[[dset]], what = 'H5Group')) {
+      rownames <- if (source[[dset]]$attr_exists(attr_name = '_index')) {
+        h5attr(x = source[[dset]], which = '_index')
+      } else if (source[[dset]]$exists(name = '_index')) {
+        '_index'
+      } else if (source[[dset]]$exists(name = 'index')) {
+        'index'
+      } else {
+        stop("Cannot find rownames in ", dset, call. = FALSE)
+      }
+    } else {
+      # TODO: fix this
+      stop("Don't know how to handle datasets", call. = FALSE)
+    }
+    return(rownames)
+  }
+  if (source$exists(name = 'raw')) {
+    shape.var <- 'raw/var'
+    shape.x <- 'raw/X'
+  } else {
+    shape.var <- 'var'
+    shape.x <- 'X'
+  }
+  ds.map <- c(
+    scale.data = if (inherits(x = source[['X']], what = 'H5D')) {
+      'X'
+    } else {
+      NULL
+    },
+    data = if (inherits(x = source[['X']], what = 'H5D') && source$exists(name = 'raw')) {
+      'raw/X'
+    } else {
+      'X'
+    },
+    counts = if (source$exists(name = 'raw')) {
+      'raw/X'
+    } else {
+      'X'
+    }
+  )
+  # Add assay data
+  assay.group <- dfile[['assays']]$create_group(name = assay)
+  for (i in seq_along(along.with = ds.map)) {
+    assay.group$obj_copy_from(
+      src_loc = source,
+      src_name = ds.map[[i]],
+      dst_name = names(x = ds.map)[i]
+    )
+  }
+  if (source$exists(name = 'raw/var')) {
+    ''
+  }
+  # TODO: add meta.features
+  # Add cell-level metadata
+  # Add dimensional reduction information
+  # Add nearest-neighbor graph
+  return(dfile)
+}
+
 #' Convert h5Seurat files to H5AD files
 #'
 #' @inheritParams Convert
 #'
-#' @return Returns a handle to \code{dest} as a \code{\link[hdf5r]{H5File}}
+#' @return Returns a handle to \code{dest} as an \code{\link[hdf5r]{H5File}}
+#' object
 #'
 #' @section h5Seurat to AnnData/H5AD:
 #' The h5Seurat to AnnData/H5AD conversion will try to automatically fill in
@@ -467,7 +591,7 @@ H5SeuratToH5AD <- function(
     }
     dgraph$create_group(name = 'params')
     dgraph[['params']]$create_dataset(
-      name = 'method',
+      name = 'metric',
       robj = gsub(pattern = paste0('^', assay, '_'), replacement = '', x = graph),
       dtype = GuessDType(x = graph)
     )

@@ -361,7 +361,7 @@ setMethod(
       FUN.VALUE = logical(length = 1L),
       USE.NAMES = FALSE
     )
-    if (any(factor.cols)) {
+    if (any(factor.cols) || getOption(x = "SeuratDisk.dtypes.dataframe_as_group", default = FALSE)) {
       xgroup <- hgroup$create_group(name = name)
       for (i in colnames(x = x)) {
         WriteH5Group(
