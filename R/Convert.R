@@ -83,13 +83,12 @@ Convert.character <- function(
 #'
 Convert.H5File <- function(
   source,
-  dest,
+  dest = 'h5seurat',
   assay = 'RNA',
   overwrite = FALSE,
   verbose = TRUE,
   ...
 ) {
-  .NotYetImplemented()
   stype <- FileType(file = source$filename)
   dtype <- FileType(file = dest)
   if (tolower(x = dest) == dtype) {
@@ -99,7 +98,13 @@ Convert.H5File <- function(
     EXPR = stype,
     'h5ad' = switch(
       EXPR = dtype,
-      'h5seurat' = '',
+      'h5seurat' = H5ADToH5Seurat(
+        source = source,
+        dest = dest,
+        assay = assay,
+        overwrite = overwrite,
+        verbose = verbose
+      ),
       stop("Unable to convert H5AD files to ", dtype, " files", call. = FALSE)
     ),
     stop("Unknown file type: ", stype, call. = FALSE)
@@ -178,8 +183,8 @@ Convert.h5Seurat <- function(
 #' \subsection{Nearest-neighbor graph:}{
 #' If a nearest neighbor graph is present in \code{/uns/neighbors/distances}, it
 #' will be added as a graph dataset in the h5Seurat file and associated with
-#' \code{assay}; if a value is present in \code{/uns/neighbors/params/metric},
-#' the name of the graph will be \code{assay_metric}, otherwise, it will be
+#' \code{assay}; if a value is present in \code{/uns/neighbors/params/method},
+#' the name of the graph will be \code{assay_method}, otherwise, it will be
 #' \code{assay_anndata}}
 #'
 #' @keywords internal
@@ -191,7 +196,6 @@ H5ADToH5Seurat <- function(
   overwrite = FALSE,
   verbose = TRUE
 ) {
-  .NotYetImplemented()
   if (file.exists(dest)) {
     if (overwrite) {
       file.remove(dest)
@@ -200,10 +204,13 @@ H5ADToH5Seurat <- function(
     }
   }
   dfile <- h5Seurat$new(filename = dest, mode = WriteMode(overwrite = FALSE))
+  # Get rownames from an H5AD data frame
+  #
+  # @param dset Name of data frame
+  #
+  # @return Returns the name of the dataset that contains the rownames
+  #
   GetRownames <- function(dset) {
-    if (!IsDataFrame(x = source[[dset]])) {
-      stop("'", dset, "' is not a data frame", call. = FALSE)
-    }
     if (inherits(x = source[[dset]], what = 'H5Group')) {
       rownames <- if (source[[dset]]$attr_exists(attr_name = '_index')) {
         h5attr(x = source[[dset]], which = '_index')
@@ -220,12 +227,28 @@ H5ADToH5Seurat <- function(
     }
     return(rownames)
   }
-  if (source$exists(name = 'raw')) {
-    shape.var <- 'raw/var'
-    shape.x <- 'raw/X'
-  } else {
-    shape.var <- 'var'
-    shape.x <- 'X'
+  ColToFactor <- function(dfgroup) {
+    if (dfgroup$exists(name = '__categories')) {
+      for (i in names(x = dfgroup[['__categories']])) {
+        tname <- basename(path = tempfile(tmpdir = ''))
+        dfgroup$obj_copy_to(dst_loc = dfgroup, dst_name = tname, src_name = i)
+        dfgroup$link_delete(name = i)
+        dfgroup$create_group(name = i)
+        dfgroup$obj_copy_to(
+          dst_loc = dfgroup,
+          dst_name = paste0(i, '/values'),
+          src_name = tname
+        )
+        dfgroup$obj_copy_to(
+          dst_loc = dfgroup,
+          dst_name = paste0(i, '/levels'),
+          src_name = paste0('__categories/', i)
+        )
+        dfgroup$link_delete(name = tname)
+      }
+      dfgroup$link_delete(name = '__categories')
+    }
+    return(invisible(x = NULL))
   }
   ds.map <- c(
     scale.data = if (inherits(x = source[['X']], what = 'H5D')) {
@@ -247,19 +270,128 @@ H5ADToH5Seurat <- function(
   # Add assay data
   assay.group <- dfile[['assays']]$create_group(name = assay)
   for (i in seq_along(along.with = ds.map)) {
+    if (verbose) {
+      message("Adding ", ds.map[[i]], " as ", names(x = ds.map)[i])
+    }
     assay.group$obj_copy_from(
       src_loc = source,
       src_name = ds.map[[i]],
       dst_name = names(x = ds.map)[i]
     )
   }
-  if (source$exists(name = 'raw/var')) {
-    ''
+  features.source <- ifelse(
+    test = source$exists(name = 'raw/var'),
+    yes = 'raw/var',
+    no = 'var'
+  )
+  features.dset <- GetRownames(dset = features.source)
+  assay.group$obj_copy_from(
+    src_loc = source,
+    src_name = paste(features.source, features.dset, sep = '/'),
+    dst_name = 'features'
+  )
+  scaled <- !is.null(x = ds.map['scale.data']) && !is.null(x = ds.map['scale.data'])
+  if (scaled) {
+    scaled.dset <- GetRownames(dset = 'var')
+    assay.group$obj_copy_from(
+      src_loc = source,
+      src_name = paste0('var/', scaled.dset),
+      dst_name = 'scaled.features'
+    )
   }
-  # TODO: add meta.features
+  # Add feature-level metadata
+  if (source$exists(name = 'raw/var')) {
+    if (verbose) {
+      message("Adding meta.features from raw/var")
+    }
+    assay.group$obj_copy_from(
+      src_loc = source,
+      src_name = 'raw/var',
+      dst_name = 'meta.features'
+    )
+  } else {
+    if (verbose) {
+      message("Adding meta.features from var")
+    }
+    assay.group$obj_copy_from(
+      src_loc = source,
+      src_name = 'var',
+      dst_name = 'meta.features'
+    )
+  }
   # Add cell-level metadata
+  if (source$exists(name = 'obs')) {
+    if (!source[['obs']]$exists(name = '__categories') && !getOption("SeuratDisk.dtypes.dataframe_as_group", x = TRUE)) {
+      warning(
+        "Conversion from H5AD to h5Seurat allowing compound datasets is not yet implemented",
+        call. = FALSE,
+        immediate. = TRUE
+      )
+    }
+    dfile$obj_copy_from(
+      src_loc = source,
+      src_name = 'obs',
+      dst_name = 'meta.data'
+    )
+    ColToFactor(dfgroup = dfile[['meta.data']])
+    if (dfile[['meta.data']]$attr_exists(attr_name = 'column-order')) {
+      colnames <- h5attr(x = dfile[['meta.data']], which = 'column-order')
+      dfile[['meta.data']]$create_attr(
+        attr_name = 'colnames',
+        robj = colnames,
+        dtype = GuessDType(x = colnames)
+      )
+    }
+    rownames <- GetRownames(dset = 'obs')
+    dfile$obj_copy_from(
+      src_loc = dfile,
+      src_name = paste0('meta.data/', rownames),
+      dst_name = 'cell.names'
+    )
+    dfile[['meta.data']]$link_delete(name = rownames)
+  } else {
+    warning(
+      "No cell-level metadata present, creating fake cell names",
+      call. = FALSE,
+      immediate. = TRUE
+    )
+  }
   # Add dimensional reduction information
   # Add nearest-neighbor graph
+  if (source$exists('uns/neighbors/distances')) {
+    graph.name <- paste(
+      assay,
+      ifelse(
+        test = source$exists(name = 'uns/neighbors/params/method'),
+        yes = source[['uns/neighbors/params/method']][1],
+        no = 'anndata'
+      ),
+      sep = '_'
+    )
+    if (verbose) {
+      message("Saving nearest-neighbor graph as ", graph.name)
+    }
+    dfile[['graphs']]$obj_copy_from(
+      src_loc = source,
+      src_name = 'uns/neighbors/distances',
+      dst_name = graph.name
+    )
+    if (dfile[['graphs']][[graph.name]]$attr_exists(attr_name = 'shape')) {
+      dfile[['graphs']][[graph.name]]$create_attr(
+        attr_name = 'dims',
+        robj = h5attr(x = dfile[['graphs']][[graph.name]], which = 'shape'),
+        dtype = GuessDType(x = h5attr(
+          x = dfile[['graphs']][[graph.name]],
+          which = 'shape'
+        ))
+      )
+    }
+    dfile[['graphs']][[graph.name]]$create_attr(
+      attr_name = 'assay.used',
+      robj = assay,
+      dtype = GuessDType(x = assay)
+    )
+  }
   return(dfile)
 }
 
@@ -591,7 +723,7 @@ H5SeuratToH5AD <- function(
     }
     dgraph$create_group(name = 'params')
     dgraph[['params']]$create_dataset(
-      name = 'metric',
+      name = 'method',
       robj = gsub(pattern = paste0('^', assay, '_'), replacement = '', x = graph),
       dtype = GuessDType(x = graph)
     )

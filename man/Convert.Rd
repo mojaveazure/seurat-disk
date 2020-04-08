@@ -11,7 +11,14 @@ Convert(source, dest, assay, overwrite = FALSE, verbose = TRUE, ...)
 
 \method{Convert}{character}(source, dest, assay, overwrite = FALSE, verbose = TRUE, ...)
 
-\method{Convert}{H5File}(source, dest, assay = "RNA", overwrite = FALSE, verbose = TRUE, ...)
+\method{Convert}{H5File}(
+  source,
+  dest = "h5seurat",
+  assay = "RNA",
+  overwrite = FALSE,
+  verbose = TRUE,
+  ...
+)
 
 \method{Convert}{h5Seurat}(
   source,

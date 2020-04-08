@@ -26,7 +26,7 @@ Convert AnnData/H5AD files to h5Seurat files
 }
 \section{AnnData/H5AD to h5Seurat}{
 
-The AnnData/H5AD to h5Seurat conversio will try to automatically fill in
+The AnnData/H5AD to h5Seurat conversion will try to automatically fill in
 datasets based on data presence. It works in the following manner:
 \subsection{Expression data:}{
  The expression matrices \code{counts}, \code{data}, and \code{scale.data}
@@ -56,8 +56,8 @@ will be added as an HDF5 group unless factors are \strong{not} present and
 \subsection{Nearest-neighbor graph:}{
 If a nearest neighbor graph is present in \code{/uns/neighbors/distances}, it
 will be added as a graph dataset in the h5Seurat file and associated with
-\code{assay}; if a value is present in \code{/uns/neighbors/params/metric},
-the name of the graph will be \code{assay_metric}, otherwise, it will be
+\code{assay}; if a value is present in \code{/uns/neighbors/params/method},
+the name of the graph will be \code{assay_method}, otherwise, it will be
 \code{assay_anndata}}
 }
 
