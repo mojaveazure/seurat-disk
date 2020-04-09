@@ -273,11 +273,20 @@ H5ADToH5Seurat <- function(
     if (verbose) {
       message("Adding ", ds.map[[i]], " as ", names(x = ds.map)[i])
     }
+    dst <- names(x = ds.map)[i]
     assay.group$obj_copy_from(
       src_loc = source,
       src_name = ds.map[[i]],
-      dst_name = names(x = ds.map)[i]
+      dst_name = dst
     )
+    if (assay.group[[dst]]$attr_exists(attr_name = 'shape')) {
+      dims <- rev(x = h5attr(x = assay.group[[dst]], which = 'shape'))
+      assay.group[[dst]]$create_attr(
+        attr_name = 'dims',
+        robj = dims,
+        dtype = GuessDType(x = dims)
+      )
+    }
   }
   features.source <- ifelse(
     test = source$exists(name = 'raw/var'),
@@ -300,6 +309,13 @@ H5ADToH5Seurat <- function(
     )
   }
   # Add feature-level metadata
+  if (getOption(x = "Seuratdisk.dtypes.dataframe_as_group", default = FALSE)) {
+    warning(
+      "Adding feature-level metadata as a compound is not yet supported",
+      call. = FALSE,
+      immediate. = TRUE
+    )
+  }
   if (source$exists(name = 'raw/var')) {
     if (verbose) {
       message("Adding meta.features from raw/var")
@@ -309,6 +325,27 @@ H5ADToH5Seurat <- function(
       src_name = 'raw/var',
       dst_name = 'meta.features'
     )
+    if (scaled) {
+      features.use <- assay.group[['features']][] %in% assay.group[['scaled.features']][]
+      features.use <- which(x = features.use)
+      meta.scaled <- names(x = source[['var']])
+      meta.scaled <- meta.scaled[!meta.scaled %in% c('__categories', scaled.dset)]
+      for (mf in meta.scaled) {
+        if (!mf %in% names(x = assay.group[['meta.features']])) {
+          if (verbose) {
+            message("Adding ", mf, " from scaled feature-level metadata")
+          }
+          assay.group[['meta.features']]$create_dataset(
+            name = mf,
+            dtype = source[['var']][[mf]]$get_type(),
+            space = H5S$new(dims = assay.group[['features']]$dims)
+          )
+        } else if (verbose) {
+          message("Merging ", mf, " from scaled feature-level metadata")
+        }
+        assay.group[['meta.features']][[mf]][features.use] <- source[['var']][[mf]]$read()
+      }
+    }
   } else {
     if (verbose) {
       message("Adding meta.features from var")
@@ -319,6 +356,19 @@ H5ADToH5Seurat <- function(
       dst_name = 'meta.features'
     )
   }
+  ColToFactor(dfgroup = assay.group[['meta.features']])
+  if (assay.group[['meta.features']]$attr_exists(attr_name = 'column-order')) {
+    colnames <- h5attr(
+      x = assay.group[['meta.features']],
+      which = 'column-order'
+    )
+    assay.group[['meta.features']]$create_attr(
+      attr_name = 'colnames',
+      robj = colnames,
+      dtype = GuessDType(x = colnames)
+    )
+  }
+  assay.group[['meta.features']]$link_delete(name = GetRownames(dset = 'var'))
   # Add cell-level metadata
   if (source$exists(name = 'obs')) {
     if (!source[['obs']]$exists(name = '__categories') && !getOption("SeuratDisk.dtypes.dataframe_as_group", x = TRUE)) {
@@ -354,6 +404,17 @@ H5ADToH5Seurat <- function(
       "No cell-level metadata present, creating fake cell names",
       call. = FALSE,
       immediate. = TRUE
+    )
+    ncells <- if (inherits(x = assay.group[['data']], what = 'H5Group')) {
+      assay.group[['data/indptr']]$dims - 1
+    } else {
+      assay.group[['data']]$dims[2]
+    }
+    dfile$create_group(name = 'meta.data')
+    dfile$create_dataset(
+      name = 'cell.names',
+      robj = paste0('Cell', seq.default(from = 1, to = ncells)),
+      dtype = GuessDType(x = 'Cell1')
     )
   }
   # Add dimensional reduction information
