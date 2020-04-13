@@ -39,7 +39,21 @@ datasets based on data presence. It works in the following manner:
   \item \code{scale.data} will be filled with \code{/X} if it dense;
   otherwise, it will be empty
  }
- TODO: note about meta.features
+ Feature names are taken from the feature-level metadata
+}
+\subsection{Feature-level metadata:}{
+Feature-level metadata is added to the \code{meta.features} datasets in each
+assay. Feature names are taken from the dataset specified by the
+\code{_index} attribute, the \code{_index} dataset, or the \code{index}
+dataset, in that order. Metadata is populated with \code{/raw/var} if
+present, otherwise with \code{/var}; if both \code{/raw/var} and \code{/var}
+are present, then \code{meta.features} will be populated with \code{/raw/var}
+first, then \code{/var} will be added to it. For columns present in both
+\code{/raw/var} and \code{/var}, the values in \code{/var} will be used
+instead. \strong{Note}: it is possible for \code{/var} to have fewer features
+than \code{/raw/var}; if this is the case, then only the features present in
+\code{/var} will be overwritten, with the metadata for features \emph{not}
+present in \code{/var} remaining as they were in \code{/raw/var} or empty
 }
 \subsection{Cell-level metadata:}{
 Cell-level metadata is added to \code{meta.data}; the row names of the
@@ -51,7 +65,37 @@ will be added as an HDF5 group unless factors are \strong{not} present and
 \code{\link[SeuratDisk]{SeuratDisk.dtype.dataframe_as_group}} is \code{FALSE}
 }
 \subsection{Dimensional reduction information:}{
- TODO: this
+ Cell embeddings are taken from \code{/obsm}; dimensional reductions are
+ named based on their names from \code{obsm} by removing the preceding "X_".
+ For example, if a dimensional reduction is named "X_pca" in \code{/obsm},
+ the resulting dimensional reduction information will be named "pca". The key
+ will be set to one of the following:
+ \itemize{
+  \item "PC_" if "pca" is present in the dimensional reduction name (
+  \code{grepl("pca", reduction.name, ignore.case = TRUE)})
+  \item "tSNE_" if "tsne" is present in the dimensional reduction name (
+  \code{grepl("tsne", reduction.name, ignore.case = TRUE)})
+  \item \code{reduction.name_} for all other reductions
+ }
+ Remember that the preceding "X_" will be removed from the reduction name
+ before converting to a key. Feature loadings are taken from \code{/varm} and
+ placed in the associated dimensional reduction. The dimensional reduction is
+ determine from the loadings name in \code{/varm}:
+ \itemize{
+  \item "PCs" will be associated with a dimensional reduction named "pca"
+  \item All other loadings in \code{/varm} will be added to a dimensional
+  reduction named \code{tolower(loading)} (eg. a loading named "ICA" will be
+  added to a dimensional reduction named "ica")
+ }
+ If a dimensional reduction cannot be found according to the rules above, the
+ loading will not be taken from the AnnData/H5AD file. Miscellaneous
+ information will be taken from \code{/uns/reduction} where \code{reduction}
+ is the name of the reduction in \code{/obsm} without the preceding "X_"; if
+ no dimensional reduction information present, then miscellaneous information
+ will not be taken from the AnnData/H5AD file. Standard deviations are taken
+ from a dataset \code{/uns/reduction/variance}; the variances will be
+ converted to standard deviations and added to the \code{stdev} dataset of
+ a dimensional reduction
 }
 \subsection{Nearest-neighbor graph:}{
 If a nearest neighbor graph is present in \code{/uns/neighbors/distances}, it

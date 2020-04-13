@@ -64,7 +64,7 @@ index (\code{source$index()}). It works in the following manner:
   \code{X_reduc}
   \item feature loadings, if present, are placed in \code{varm} and renamed
   to either \code{PCs} if \code{reduc} is "pca" otherwise \code{reduc} in all
-   caps
+  caps
  }
  For example, if \code{reduc} is "ica", then cell embeddings will be "X_ica"
  in \code{obsm} and feature loaodings, if present, will be "ICA" in
