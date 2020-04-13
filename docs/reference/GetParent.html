@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get a class string with package information — GetClass • SeuratDisk</title>
+<title>Get the parent of an HDF5 dataset or group — GetParent • SeuratDisk</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,8 @@
 
 
 
-<meta property="og:title" content="Get a class string with package information — GetClass" />
-<meta property="og:description" content="S4 classes are useful in the context of their defining package (benefits of
-stricter typing). In order to ensure class information is properly retained
-in HDF5 files, S4 class names are written as &amp;#8220;package:classname&amp;#8221; with
-certain exceptions (eg. S4 classes defined by
-Seurat)" />
+<meta property="og:title" content="Get the parent of an HDF5 dataset or group — GetParent" />
+<meta property="og:description" content="Get the parent of an HDF5 dataset or group" />
 
 
 
@@ -127,44 +123,30 @@ Seurat)" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get a class string with package information</h1>
+    <h1>Get the parent of an HDF5 dataset or group</h1>
     <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/zzz.R'><code>R/zzz.R</code></a></small>
-    <div class="hidden name"><code>GetClass.Rd</code></div>
+    <div class="hidden name"><code>GetParent.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>S4 classes are useful in the context of their defining package (benefits of
-stricter typing). In order to ensure class information is properly retained
-in HDF5 files, S4 class names are written as &#8220;package:classname&#8221; with
-certain exceptions (eg. S4 classes defined by
-<a href='https://rdrr.io/pkg/Seurat/man/Seurat-package.html'>Seurat</a>)</p>
+    <p>Get the parent of an HDF5 dataset or group</p>
     </div>
 
-    <pre class="usage"><span class='fu'>GetClass</span>(<span class='no'>class</span>, <span class='kw'>packages</span> <span class='kw'>=</span> <span class='st'>"Seurat"</span>)</pre>
+    <pre class="usage"><span class='fu'>GetParent</span>(<span class='no'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>class</th>
-      <td><p>Class name</p></td>
-    </tr>
-    <tr>
-      <th>packages</th>
-      <td><p>A vector of packages to exclude from resulting class
-information</p></td>
+      <th>x</th>
+      <td><p>An HDF5 dataset or group</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A character vector with the class</p>
+    <p>An <code><a href='http://hhoeflin.github.io/hdf5r/reference/H5File-class.html'>H5File</a></code> or <code><a href='http://hhoeflin.github.io/hdf5r/reference/H5Group-class.html'>H5Group</a></code> object</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>GetClass</span>(<span class='st'>'Seurat'</span>)</div><div class='output co'>#&gt; [1] "Seurat"</div><div class='input'><span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>GetClass</span>(<span class='st'>'Matrix'</span>)</div><div class='output co'>#&gt; [1] "Matrix:Matrix"</div><div class='input'># }
-
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

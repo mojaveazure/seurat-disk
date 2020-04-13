@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -42,7 +46,6 @@
   oriented HDF5-based file formats and provides infrastructure to perform
   disk-based computation on said files. In addition, SeuratDisk integrates with
   the Seurat framework and provides disk-based methods for Seurat's toolkit." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -60,7 +63,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -107,7 +110,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/mojaveazure/seurat-disk">
+  <a href="https://github.com/mojaveazure/seurat-disk/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -148,10 +151,18 @@
 
 <p>SeuratDisk uses the following options to control behaviour, users can configure
 these with <code><a href='https://rdrr.io/r/base/options.html'>options</a></code>:</p>
-<dl class='dl-horizontal'>
- <dt><code>SeuratDisk.dtypes.logical_to_int</code></dt><dd><p>When writing
- <a href='https://rdrr.io/r/base/logical.html'>logical</a> vectors, coerce to integer types to ensure
- compatibility across languages (see <code><a href='BoolToInt.html'>BoolToInt</a></code> for more details)</p></dd>
+<dl'>
+ <dt><code>SeuratDisk.dtypes.logical_to_int</code></dt><dd><p>When writing <a href='https://rdrr.io/r/base/logical.html'>logical</a> vectors, coerce to integer types to
+  ensure compatibility across languages (see <code><a href='BoolToInt.html'>BoolToInt</a></code> for
+  more details)</p></dd>
+ <dt><code>SeuratDisk.dtypes.dataframe_as_group</code></dt><dd><p>When writing <a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a>s, always write out as a group
+  regardless of factor presence</p></dd>
+ <dt><code>SeuratDisk.chunking.MARGIN</code></dt><dd><p>Default direction for chunking datasets; choose from:
+  <dl'>
+   <dt>largest</dt><dd><p>Chunk along the largest dimension of a dataset</p></dd>
+   <dt>smallest</dt><dd><p>Chunk along the smallest dimension</p></dd>
+   <dt>first</dt><dd><p>Chunk along the first dimension</p></dd>
+   <dt>last</dt><dd><p>Chunk along the last dimension</p></dd></dl></p></dd>
 
 </dl>
 
@@ -166,20 +177,10 @@ these with <code><a href='https://rdrr.io/r/base/options.html'>options</a></code
 </div>
 
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#package-options">Package options</a></li>
-      <li><a href="#see-also">See also</a></li>
-    </ul>
-
-    <h2>Author</h2>
-    <p><strong>Maintainer</strong>: Paul Hoffman <a href='mailto:phoffman@nygenome.org'>phoffman@nygenome.org</a> (<a href='https://orcid.org/0000-0002-7693-8957'>ORCID</a>)</p>
-<p>Other contributors:</p><ul>
-<li><p>Rahul Satija <a href='mailto:rsatija@nygenome.org'>rsatija@nygenome.org</a> (<a href='https://orcid.org/0000-0001-9448-8833'>ORCID</a>) [contributor]</p></li>
-</ul>
-
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -190,7 +191,7 @@ these with <code><a href='https://rdrr.io/r/base/options.html'>options</a></code
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

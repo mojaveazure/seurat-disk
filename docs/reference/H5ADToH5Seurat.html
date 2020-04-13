@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert an on-disk single-cell dataset to another format — Convert • SeuratDisk</title>
+<title>Convert AnnData/H5AD files to h5Seurat files — H5ADToH5Seurat • SeuratDisk</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,8 @@
 
 
 
-<meta property="og:title" content="Convert an on-disk single-cell dataset to another format — Convert" />
-<meta property="og:description" content="HDF5-based single-cell datasets can be converted from one format to another
-using minimal memory. Details about conversion formats implemented are
-provided below" />
+<meta property="og:title" content="Convert AnnData/H5AD files to h5Seurat files — H5ADToH5Seurat" />
+<meta property="og:description" content="Convert AnnData/H5AD files to h5Seurat files" />
 
 
 
@@ -125,41 +123,16 @@ provided below" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convert an on-disk single-cell dataset to another format</h1>
+    <h1>Convert AnnData/H5AD files to h5Seurat files</h1>
     <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/Convert.R'><code>R/Convert.R</code></a></small>
-    <div class="hidden name"><code>Convert.Rd</code></div>
+    <div class="hidden name"><code>H5ADToH5Seurat.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>HDF5-based single-cell datasets can be converted from one format to another
-using minimal memory. Details about conversion formats implemented are
-provided below</p>
+    <p>Convert AnnData/H5AD files to h5Seurat files</p>
     </div>
 
-    <pre class="usage"><span class='fu'>Convert</span>(<span class='no'>source</span>, <span class='no'>dest</span>, <span class='no'>assay</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for character</span>
-<span class='fu'>Convert</span>(<span class='no'>source</span>, <span class='no'>dest</span>, <span class='no'>assay</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for H5File</span>
-<span class='fu'>Convert</span>(
-  <span class='no'>source</span>,
-  <span class='kw'>dest</span> <span class='kw'>=</span> <span class='st'>"h5seurat"</span>,
-  <span class='kw'>assay</span> <span class='kw'>=</span> <span class='st'>"RNA"</span>,
-  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>...</span>
-)
-
-<span class='co'># S3 method for h5Seurat</span>
-<span class='fu'>Convert</span>(
-  <span class='no'>source</span>,
-  <span class='kw'>dest</span> <span class='kw'>=</span> <span class='st'>"h5ad"</span>,
-  <span class='kw'>assay</span> <span class='kw'>=</span> <span class='fu'><a href='h5Seurat-bindings.html'>DefaultAssay</a></span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='no'>source</span>),
-  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>H5ADToH5Seurat</span>(<span class='no'>source</span>, <span class='no'>dest</span>, <span class='kw'>assay</span> <span class='kw'>=</span> <span class='st'>"RNA"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -185,18 +158,11 @@ out; converting to <code><a href='h5Seurat-class.html'>h5Seurat</a></code>: name
       <th>verbose</th>
       <td><p>Show progress updates</p></td>
     </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Arguments passed to other methods</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If <code>source</code> is a <code>character</code>, invisibly returns
-<code>dest</code>; otherwise, returns an <code><a href='http://hhoeflin.github.io/hdf5r/reference/H5File-class.html'>H5File</a></code>, or
-filetype-specific subclass of <code>H5File</code> (eg. <code><a href='h5Seurat-class.html'>h5Seurat</a></code>),
-connection to <code>dest</code></p>
+    <p>Returns a handle to <code>dest</code> as an <code><a href='h5Seurat-class.html'>h5Seurat</a></code> object</p>
     <h2 class="hasAnchor" id="anndata-h-ad-to-h-seurat"><a class="anchor" href="#anndata-h-ad-to-h-seurat"></a>AnnData/H5AD to h5Seurat</h2>
 
     
@@ -269,47 +235,6 @@ will be added as a graph dataset in the h5Seurat file and associated with
 <code>assay</code>; if a value is present in <code>/uns/neighbors/params/method</code>,
 the name of the graph will be <code>assay_method</code>, otherwise, it will be
 <code>assay_anndata</code></p>
-
-    <h2 class="hasAnchor" id="h-seurat-to-anndata-h-ad"><a class="anchor" href="#h-seurat-to-anndata-h-ad"></a>h5Seurat to AnnData/H5AD</h2>
-
-    
-
-<p>The h5Seurat to AnnData/H5AD conversion will try to automatically fill in
-datasets based on data presence. Data presense is determined by the h5Seurat
-index (<code>source$index()</code>). It works in the following manner:</p><h3>Assay data:</h3>
-<p></p><ul>
-<li><p><code>X</code> will be filled with <code>scale.data</code> if <code>scale.data</code>
-  is present; otherwise, it will be filled with <code>data</code></p></li>
-<li><p><code>var</code> will be filled with <code>meta.features</code> <strong>only</strong> for
-  the features present in <code>X</code>; for example, if <code>X</code> is filled with
-  <code>scale.data</code>, then <code>var</code> will contain only features that have
-  been scaled</p></li>
-<li><p><code>raw.X</code> will be filled with <code>data</code> if <code>X</code> is filled
-  with <code>scale.data</code>; otherwise, it will be filled with <code>counts</code>. If
-  <code>counts</code> is not present, then <code>raw</code> will not be filled</p></li>
-<li><p><code>raw.var</code> will be filled with <code>meta.features</code> with the
-  features present in <code>raw.X</code>; if <code>raw.X</code> is not filled, then
-  <code>raw.var</code> will not be filled</p></li>
-</ul>
-
-<h3>Cell-level metadata:</h3>
-<p>Cell-level metadata is added to <code>obs</code></p>
-<h3>Dimensional reduction information</h3>
-<p>Only dimensional reductions associated with <code>assay</code> or marked as
- <a href='https://rdrr.io/pkg/Seurat/man/IsGlobal.html'>global</a> will be transfered to the H5AD file. For
- every reduction <code>reduc</code>:</p><ul>
-<li><p>cell embeddings are placed in <code>obsm</code> and renamed to
-  <code>X_reduc</code></p></li>
-<li><p>feature loadings, if present, are placed in <code>varm</code> and renamed
-  to either &#8220;PCs&#8221; if <code>reduc</code> is &#8220;pca&#8221; otherwise
-  <code>reduc</code> in all caps</p></li>
-</ul><p>For example, if <code>reduc</code> is &#8220;ica&#8221;, then cell embeddings will be
- &#8220;X_ica&#8221; in <code>obsm</code> and feature loaodings, if present, will be
- &#8220;ICA&#8221; in <code>varm</code></p>
-<h3>Nearest-neighbor graphs</h3>
-<p>If a nearest-neighbor graph is associated with <code>assay</code>, it will be
- added to <code>uns/neighbors/distances</code>; if more than one graph is present,
- then <strong>only</strong> the last graph according to the index will be added.</p>
 
 
   </div>

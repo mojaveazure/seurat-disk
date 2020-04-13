@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get a class string with package information — GetClass • SeuratDisk</title>
+<title>Determine the margin to use for a dataset — GetMargin • SeuratDisk</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,8 @@
 
 
 
-<meta property="og:title" content="Get a class string with package information — GetClass" />
-<meta property="og:description" content="S4 classes are useful in the context of their defining package (benefits of
-stricter typing). In order to ensure class information is properly retained
-in HDF5 files, S4 class names are written as &amp;#8220;package:classname&amp;#8221; with
-certain exceptions (eg. S4 classes defined by
-Seurat)" />
+<meta property="og:title" content="Determine the margin to use for a dataset — GetMargin" />
+<meta property="og:description" content="Determine the margin to use for a dataset" />
 
 
 
@@ -127,42 +123,42 @@ Seurat)" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get a class string with package information</h1>
+    <h1>Determine the margin to use for a dataset</h1>
     <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/zzz.R'><code>R/zzz.R</code></a></small>
-    <div class="hidden name"><code>GetClass.Rd</code></div>
+    <div class="hidden name"><code>GetMargin.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>S4 classes are useful in the context of their defining package (benefits of
-stricter typing). In order to ensure class information is properly retained
-in HDF5 files, S4 class names are written as &#8220;package:classname&#8221; with
-certain exceptions (eg. S4 classes defined by
-<a href='https://rdrr.io/pkg/Seurat/man/Seurat-package.html'>Seurat</a>)</p>
+    <p>Determine the margin to use for a dataset</p>
     </div>
 
-    <pre class="usage"><span class='fu'>GetClass</span>(<span class='no'>class</span>, <span class='kw'>packages</span> <span class='kw'>=</span> <span class='st'>"Seurat"</span>)</pre>
+    <pre class="usage"><span class='fu'>GetMargin</span>(<span class='no'>dims</span>, <span class='kw'>MARGIN</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"SeuratDisk.chunking.MARGIN"</span>))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>class</th>
-      <td><p>Class name</p></td>
+      <th>dims</th>
+      <td><p>Dimensions of a dataset</p></td>
     </tr>
     <tr>
-      <th>packages</th>
-      <td><p>A vector of packages to exclude from resulting class
-information</p></td>
+      <th>MARGIN</th>
+      <td><p>Either an integer value contained within
+<code>1:length(x = dims)</code> or one of the possible values of
+<code>SeuratDisk.chunking.MARGIN</code></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A character vector with the class</p>
+    <p>An integer value with the <code>MARGIN</code></p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code>SeuratDisk.chunking.MARGIN</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>GetClass</span>(<span class='st'>'Seurat'</span>)</div><div class='output co'>#&gt; [1] "Seurat"</div><div class='input'><span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>GetClass</span>(<span class='st'>'Matrix'</span>)</div><div class='output co'>#&gt; [1] "Matrix:Matrix"</div><div class='input'># }
+<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>GetMargin</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>, <span class='fl'>10</span>))</div><div class='output co'>#&gt; [1] 2</div><div class='input'># }
 
 </div></pre>
   </div>
