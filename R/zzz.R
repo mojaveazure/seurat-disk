@@ -14,12 +14,24 @@ NULL
 #' these with \code{\link[base]{options}}:
 #'
 #' \describe{
-#'  \item{\code{SeuratDisk.dtypes.logical_to_int}}{When writing
-#'  \link[base]{logical} vectors, coerce to integer types to ensure
-#'  compatibility across languages (see \code{\link{BoolToInt}} for more details)}
-#'  \item{\code{SeuratDisk.dtypes.dataframe_as_group}}{When writing
-#'  \link[base]{data.frame}s, always write out as a group regardless of factor
-#'  presence}
+#'  \item{\code{SeuratDisk.dtypes.logical_to_int}}{
+#'   When writing \link[base]{logical} vectors, coerce to integer types to
+#'   ensure compatibility across languages (see \code{\link{BoolToInt}} for
+#'   more details)
+#'  }
+#'  \item{\code{SeuratDisk.dtypes.dataframe_as_group}}{
+#'   When writing \link[base]{data.frame}s, always write out as a group
+#'   regardless of factor presence
+#'  }
+#'  \item{\code{SeuratDisk.chunking.MARGIN}}{
+#'   Default direction for chunking datasets; choose from:
+#'   \describe{
+#'    \item{largest}{Chunk along the largest dimension of a dataset}
+#'    \item{smallest}{Chunk along the smallest dimension}
+#'    \item{first}{Chunk along the first dimension}
+#'    \item{last}{Chunk along the last dimension}
+#'   }
+#'  }
 #' }
 #'
 #' @aliases SeuratDisk
@@ -32,7 +44,8 @@ NULL
 
 default.options <- list(
   "SeuratDisk.dtypes.logical_to_int" = TRUE,
-  "SeuratDisk.dtypes.dataframe_as_group" = TRUE
+  "SeuratDisk.dtypes.dataframe_as_group" = TRUE,
+  "SeuratDisk.chunking.MARGIN" = c("largest", "smallest", "first", "last")
 )
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -312,6 +325,68 @@ GetClass <- function(class, packages = 'Seurat') {
   return(gsub(pattern = '^:', replacement = '', x = class))
 }
 
+#' Determine the margin to use for a dataset
+#'
+#' @param dims Dimensions of a dataset
+#' @param MARGIN Either an integer value contained within
+#' \code{1:length(x = dims)} or one of the possible values of
+#' \code{\link[SeuratDisk]{SeuratDisk.chunking.MARGIN}}
+#'
+#' @return An integer value with the \code{MARGIN}
+#'
+#' @seealso \code{\link[SeuratDisk]{SeuratDisk.chunking.MARGIN}}
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \donttest{
+#' SeuratDisk:::GetMargin(c(4, 10))
+#' }
+#'
+GetMargin <- function(dims, MARGIN = getOption(x = 'SeuratDisk.chunking.MARGIN')) {
+  if (isFALSE(x = is.numeric(x = MARGIN))) {
+    MARGIN <- tryCatch(
+      expr = match.arg(
+        arg = MARGIN,
+        choices = default.options[['SeuratDisk.chunking.MARGIN']]
+      ),
+      error = function(err) {
+        warning(err$message, call. = FALSE, immediate. = TRUE)
+        return(default.options[['SeuratDisk.chunking.MARGIN']][1])
+      }
+    )
+    MARGIN <- switch(
+      EXPR = MARGIN,
+      'largest' = which.max(x = dims),
+      'smallest' = which.min(x = dims),
+      'first' = 1L,
+      'last' = length(x = dims)
+    )
+  }
+  if (isFALSE(x = MARGIN %in% seq.int(from = 1, to = length(x = dims)))) {
+    stop("'MARGIN' must be within the dimensions of the dataset", call. = FALSE)
+  }
+  return(MARGIN)
+}
+
+#' Get the parent of an HDF5 dataset or group
+#'
+#' @param x An HDF5 dataset or group
+#'
+#' @return An \code{\link[hdf5r]{H5File}} or \code{\link[hdf5r]{H5Group}} object
+#'
+#' @keywords internal
+#'
+GetParent <- function(x) {
+  dname <- dirname(path = x$get_obj_name())
+  dest <- if (dname == '/') {
+    x$get_file_id()
+  } else {
+    x$get_file_id()[[dname]]
+  }
+  return(dest)
+}
+
 #' Guess an HDF5 Datatype
 #'
 #' Wrapper around \code{\link[hdf5r:guess_dtype]{hdf5r::guess_dtype}}, allowing
@@ -578,6 +653,29 @@ UpdateSlots <- function(object) {
     }
   }
   return(object)
+}
+
+#' Is an HDF5 file or group writeable
+#'
+#' @param x An \code{\link[hdf5r]{H5File}} or \code{\link[hdf5r]{H5Group}}
+#' object
+#' @param error Throw an error
+#'
+#' @return ...
+#'
+#' @keywords internal
+#'
+Writeable <- function(x, error = TRUE) {
+  mode <- as.character(x = x$get_file_id()$get_intent()) == 'H5F_ACC_RDONLY'
+  if (isTRUE(x = mode)) {
+    msg <- paste("File", x$get_filename(), "is not writeable")
+    if (isTRUE(x = error)) {
+      stop(msg, call. = FALSE)
+    } else {
+      warning(msg, immediate. = TRUE, call. = FALSE)
+    }
+  }
+  return(invisible(x = !mode))
 }
 
 #' Get the proper HDF5 connection mode for writing depending on overwrite status

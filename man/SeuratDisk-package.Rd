@@ -21,12 +21,24 @@ SeuratDisk uses the following options to control behaviour, users can configure
 these with \code{\link[base]{options}}:
 
 \describe{
- \item{\code{SeuratDisk.dtypes.logical_to_int}}{When writing
- \link[base]{logical} vectors, coerce to integer types to ensure
- compatibility across languages (see \code{\link{BoolToInt}} for more details)}
- \item{\code{SeuratDisk.dtypes.dataframe_as_group}}{When writing
- \link[base]{data.frame}s, always write out as a group regardless of factor
- presence}
+ \item{\code{SeuratDisk.dtypes.logical_to_int}}{
+  When writing \link[base]{logical} vectors, coerce to integer types to
+  ensure compatibility across languages (see \code{\link{BoolToInt}} for
+  more details)
+ }
+ \item{\code{SeuratDisk.dtypes.dataframe_as_group}}{
+  When writing \link[base]{data.frame}s, always write out as a group
+  regardless of factor presence
+ }
+ \item{\code{SeuratDisk.chunking.MARGIN}}{
+  Default direction for chunking datasets; choose from:
+  \describe{
+   \item{largest}{Chunk along the largest dimension of a dataset}
+   \item{smallest}{Chunk along the smallest dimension}
+   \item{first}{Chunk along the first dimension (dims[1])}
+   \item{last}{Chunk along the last dimension (dims[length(dims)])}
+  }
+ }
 }
 }
 
