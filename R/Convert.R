@@ -1,6 +1,7 @@
 #' @include zzz.R
 #' @include Connect.R
 #' @include TestObject.R
+#' @include Transpose.R
 #' @importFrom utils setTxtProgressBar
 #' @importFrom hdf5r H5File h5attr H5S
 #' @importFrom tools file_path_sans_ext
@@ -309,7 +310,7 @@ H5ADToH5Seurat <- function(
     )
   }
   # Add feature-level metadata
-  if (getOption(x = "Seuratdisk.dtypes.dataframe_as_group", default = FALSE)) {
+  if (!getOption(x = "Seuratdisk.dtypes.dataframe_as_group", default = FALSE)) {
     warning(
       "Adding feature-level metadata as a compound is not yet supported",
       call. = FALSE,
@@ -418,6 +419,121 @@ H5ADToH5Seurat <- function(
     )
   }
   # Add dimensional reduction information
+  if (source$exists(name = 'obsm')) {
+    # Add cell embeddings
+    if (inherits(x = source[['obsm']], what = 'H5Group')) {
+      for (reduc in names(x = source[['obsm']])) {
+        sreduc <- gsub(pattern = '^X_', replacement = '', x = reduc)
+        reduc.group <- dfile[['reductions']]$create_group(name = sreduc)
+        message("Adding ", reduc, " as cell embeddings for ", sreduc)
+        Transpose(
+          x = source[['obsm']][[reduc]],
+          dest = reduc.group,
+          dname = 'cell.embeddings',
+          verbose = verbose
+        )
+        reduc.group$create_group(name = 'misc')
+        reduc.group$create_attr(
+          attr_name = 'active.assay',
+          robj = assay,
+          dtype = GuessDType(x = assay)
+        )
+        key <- paste0(
+          if (grepl(pattern = 'pca', x = sreduc, ignore.case = TRUE)) {
+            'PC'
+          } else if (grepl(pattern = 'tsne', x = sreduc, ignore.case = TRUE)) {
+            'tSNE'
+          } else {
+            sreduc
+          },
+          '_'
+        )
+        reduc.group$create_attr(
+          attr_name = 'key',
+          robj = key,
+          dtype = GuessDType(x = reduc)
+        )
+        global <- BoolToInt(x = grepl(
+          pattern = 'tsne|umap',
+          x = sreduc,
+          ignore.case = TRUE
+        ))
+        reduc.group$create_attr(
+          attr_name = 'global',
+          robj = global,
+          dtype = GuessDType(x = global)
+        )
+      }
+    } else {
+      warning(
+        "Reading compound dimensional reductions not yet supported, please update your H5AD file",
+        call. = FALSE,
+        immediate. = TRUE
+      )
+    }
+    # Add feature loadings
+    if (source$exists(name = 'varm')) {
+      if (inherits(x = source[['varm']], what = 'H5Group')) {
+        for (reduc in names(x = source[['varm']])) {
+          sreduc <- switch(EXPR = reduc, 'PCs' = 'pca', tolower(x = reduc))
+          if (!isTRUE(x = sreduc %in% names(x = dfile[['reductions']]))) {
+            warning(
+              "Cannot find a reduction named ",
+              sreduc,
+              " (",
+              reduc,
+              " in varm)",
+              call. = FALSE,
+              immediate. = TRUE
+            )
+            next
+          }
+          if (isTRUE(x = verbose)) {
+            message("Adding ", reduc, " as feature loadings fpr ", sreduc)
+          }
+          Transpose(
+            x = source[['varm']][[reduc]],
+            dest = dfile[['reductions']][[sreduc]],
+            dname = 'feature.loadings',
+            verbose = verbose
+          )
+        }
+      } else {
+        warning(
+          "Reading compound dimensional reductions not yet supported",
+          call. = FALSE,
+          immediate. = TRUE
+        )
+      }
+    }
+    # Add miscellaneous information
+    if (source$exists(name = 'uns')) {
+      for (reduc in names(x = source[['uns']])) {
+        if (!isTRUE(x = reduc %in% names(x = dfile[['reductions']]))) {
+          next
+        }
+        if (verbose) {
+          message("Adding miscellaneous information for ", reduc)
+        }
+        dfile[['reductions']][[reduc]]$link_delete(name = 'misc')
+        dfile[['reductions']][[reduc]]$obj_copy_from(
+          src_loc = source[['uns']],
+          src_name = reduc,
+          dst_name = 'misc'
+        )
+        if ('variance' %in% names(x = dfile[['reductions']][[reduc]][['misc']])) {
+          if (verbose) {
+            message("Adding standard deviations for ", reduc)
+          }
+          dfile[['reductions']][[reduc]]$create_dataset(
+            name = 'stdev',
+            robj = sqrt(x = dfile[['reductions']][[reduc]][['misc']][['variance']][]),
+            dtype = GuessDType(x = 1.0)
+          )
+        }
+      }
+    }
+  }
   # Add nearest-neighbor graph
   if (source$exists('uns/neighbors/distances')) {
     graph.name <- paste(
