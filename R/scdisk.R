@@ -55,13 +55,13 @@ scdisk <- R6Class(
     },
     #' @description Generate chunk points for a dataset
     #' @param dataset Name of dataset
-    #' @param MARGIN Direction to chunk in; defaults to last dimension of dataset
+    #' @param MARGIN Direction to chunk in; defaults to largest dimension of dataset
     #' @param csize Size of chunk; defaults to hdf5r-suggested chunk size
     #' @return A matrix where each row is a chunk, column 1 is start points,
     #' column 2 is end points
     chunk.points = function(
       dataset,
-      MARGIN = NULL,
+      MARGIN = getOption(x = 'SeuratDisk.chunking.MARGIN', default = 'largest'),
       csize = NULL
     ) {
       if (!self$exists(name = dataset)) {
@@ -75,13 +75,7 @@ scdisk <- R6Class(
       } else if (!inherits(x = self[[dataset]], what = 'H5D')) {
         stop("'dataset' must be an HDF5 dataset", call. = FALSE)
       }
-      MARGIN <- MARGIN %||% length(x = self[[dataset]]$dims)
-      if (!MARGIN %in% seq.int(from = 1, to = length(x = self[[dataset]]$dims))) {
-        stop(
-          "'MARGIN' must be within the dimensions of the dataset",
-          call. = FALSE
-        )
-      }
+      MARGIN <- GetMargin(dims = self[[dataset]]$dims, MARGIN = MARGIN)
       csize <- csize %||% self[[dataset]]$chunk_dims[MARGIN]
       return(ChunkPoints(dsize = self[[dataset]]$dims[MARGIN], csize = csize))
     }

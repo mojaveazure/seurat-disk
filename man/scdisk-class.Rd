@@ -152,7 +152,11 @@ Handle the loss of reference to this \code{scdisk} object
 \subsection{Method \code{chunk.points()}}{
 Generate chunk points for a dataset
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{scdisk$chunk.points(dataset, MARGIN = NULL, csize = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{scdisk$chunk.points(
+  dataset,
+  MARGIN = getOption(x = "SeuratDisk.chunking.MARGIN", default = "largest"),
+  csize = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -160,7 +164,7 @@ Generate chunk points for a dataset
 \describe{
 \item{\code{dataset}}{Name of dataset}
 
-\item{\code{MARGIN}}{Direction to chunk in; defaults to last dimension of dataset}
+\item{\code{MARGIN}}{Direction to chunk in; defaults to largest dimension of dataset}
 
 \item{\code{csize}}{Size of chunk; defaults to hdf5r-suggested chunk size}
 }
