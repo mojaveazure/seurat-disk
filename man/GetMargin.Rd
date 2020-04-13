@@ -11,7 +11,7 @@ GetMargin(dims, MARGIN = getOption(x = "SeuratDisk.chunking.MARGIN"))
 
 \item{MARGIN}{Either an integer value contained within
 \code{1:length(x = dims)} or one of the possible values of
-\code{\link[SeuratDisk]{"SeuratDisk.chunking.MARGIN"}}}
+\code{\link[SeuratDisk]{SeuratDisk.chunking.MARGIN}}}
 }
 \value{
 An integer value with the \code{MARGIN}
@@ -24,5 +24,8 @@ Determine the margin to use for a dataset
 SeuratDisk:::GetMargin(c(4, 10))
 }
 
+}
+\seealso{
+\code{\link[SeuratDisk]{SeuratDisk.chunking.MARGIN}}
 }
 \keyword{internal}
