@@ -18,8 +18,9 @@ A character vector with the class
 \description{
 S4 classes are useful in the context of their defining package (benefits of
 stricter typing). In order to ensure class information is properly retained
-in HDF5 files, S4 class names are written as "package:classname" with certain
-exceptions (eg. S4 classes defined by \link[Seurat:Seurat-package]{Seurat})
+in HDF5 files, S4 class names are written as \dQuote{package:classname} with
+certain exceptions (eg. S4 classes defined by
+\link[Seurat:Seurat-package]{Seurat})
 }
 \examples{
 \donttest{

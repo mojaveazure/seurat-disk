@@ -63,7 +63,7 @@ will be loaded}
 \code{GetAssays}: A named list where each entry is a vector
 describing the slots of an assay to load and the names are the assays to load
 
-\code{GetCommands}" A vector of command log names that are derived
+\code{GetCommands}: A vector of command log names that are derived
 from an assay in \code{assay}
 
 \code{GetDimReducs}: A vector of reduction names that are derived

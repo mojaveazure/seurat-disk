@@ -25,7 +25,7 @@ ClosestVersion(
 }}
 
 \item{inclusive}{Perform an inclusive comparison (eg. \code{>=} or \code{<=}
-versus to \code{>} or \code{<}) for "rounding"}
+versus to \code{>} or \code{<}) for \dQuote{rounding}}
 }
 \value{
 The version from \code{targets} that is closest to \code{query} as a
@@ -34,9 +34,9 @@ The version from \code{targets} that is closest to \code{query} as a
 \description{
 API changes happen at set versions, and knowing how a current running version
 relates to versions introducing API changes is important.
-\code{ClosestVersion} approximages both "rounding down" (eg. to determine
-minimum version with new API addition) and "rounding up" (eg. to determine
-maximum version before API deletion) for semantic versions.
+\code{ClosestVersion} approximages both \dQuote{rounding down} (eg. to
+determine minimum version with new API addition) and \dQuote{rounding up}
+(eg. to determine maximum version before API deletion) for semantic versions.
 }
 \examples{
 \donttest{

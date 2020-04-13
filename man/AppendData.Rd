@@ -106,8 +106,8 @@ will be loaded}
 \item{extras}{Extra information to load; supports any combination of the
 following values:
 \describe{
- \item{"commands"}{Load command logs. if \code{overwrite = TRUE}, replaces
- existing command logs}
+ \item{\dQuote{commands}}{Load command logs. If \code{overwrite = TRUE},
+ replaces existing command logs}
 }}
 
 \item{overwrite}{Overwrite existing data in \code{object} with data from

@@ -63,12 +63,12 @@ index (\code{source$index()}). It works in the following manner:
   \item cell embeddings are placed in \code{obsm} and renamed to
   \code{X_reduc}
   \item feature loadings, if present, are placed in \code{varm} and renamed
-  to either \code{PCs} if \code{reduc} is "pca" otherwise \code{reduc} in all
-  caps
+  to either \dQuote{PCs} if \code{reduc} is \dQuote{pca} otherwise
+  \code{reduc} in all caps
  }
- For example, if \code{reduc} is "ica", then cell embeddings will be "X_ica"
- in \code{obsm} and feature loaodings, if present, will be "ICA" in
- \code{varm}
+ For example, if \code{reduc} is \dQuote{ica}, then cell embeddings will be
+ \dQuote{X_ica} in \code{obsm} and feature loaodings, if present, will be
+ \dQuote{ICA} in \code{varm}
 }
 \subsection{Nearest-neighbor graphs}{
  If a nearest-neighbor graph is associated with \code{assay}, it will be

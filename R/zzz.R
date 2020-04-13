@@ -140,9 +140,9 @@ ChunkPoints <- function(dsize, csize) {
 #'
 #' API changes happen at set versions, and knowing how a current running version
 #' relates to versions introducing API changes is important.
-#' \code{ClosestVersion} approximages both "rounding down" (eg. to determine
-#' minimum version with new API addition) and "rounding up" (eg. to determine
-#' maximum version before API deletion) for semantic versions.
+#' \code{ClosestVersion} approximages both \dQuote{rounding down} (eg. to
+#' determine minimum version with new API addition) and \dQuote{rounding up}
+#' (eg. to determine maximum version before API deletion) for semantic versions.
 #'
 #' @param query A query version (\code{\link[base]{character}} or
 #' \code{\link[base]{numeric_version}})
@@ -154,7 +154,7 @@ ChunkPoints <- function(dsize, csize) {
 #'  \item{max}{Closest version greater than or equal to \code{query}}
 #' }
 #' @param inclusive Perform an inclusive comparison (eg. \code{>=} or \code{<=}
-#' versus to \code{>} or \code{<}) for "rounding"
+#' versus to \code{>} or \code{<}) for \dQuote{rounding}
 #'
 #' @return The version from \code{targets} that is closest to \code{query} as a
 #' \code{\link[base]{character}} vector
@@ -295,8 +295,9 @@ FileType <- function(file) {
 #'
 #' S4 classes are useful in the context of their defining package (benefits of
 #' stricter typing). In order to ensure class information is properly retained
-#' in HDF5 files, S4 class names are written as "package:classname" with certain
-#' exceptions (eg. S4 classes defined by \link[Seurat:Seurat-package]{Seurat})
+#' in HDF5 files, S4 class names are written as \dQuote{package:classname} with
+#' certain exceptions (eg. S4 classes defined by
+#' \link[Seurat:Seurat-package]{Seurat})
 #'
 #' @param class Class name
 #' @param packages A vector of packages to exclude from resulting class

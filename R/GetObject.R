@@ -96,7 +96,7 @@ GetAssays <- function(assays, index) {
   return(assays)
 }
 
-#' @return \code{GetCommands}" A vector of command log names that are derived
+#' @return \code{GetCommands}: A vector of command log names that are derived
 #' from an assay in \code{assay}
 #'
 #' @rdname GetObject
