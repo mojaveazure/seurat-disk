@@ -1,6 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-SeuratDisk v0.0.0.9005
+SeuratDisk v0.0.0.9006
 ======================
 
 <!-- badges: start -->
