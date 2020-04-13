@@ -35,8 +35,8 @@ these with \code{\link[base]{options}}:
   \describe{
    \item{largest}{Chunk along the largest dimension of a dataset}
    \item{smallest}{Chunk along the smallest dimension}
-   \item{first}{Chunk along the first dimension (dims[1])}
-   \item{last}{Chunk along the last dimension (dims[length(dims)])}
+   \item{first}{Chunk along the first dimension}
+   \item{last}{Chunk along the last dimension}
   }
  }
 }
