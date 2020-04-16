@@ -198,8 +198,7 @@ h5Seurat <- R6Class(
       private$index.internal <- structure(
         .Data = index,
         class = c('h5SI', 'list'),
-        # active.assay = DefaultAssay(object = self)
-        active.assay = 'SCT'
+        active.assay = DefaultAssay(object = self)
       )
       return(invisible(x = NULL))
     },

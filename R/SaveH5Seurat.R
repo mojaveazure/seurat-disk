@@ -148,7 +148,7 @@ as.h5Seurat.default <- function(
 as.h5Seurat.H5File <- function(x, ...) {
   return(h5Seurat$new(
     filename = x$filename,
-    mode = ifelse(test = x$mode == 'r', yes = 'r', no = 'r+')
+    mode = ifelse(test = Writeable(x = x, error = FALSE), yes = 'r', no = 'r+')
   ))
 }
 
