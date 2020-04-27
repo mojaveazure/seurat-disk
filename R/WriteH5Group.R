@@ -31,7 +31,7 @@ BasicWrite <- function(x, name, hgroup, verbose = TRUE) {
         verbose = verbose
       )
     }
-    if (!is.null(x = names(x = x))) {
+    if (!is.null(x = names(x = x)) && length(x = names(x = x))) {
       xgroup$create_attr(
         attr_name = 'names',
         robj = intersect(x = names(x = x), y = names(x = xgroup)),
