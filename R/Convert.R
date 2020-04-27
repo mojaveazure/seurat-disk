@@ -65,6 +65,19 @@ Convert.character <- function(
   ...
 ) {
   hfile <- Connect(filename = source, force = TRUE)
+  if (missing(x = assay)) {
+    assay <- tryCatch(
+      expr = DefaultAssay(object = hfile),
+      error = function(...) {
+        warning(
+          "'assay' not set, setting to 'RNA'",
+          call. = FALSE,
+          immediate. = TRUE
+        )
+        "RNA"
+      }
+    )
+  }
   on.exit(expr = hfile$close_all())
   dfile <- Convert(
     source = hfile,
@@ -797,7 +810,7 @@ H5SeuratToH5AD <- function(
       robj = rev(x = dims),
       dtype = GuessDType(x = dims)
     )
-    dfile$attr_delete(attr_name = 'dims')
+    dfile[['X']]$attr_delete(attr_name = 'dims')
   }
   x.features <- switch(
     EXPR = x.data,
@@ -823,7 +836,8 @@ H5SeuratToH5AD <- function(
   dfile[['var']]$create_attr(
     attr_name = rownames,
     robj = rownames,
-    dtype = GuessDType(x = rownames)
+    dtype = GuessDType(x = rownames),
+    space = Scalar()
   )
   # Add raw
   if (!is.null(x = raw.data)) {
@@ -864,7 +878,8 @@ H5SeuratToH5AD <- function(
     dfile[['raw/var']]$create_attr(
       attr_name = rownames,
       robj = rownames,
-      dtype = GuessDType(x = rownames)
+      dtype = GuessDType(x = rownames),
+      space = Scalar()
     )
   }
   # Add cell-level metadata
@@ -881,7 +896,8 @@ H5SeuratToH5AD <- function(
   dfile[['obs']]$create_attr(
     attr_name = rownames,
     robj = rownames,
-    dtype = GuessDType(x = rownames)
+    dtype = GuessDType(x = rownames),
+    space = Scalar()
   )
   # Add dimensional reduction information
   dfile$create_group(name = 'obsm')

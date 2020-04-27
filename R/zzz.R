@@ -583,6 +583,17 @@ PB <- function() {
   return(txtProgressBar(char = '=', style = 3, file = stderr()))
 }
 
+#' Create a scalar space
+#'
+#' @return An object of type \code{\link[hdf5r:H5S]{H5S}} denoting a scalar HDF5
+#' space
+#'
+#' @keywords internal
+#'
+Scalar <- function() {
+  return(H5S$new(type = 'scalar'))
+}
+
 #' Generate an HDF5 string dtype
 #'
 #' Presets for encoding variations of \code{\link[hdf5r]{H5T_STRING}}; used to
@@ -654,6 +665,60 @@ UpdateSlots <- function(object) {
     }
   }
   return(object)
+}
+
+#' Write an attribute to an HDF5 file, group, or dataset
+#'
+#' @param h5 An HDF5 \link[hdf5r:H5File]{file}, \link[hdf5r:H5Group]{group}, or
+#' \link[hdf5r:H5D]{dataset}
+#' @param name Name to store attribute as
+#' @param robj An object to write out
+#' @param dtype Data type of attribute
+#' @param scalar Is this a scalar or simple (vectorized) attribute?
+#' @param overwrite Overwrite the attribute if it already exists
+#' @param ... Extra paramters passed to \code{\link[hdf5r:H5S]{H5S$new}}
+#'
+#' @return Invisibly returns \code{NULL}
+#'
+#' @importFrom hdf5r H5S
+#'
+#' @keywords internal
+#'
+WriteAttribute <- function(
+  h5,
+  name,
+  robj,
+  dtype = GuessDType(x = robj),
+  scalar = length(x = robj) == 1,
+  overwrite = FALSE,
+  ...
+) {
+  if (!inherits(x = h5, what = c('H5File', 'H5Group', 'H5D'))) {
+    stop("'h5' must be an HDF5 file, group, or dataset", call. = FALSE)
+  }
+  if (h5$attr_exists(attr_name = name)) {
+    if (overwrite) {
+      h5$attr_delete(attr_name = name)
+    } else {
+      stop("Attribute ", name, " already exists", call. = FALSE)
+    }
+  }
+  if (is.logical(x = robj) && getOption(x = "SeuratDisk.dtypes.logical_to_int", default = TRUE)) {
+    robj <- BoolToInt(x = robj)
+  }
+  space.type <- ifelse(test = isTRUE(x = scalar), yes = 'scalar', no = 'simple')
+  dims <- if (space.type == 'scalar') {
+    NULL
+  } else {
+    dim(x = robj) %||% length(x = robj)
+  }
+  h5$create_attr(
+    attr_name = name,
+    robj = robj,
+    dtype = dtype,
+    space = H5S$new(type = space.type, dims = dims, ...)
+  )
+  return(invisible(x = NULL))
 }
 
 #' Is an HDF5 file or group writeable
