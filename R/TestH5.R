@@ -90,7 +90,7 @@ setMethod(
       )
     }
     if (all(check)) {
-      check <- length(x = unique(x = x[['values']]$read())) <= x[['levels']]$dims
+      check <- length(x = na.omit(object = unique(x = x[['values']]$read()))) <= x[['levels']]$dims
     }
     return(all(check))
   }
