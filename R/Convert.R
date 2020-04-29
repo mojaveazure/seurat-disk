@@ -758,9 +758,6 @@ H5SeuratToH5AD <- function(
   # @rdname TransferDF
   #
   TransferMatrix <- function(src, dname) {
-    if (verbose) {
-      pb <- PB()
-    }
     mtx.dims <- rev(x = src$dims)
     dset <- dfile$create_dataset(
       name = dname,
@@ -777,12 +774,6 @@ H5SeuratToH5AD <- function(
         to = chunk.points[i, 'end']
       )
       dset[, select] <- src[select, ]
-      if (verbose) {
-        setTxtProgressBar(pb = pb, value = i / nrow(x = chunk.points))
-      }
-    }
-    if (verbose) {
-      close(con = pb)
     }
     return(invisible(x = NULL))
   }
