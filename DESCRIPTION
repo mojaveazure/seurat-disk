@@ -49,6 +49,7 @@ Collate:
     'Transpose.R'
     'Convert.R'
     'LoadH5Seurat.R'
+    'PadMatrix.R'
     'ReadH5.R'
     'WriteH5Group.R'
     'SaveH5Seurat.R'
