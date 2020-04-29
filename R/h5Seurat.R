@@ -6,6 +6,8 @@ NULL
 # Class definition
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+spatial.version <- '3.1.5.9900'
+
 #' A class for connections to h5Seurat files
 #'
 #' @docType class
@@ -71,7 +73,7 @@ h5Seurat <- R6Class(
   private = list(
     # Fields
     index.internal = list(),
-    versions = c('3.1.2', '3.1.4.9900'),
+    versions = c('3.1.2', spatial.version),
     # Methods
     build.index = function(version) {
       version <- match.arg(arg = version, choices = private$versions)
@@ -146,7 +148,7 @@ h5Seurat <- R6Class(
         }
       }
       # Get images
-      if (version >= numeric_version(x = '3.1.4.9900')) {
+      if (version >= numeric_version(x = spatial.version)) {
         for (image in names(x = self[['images']])) {
           img.group <- self[['images']][[image]]
           if (!img.group$attr_exists(attr_name = 'assay') || !img.group$attr_exists(attr_name = 's4class')) {
@@ -231,7 +233,7 @@ h5Seurat <- R6Class(
           }
         }
       }
-      if (numeric_version(x = version) >= numeric_version(x = '3.1.4.9900')) {
+      if (numeric_version(x = version) >= numeric_version(x = spatial.version)) {
         self$create_group(name = 'images')
       }
       return(invisible(x = self))
