@@ -2,6 +2,7 @@
 #' @include Connect.R
 #' @include TestObject.R
 #' @include Transpose.R
+#' @include PadMatrix.R
 #' @importFrom utils setTxtProgressBar
 #' @importFrom hdf5r H5File h5attr H5S
 #' @importFrom tools file_path_sans_ext
@@ -764,9 +765,13 @@ H5SeuratToH5AD <- function(
       dtype = src$get_type(),
       space = H5S$new(dims = mtx.dims, maxdims = mtx.dims)
     )
-    chunk.points <- source$chunk.points(
-      dataset = src$get_obj_name(),
-      MARGIN = 1L
+    # chunk.points <- source$chunk.points(
+    #   dataset = src$get_obj_name(),
+    #   MARGIN = 1L
+    # )
+    chunk.points <- ChunkPoints(
+      dsize = src$dims[1L],
+      csize = src$chunk_dims[1L]
     )
     for (i in 1:nrow(x = chunk.points)) {
       select <- seq.default(
@@ -830,6 +835,26 @@ H5SeuratToH5AD <- function(
     dtype = GuessDType(x = rownames),
     space = Scalar()
   )
+  # Because AnnData requries meta.features and can't build an empty data frame
+  if (!dfile[['var']]$attr_exists(attr_name = 'column-order')) {
+    var.cols <- setdiff(
+      x = names(x = dfile[['var']]),
+      y = c(rownames, '__categories')
+    )
+    if (!length(x = var.cols)) {
+      var.cols <- 'features'
+      dfile[['var']]$obj_copy_to(
+        dst_loc = dfile[['var']],
+        dst_name = var.cols,
+        src_name = rownames
+      )
+    }
+    dfile[['var']]$create_attr(
+      attr_name = 'column-order',
+      robj = var.cols,
+      dtype = GuessDType(x = var.cols)
+    )
+  }
   # Add raw
   if (!is.null(x = raw.data)) {
     if (verbose) {
@@ -906,13 +931,32 @@ H5SeuratToH5AD <- function(
       if (verbose) {
         message("Adding feature loadings for ", reduc)
       }
-      TransferMatrix(
-        src = source[['reductions']][[reduc]][['feature.loadings']],
-        dname = paste0(
-          'varm/',
-          switch(EXPR = reduc, 'pca' = 'PCs', toupper(x = reduc))
+      loadings <- source[['reductions']][[reduc]][['feature.loadings']]
+      reduc.features <- loadings$dims[1]
+      x.features <- dfile[['var']][[rownames]]$dims
+      varm.name <- switch(EXPR = reduc, 'pca' = 'PCs', toupper(x = reduc))
+      # Because apparently AnnData requires nPCs == nrow(X)
+      if (reduc.features < x.features) {
+        pad <- paste0('pad_', varm.name)
+        PadMatrix(
+          src = loadings,
+          dest = dfile[['varm']],
+          dname = pad,
+          dims = c(x.features, loadings$dims[2]),
+          index = list(
+            match(
+              x = source[['reductions']][[reduc]][['features']][],
+              table = dfile[['var']][[rownames]][]
+            ),
+            seq.default(from = 1, to = loadings$dims[2])
+          )
         )
-      )
+        loadings <- dfile[['varm']][[pad]]
+      }
+      TransferMatrix(src = loadings, dname = paste0('varm/', varm.name))
+      if (reduc.features < x.features) {
+        dfile$link_delete(name = loadings$get_obj_name())
+      }
     }
   }
   # Add global dimensional reduction information

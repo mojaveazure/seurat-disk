@@ -3,21 +3,22 @@ title: "Conversions: h5Seurat and AnnData"
 ---
 
 ```{r setup, include = FALSE}
+python3 <- Sys.which(names = "python3")
 library(reticulate)
-use_python(python = "/usr/local/bin/python3.8")
+use_python(python = python3)
 knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE,
   collapse = TRUE,
   comment = "#>"
 )
-options(SeuratData.repo.use = "https://seurat.nygenome.org")
+# options(SeuratData.repo.use = "https://seurat.nygenome.org")
 ```
 
 ```{r cleanup, echo=FALSE, results='hide'}
 outs <- c(
-  "hcabm40k.h5Seurat",
-  "hcabm40k.h5ad"
+  "pbmc3k.h5Seurat",
+  "pbmc3k.h5ad"
 )
 file.remove(outs)
 ```
@@ -31,18 +32,28 @@ library(SeuratDisk)
 ## Converting from Seurat to AnnData via h5Seurat
 
 ```{r get_data}
-InstallData("hcabm40k")
-data("hcabm40k")
-hcabm40k
+InstallData("pbmc3k")
+data("pbmc3k.final")
+pbmc3k.final
 ```
 
-```{r conversion, eval=FALSE}
-SaveH5Seurat(hcabm40k, filename = "hcabm40k.h5Seurat")
-Convert("hcabm40k.h5Seurat", dest = "h5ad")
+```{r convert_seurat}
+SaveH5Seurat(pbmc3k.final, filename = "pbmc3k.h5Seurat")
+Convert("pbmc3k.h5Seurat", dest = "h5ad")
 ```
 
 ```{python load_adata}
-import sys
-sys.version
+import scanpy
+adata = scanpy.read_h5ad("pbmc3k.h5ad", backed="r+")
+adata
 ```
 
+## Converting from AnnData to Seurat via h5Seurat
+
+```{r get_adata}
+
+```
+
+```{r convert_adata}
+
+```
