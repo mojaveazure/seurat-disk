@@ -357,7 +357,7 @@ H5ADToH5Seurat <- function(
     }
   }
   features.source <- ifelse(
-    test = source$exists(name = 'raw/var'),
+    test = source$exists(name = 'raw') && source$exists(name = 'raw/var'),
     yes = 'raw/var',
     no = 'var'
   )
