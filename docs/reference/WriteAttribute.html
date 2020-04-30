@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Update slots in an object — UpdateSlots • SeuratDisk</title>
+<title>Write an attribute to an HDF5 file, group, or dataset — WriteAttribute • SeuratDisk</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Update slots in an object — UpdateSlots" />
-<meta property="og:description" content="Update slots in an object" />
+<meta property="og:title" content="Write an attribute to an HDF5 file, group, or dataset — WriteAttribute" />
+<meta property="og:description" content="Write an attribute to an HDF5 file, group, or dataset" />
 
 
 
@@ -126,29 +126,62 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Update slots in an object</h1>
+    <h1>Write an attribute to an HDF5 file, group, or dataset</h1>
     <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/zzz.R'><code>R/zzz.R</code></a></small>
-    <div class="hidden name"><code>UpdateSlots.Rd</code></div>
+    <div class="hidden name"><code>WriteAttribute.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Update slots in an object</p>
+    <p>Write an attribute to an HDF5 file, group, or dataset</p>
     </div>
 
-    <pre class="usage"><span class='fu'>UpdateSlots</span>(<span class='no'>object</span>)</pre>
+    <pre class="usage"><span class='fu'>WriteAttribute</span>(
+  <span class='no'>h5</span>,
+  <span class='no'>name</span>,
+  <span class='no'>robj</span>,
+  <span class='kw'>dtype</span> <span class='kw'>=</span> <span class='fu'><a href='GuessDType.html'>GuessDType</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>robj</span>),
+  <span class='kw'>scalar</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>robj</span>) <span class='kw'>==</span> <span class='fl'>1</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
-      <td><p>An object to update</p></td>
+      <th>h5</th>
+      <td><p>An HDF5 <a href='http://hhoeflin.github.io/hdf5r/reference/H5File-class.html'>file</a>, <a href='http://hhoeflin.github.io/hdf5r/reference/H5Group-class.html'>group</a>, or
+<a href='http://hhoeflin.github.io/hdf5r/reference/H5D-class.html'>dataset</a></p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>Name to store attribute as</p></td>
+    </tr>
+    <tr>
+      <th>robj</th>
+      <td><p>An object to write out</p></td>
+    </tr>
+    <tr>
+      <th>dtype</th>
+      <td><p>Data type of attribute</p></td>
+    </tr>
+    <tr>
+      <th>scalar</th>
+      <td><p>Is this a scalar or simple (vectorized) attribute?</p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p>Overwrite the attribute if it already exists</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Extra paramters passed to <code><a href='http://hhoeflin.github.io/hdf5r/reference/H5S-class.html'>H5S$new</a></code></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>object</code> with the latest slot definitions</p>
+    <p>Invisibly returns <code>NULL</code></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

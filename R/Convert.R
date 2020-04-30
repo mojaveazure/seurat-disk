@@ -167,6 +167,8 @@ Convert.h5Seurat <- function(
 #'
 #' @return Returns a handle to \code{dest} as an \code{\link{h5Seurat}} object
 #'
+#' @importFrom Seurat Project<- DefaultAssay<-
+#'
 #' @section AnnData/H5AD to h5Seurat:
 #' The AnnData/H5AD to h5Seurat conversion will try to automatically fill in
 #' datasets based on data presence. It works in the following manner:
@@ -295,10 +297,15 @@ H5ADToH5Seurat <- function(
         dfgroup$obj_copy_to(dst_loc = dfgroup, dst_name = tname, src_name = i)
         dfgroup$link_delete(name = i)
         dfgroup$create_group(name = i)
-        dfgroup$obj_copy_to(
-          dst_loc = dfgroup,
-          dst_name = paste0(i, '/values'),
-          src_name = tname
+        # dfgroup$obj_copy_to(
+        #   dst_loc = dfgroup,
+        #   dst_name = paste0(i, '/values'),
+        #   src_name = tname
+        # )
+        dfgroup[[i]]$create_dataset(
+          name = 'values',
+          robj = dfgroup[[tname]][] + 1L,
+          dtype = dfgroup[[tname]]$get_type()
         )
         dfgroup$obj_copy_to(
           dst_loc = dfgroup,
@@ -369,8 +376,15 @@ H5ADToH5Seurat <- function(
       dst_name = 'scaled.features'
     )
   }
+  assay.group$create_attr(
+    attr_name = 'key',
+    robj = paste0(tolower(x = assay), '_'),
+    dtype = GuessDType(x = assay)
+  )
+  # Set default assay
+  DefaultAssay(object = dfile) <- assay
   # Add feature-level metadata
-  if (!getOption(x = "Seuratdisk.dtypes.dataframe_as_group", default = FALSE)) {
+  if (!getOption(x = "SeuratDisk.dtypes.dataframe_as_group", default = FALSE)) {
     warning(
       "Adding feature-level metadata as a compound is not yet supported",
       call. = FALSE,
@@ -490,7 +504,7 @@ H5ADToH5Seurat <- function(
           x = source[['obsm']][[reduc]],
           dest = reduc.group,
           dname = 'cell.embeddings',
-          verbose = verbose
+          verbose = FALSE
         )
         reduc.group$create_group(name = 'misc')
         reduc.group$create_attr(
@@ -555,8 +569,29 @@ H5ADToH5Seurat <- function(
             x = source[['varm']][[reduc]],
             dest = dfile[['reductions']][[sreduc]],
             dname = 'feature.loadings',
-            verbose = verbose
+            verbose = FALSE
           )
+          reduc.features <- dfile[['reductions']][[sreduc]][['feature.loadings']]$dims[1]
+          assay.features <- if (assay.group[['features']]$dims == reduc.features) {
+            'features'
+          } else if (assay.group$exists(name = 'scaled.features') && assay.group[['scaled.features']]$dims == reduc.features) {
+            'scaled.features'
+          } else {
+            NULL
+          }
+          if (is.null(x = assay.features)) {
+            warning(
+              "Cannot find features for feature loadings, will not be able to load",
+              call. = FALSE,
+              immediate. = TRUE
+            )
+          } else {
+            dfile[['reductions']][[sreduc]]$obj_copy_from(
+              src_loc = assay.group,
+              src_name = assay.features,
+              dst_name = 'features'
+            )
+          }
         }
       } else {
         warning(
@@ -594,6 +629,23 @@ H5ADToH5Seurat <- function(
       }
     }
   }
+  # Add project and cell identities
+  Project(object = dfile) <- 'AnnData'
+  idents <- dfile$create_group(name = 'active.ident')
+  idents$create_dataset(
+    name = 'values',
+    dtype = GuessDType(x = 1L),
+    space = H5S$new(dims = dfile[['cell.names']]$dims)
+  )
+  idents$create_dataset(
+    name = 'levels',
+    robj = 'AnnData',
+    dtype = GuessDType(x = 'AnnData')
+  )
+  idents[['values']]$write(
+    args = list(seq.default(from = 1, to = idents[['values']]$dims)),
+    value = 1L
+  )
   # Add nearest-neighbor graph
   if (source$exists('uns/neighbors/distances')) {
     graph.name <- paste(

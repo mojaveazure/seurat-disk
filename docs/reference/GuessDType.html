@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -42,7 +46,6 @@ variable-length ASCII-encoded strings. Also encodes logicals as
 H5T_INTEGER instead of H5T_LOGICAL
 to ensure cross-language compatibility (controlled via
 package options)" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -60,7 +63,7 @@ package options)" />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -74,7 +77,7 @@ package options)" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9005</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9006</span>
       </span>
     </div>
 
@@ -97,6 +100,9 @@ package options)" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/convert-anndata.html">Conversions: h5Seurat and AnnData</a>
+    </li>
+    <li>
       <a href="../articles/h5Seurat-load.html">Saving and Loading Data from an h5Seurat File</a>
     </li>
     <li>
@@ -107,7 +113,7 @@ package options)" />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/mojaveazure/seurat-disk">
+  <a href="https://github.com/mojaveazure/seurat-disk/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -150,7 +156,7 @@ to ensure cross-language compatibility (controlled via
     </tr>
     <tr>
       <th>stype</th>
-      <td><p>Type of string encoding to use, choose from:</p><dl class='dl-horizontal'>
+      <td><p>Type of string encoding to use, choose from:</p><dl'>
  <dt>utf8</dt><dd><p>Variable-width, UTF-8</p></dd>
  <dt>ascii7</dt><dd><p>Fixed-width (7 bits), ASCII</p></dd>
 
@@ -158,7 +164,7 @@ to ensure cross-language compatibility (controlled via
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments passed on to <code><a href='http://hhoeflin.github.io/hdf5r/reference/guess_dtype.html'>hdf5r::guess_dtype</a></code></p><dl class='dl-horizontal'>
+      <td><p>Arguments passed on to <code><a href='http://hhoeflin.github.io/hdf5r/reference/guess_dtype.html'>hdf5r::guess_dtype</a></code></p><dl'>
     <dt><code>ds_dim</code></dt><dd><p>Can explicitly set the dimension of the dataset object. For <code>scalar</code>, this is one. Otherwise, this can be
 used so that a multi-dimensional object can be represented so that some of its dimension are in the dataset, and some are inside an
 <code><a href='http://hhoeflin.github.io/hdf5r/reference/H5T_ARRAY-class.html'>H5T_ARRAY</a></code></p></dd>
@@ -184,13 +190,13 @@ it is set to the length of the longest string in the <code>x</code>.</p></dd>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='co'># Characters can either be variable-width UTF8-encoded or</span>
 <span class='co'># fixed-width ASCII-encoded</span>
-<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'><a href='https://rdrr.io/pkg/SeuratDisk/man/GuessDType.html'>GuessDType</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>'hello'</span>)</div><div class='output co'>#&gt; Class: H5T_STRING
+<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>GuessDType</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>'hello'</span>)</div><div class='output co'>#&gt; Class: H5T_STRING
 #&gt; Datatype: H5T_STRING {
 #&gt;       STRSIZE H5T_VARIABLE;
 #&gt;       STRPAD H5T_STR_NULLTERM;
 #&gt;       CSET H5T_CSET_UTF8;
 #&gt;       CTYPE H5T_C_S1;
-#&gt;    }</div><div class='input'><span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'><a href='https://rdrr.io/pkg/SeuratDisk/man/GuessDType.html'>GuessDType</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>'hello'</span>, <span class='kw'>stype</span> <span class='kw'>=</span> <span class='st'>'ascii7'</span>)</div><div class='output co'>#&gt; Class: H5T_STRING
+#&gt;    }</div><div class='input'><span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>GuessDType</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>'hello'</span>, <span class='kw'>stype</span> <span class='kw'>=</span> <span class='st'>'ascii7'</span>)</div><div class='output co'>#&gt; Class: H5T_STRING
 #&gt; Datatype: H5T_STRING {
 #&gt;       STRSIZE 7;
 #&gt;       STRPAD H5T_STR_NULLTERM;
@@ -200,7 +206,7 @@ it is set to the length of the longest string in the <code>x</code>.</p></dd>
 <span class='co'># Data frames are a compound type; character columns follow the same rules</span>
 <span class='co'># as character vectors</span>
 <span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'g1'</span>, <span class='st'>'g2'</span>, <span class='st'>'g3'</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'><a href='https://rdrr.io/pkg/SeuratDisk/man/GuessDType.html'>GuessDType</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>df</span>)</div><div class='output co'>#&gt; Class: H5T_COMPOUND
+<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>GuessDType</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>df</span>)</div><div class='output co'>#&gt; Class: H5T_COMPOUND
 #&gt; Datatype: H5T_COMPOUND {
 #&gt;       H5T_STRING {
 #&gt;          STRSIZE H5T_VARIABLE;
@@ -211,7 +217,7 @@ it is set to the length of the longest string in the <code>x</code>.</p></dd>
 #&gt;       H5T_IEEE_F64LE "y" : 8;
 #&gt;       H5T_IEEE_F64LE "X2" : 16;
 #&gt;       H5T_IEEE_F64LE "X3" : 24;
-#&gt;    }</div><div class='input'><span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'><a href='https://rdrr.io/pkg/SeuratDisk/man/GuessDType.html'>GuessDType</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>df</span>, <span class='kw'>stype</span> <span class='kw'>=</span> <span class='st'>'ascii7'</span>)</div><div class='output co'>#&gt; Class: H5T_COMPOUND
+#&gt;    }</div><div class='input'><span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>GuessDType</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>df</span>, <span class='kw'>stype</span> <span class='kw'>=</span> <span class='st'>'ascii7'</span>)</div><div class='output co'>#&gt; Class: H5T_COMPOUND
 #&gt; Datatype: H5T_COMPOUND {
 #&gt;       H5T_STRING {
 #&gt;          STRSIZE 7;
@@ -225,20 +231,15 @@ it is set to the length of the longest string in the <code>x</code>.</p></dd>
 #&gt;    }</div><div class='input'>
 <span class='co'># Logicals are turned into integers to ensure compatibility with Python</span>
 <span class='co'># TRUE evaluates to 1, FALSE to 0, and NA to 2</span>
-<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'><a href='https://rdrr.io/pkg/SeuratDisk/man/GuessDType.html'>GuessDType</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>NA</span>))</div><div class='output co'>#&gt; Class: H5T_INTEGER
+<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>GuessDType</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>NA</span>))</div><div class='output co'>#&gt; Class: H5T_INTEGER
 #&gt; Datatype: H5T_STD_I32LE</div><div class='input'># }
 
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -249,7 +250,7 @@ it is set to the length of the longest string in the <code>x</code>.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

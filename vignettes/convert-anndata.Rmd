@@ -1,5 +1,5 @@
 ---
-title: "Conversions: h5Seurat and AnnData"
+title: 'Conversions: h5Seurat and AnnData'
 ---
 
 ```{r setup, include = FALSE}
@@ -18,10 +18,14 @@ knitr::opts_chunk$set(
 ```{r cleanup, echo=FALSE, results='hide'}
 outs <- c(
   "pbmc3k.h5Seurat",
-  "pbmc3k.h5ad"
+  "pbmc3k.h5ad",
+  "pbmc3k_final.h5ad",
+  "pbmc3k_final.h5seurat"
 )
 file.remove(outs)
 ```
+
+This vignette showcases how to convert from `Seurat` object to AnnData files via an intermediate step thorugh h5Seurat files. This allows interoperability between Seurat and [Scanpy](https://scanpy.readthedocs.io/)
 
 ```{r packages}
 library(Seurat)
@@ -31,16 +35,24 @@ library(SeuratDisk)
 
 ## Converting from Seurat to AnnData via h5Seurat
 
+To showcase going from a `Seurat` object to an AnnData file, we'll use the processed version of the PBMC 3k dataset, available on [SeuratData](https://github.com/satijalab/seurat-data); this dataset was created following [Seurat's PBMC 3k tutorial](https://satijalab.org/seurat/v3.1/pbmc3k_tutorial.html)
+
 ```{r get_data}
 InstallData("pbmc3k")
 data("pbmc3k.final")
 pbmc3k.final
 ```
 
+To see how this dataset was generated, please run `?pbmc3k.final`
+
+Converting the `Seurat` object to an AnnData file is a two-step process. First, we [save the `Seurat` object](https://mojaveazure.github.io/seurat-disk/reference/SaveH5Seurat.html) as an h5Seurat file. For more details about saving `Seurat` objects to h5Seurat files, please see [this vignette](https://mojaveazure.github.io/seurat-disk/articles/h5Seurat-load.html); after the file is saved, we can [convert](https://mojaveazure.github.io/seurat-disk/reference/Convert.html) it to an AnnData file for use in Scanpy. Full details about the conversion processes are listed in the [manual page](https://mojaveazure.github.io/seurat-disk/reference/Convert.html) for the `Convert` function
+
 ```{r convert_seurat}
 SaveH5Seurat(pbmc3k.final, filename = "pbmc3k.h5Seurat")
 Convert("pbmc3k.h5Seurat", dest = "h5ad")
 ```
+
+We can view the AnnData file in Scanpy by using the `read_h5ad` function
 
 ```{python load_adata}
 import scanpy
@@ -50,10 +62,20 @@ adata
 
 ## Converting from AnnData to Seurat via h5Seurat
 
-```{r get_adata}
+To shocwcase going from an AnnData file to a `Seurat` object, we'll use a processed version of the PBMC 3k dataset; this dataset was processed using Scanpy following [Scanpy's PBMC 3k tutorial](https://scanpy-tutorials.readthedocs.io/en/latest/pbmc3k.html)
 
+```{r get_adata}
+url <- "https://seurat.nygenome.org/pbmc3k_final.h5ad"
+curl::curl_download(url, basename(url))
 ```
 
-```{r convert_adata}
+To see how this dataset was created, please see [this script](https://gist.github.com/mojaveazure/922aa904b9ac212e627f522c2b816a52)
 
+
+Converting the AnnData file to a `Seurat` object is a two-step process. First, convert the AnnData file to an h5Seurat file using the [`Convert` function](https://mojaveazure.github.io/seurat-disk/reference/Convert.html); full details about the conversion process are listed in the [manual page](https://mojaveazure.github.io/seurat-disk/reference/Convert.html). Then, we [load the h5Seurat file](https://mojaveazure.github.io/seurat-disk/reference/LoadH5Seurat.html) into a `Seurat` object; for more details about loading `Seurat` objects from h5Seurat files, please see [this vignette](https://mojaveazure.github.io/seurat-disk/articles/h5Seurat-load.html)
+
+```{r convert_adata}
+Convert("pbmc3k_final.h5ad", dest = "h5seurat", overwrite = TRUE)
+pbmc3k <- LoadH5Seurat("pbmc3k_final.h5seurat")
+pbmc3k
 ```

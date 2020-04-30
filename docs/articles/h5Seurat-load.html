@@ -6,19 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Saving and Loading Data from an h5Seurat File • SeuratDisk</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Saving and Loading Data from an h5Seurat File">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="SeuratDisk">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9005</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9006</span>
       </span>
     </div>
 
@@ -54,6 +54,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/convert-anndata.html">Conversions: h5Seurat and AnnData</a>
+    </li>
+    <li>
       <a href="../articles/h5Seurat-load.html">Saving and Loading Data from an h5Seurat File</a>
     </li>
     <li>
@@ -64,7 +67,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/mojaveazure/seurat-disk">
+  <a href="https://github.com/mojaveazure/seurat-disk/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -82,7 +85,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Saving and Loading Data from an h5Seurat File</h1>
+      <h1 data-toc-skip>Saving and Loading Data from an h5Seurat File</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/mojaveazure/seurat-disk/blob/master/vignettes/h5Seurat-load.Rmd"><code>vignettes/h5Seurat-load.Rmd</code></a></small>
@@ -98,43 +101,42 @@
 <h2 class="hasAnchor">
 <a href="#saving-a-dataset" class="anchor"></a>Saving a dataset</h2>
 <p>Saving a <code>Seurat</code> object to an h5Seurat file is a fairly painless process. All assays, dimensional reductions, spatial images, and nearest-neighbor graphs are automatically saved as well as extra metadata such as miscellaneous data, command logs, or cell identity classes from a <code>Seurat</code> object. To save a <code>Seurat</code> object, we need the <a href="https://satijalab.org/seurat">Seurat</a> and <a href="https://mojaveazure.github.io/seurat-disk">SeuratDisk</a> R packages. Example <code>Seurat</code> objects are distributed through <a href="https://github.com/satijalab/seurat-data">SeuratData</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(Seurat)
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(SeuratDisk)
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(SeuratData)</code></pre></div>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">Seurat</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">SeuratDisk</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">SeuratData</span>)</pre></body></html></div>
 <p>For this vignette, we’ll use one of the 10X Genomics Visium datasets from the stxBrain data package. We use this dataset to showcase saving and loading a dataset with multiple assays, dimensional reductions, nearest-neighbor graphs, and with spatial image data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/pkg/SeuratData/man/InstallData.html">InstallData</a></span>(<span class="dt">ds =</span> <span class="st">"stxBrain"</span>)
-brain &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/SeuratData/man/LoadData.html">LoadData</a></span>(<span class="dt">ds =</span> <span class="st">"stxBrain"</span>, <span class="dt">type =</span> <span class="st">"anterior1"</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/SeuratData/man/InstallData.html">InstallData</a></span>(<span class="kw">ds</span> <span class="kw">=</span> <span class="st">"stxBrain"</span>)
+<span class="no">brain</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratData/man/LoadData.html">LoadData</a></span>(<span class="kw">ds</span> <span class="kw">=</span> <span class="st">"stxBrain"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"anterior1"</span>)</pre></body></html></div>
 <p>The data loaded is the raw, unprocessed version of the data. In order to generate the full dataset, we’ll follow the steps outlined in <a href="https://satijalab.org/seurat/v3.1/spatial_vignette.html">Seurat’s spatial dataset vignette</a>.</p>
-<p><details><summary>Processing Steps</summary></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/UpdateSeuratObject.html">UpdateSeuratObject</a></span>(brain)
-brain &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/SCTransform.html">SCTransform</a></span>(brain, <span class="dt">assay =</span> <span class="st">"Spatial"</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-brain &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/RunPCA.html">RunPCA</a></span>(brain)
-brain &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/FindNeighbors.html">FindNeighbors</a></span>(brain, <span class="dt">dims =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span>)
-brain &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/FindClusters.html">FindClusters</a></span>(brain, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-brain &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/RunUMAP.html">RunUMAP</a></span>(brain, <span class="dt">dims =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span>)</code></pre></div>
-<p></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain
+<details><p><summary>Processing Steps</summary></p>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">brain</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/UpdateSeuratObject.html">UpdateSeuratObject</a></span>(<span class="no">brain</span>)
+<span class="no">brain</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/SCTransform.html">SCTransform</a></span>(<span class="no">brain</span>, <span class="kw">assay</span> <span class="kw">=</span> <span class="st">"Spatial"</span>, <span class="kw">verbose</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+<span class="no">brain</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunPCA.html">RunPCA</a></span>(<span class="no">brain</span>)
+<span class="no">brain</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FindNeighbors.html">FindNeighbors</a></span>(<span class="no">brain</span>, <span class="kw">dims</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fl">30</span>)
+<span class="no">brain</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FindClusters.html">FindClusters</a></span>(<span class="no">brain</span>, <span class="kw">verbose</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+<span class="no">brain</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunUMAP.html">RunUMAP</a></span>(<span class="no">brain</span>, <span class="kw">dims</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fl">30</span>)</pre></body></html></div>
+</details><div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">brain</span>
 <span class="co">#&gt; An object of class Seurat </span>
 <span class="co">#&gt; 48721 features across 2696 samples within 2 assays </span>
-<span class="co">#&gt; Active assay: SCT (17668 features, 3000 variable features)</span>
+<span class="co">#&gt; Active assay: SCT (17668 features)</span>
 <span class="co">#&gt;  1 other assay present: Spatial</span>
-<span class="co">#&gt;  2 dimensional reductions calculated: pca, umap</span></code></pre></div>
+<span class="co">#&gt;  2 dimensional reductions calculated: pca, umap</span></pre></body></html></div>
 <p>As seen, we have a dataset with multiple components to it. Despite being a complex dataset with multiple parts, saving the dataset is no problem with nearly all information from the object being written to disk. Saving an object is as simple as calling <a href="https://mojaveazure.github.io/seurat-disk/reference/SaveH5Seurat.html"><code>SaveH5Seurat</code></a>; minimally, this function takes a <code>Seurat</code> object and nothing else. Optional arguments are present for specifying a filename and whether or not you want to overwrite a preexisting file.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/SaveH5Seurat.html">SaveH5Seurat</a></span>(brain, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="../reference/SaveH5Seurat.html">SaveH5Seurat</a></span>(<span class="no">brain</span>, <span class="kw">overwrite</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
 <p>On a laptop running Ubuntu 16.04 LTS with an Intel Core i5-2520M clocked at 2.5 GHz, 16 GB of RAM, and a 512 Gb Samsung Evo SSD, this process takes ~20 seconds and results in an on-disk file size of roughly 213 Mb.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">size &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/file.info.html">file.size</a></span>(<span class="st">"anterior1.h5Seurat"</span>)
-<span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/print.DimReduc.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/structure.html">structure</a></span>(size, <span class="dt">class =</span> <span class="st">"object_size"</span>), <span class="dt">units =</span> <span class="st">"Mb"</span>)
-<span class="co">#&gt; 212.9 Mb</span></code></pre></div>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">size</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.info.html">file.size</a></span>(<span class="st">"anterior1.h5Seurat"</span>)
+<span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/print.DimReduc.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/structure.html">structure</a></span>(<span class="no">size</span>, <span class="kw">class</span> <span class="kw">=</span> <span class="st">"object_size"</span>), <span class="kw">units</span> <span class="kw">=</span> <span class="st">"Mb"</span>)
+<span class="co">#&gt; 211.2 Mb</span></pre></body></html></div>
 <p>An <a href="http://stat.ethz.ch/R-manual/R-devel/library/base/html/readRDS.html">Rds</a> file with the same object is roughly 200 Mb on disk, though saving the Rds file took ~42 seconds on the same laptop. Moreover, Rds files are not easily readable in other languages, such as Python.</p>
 </div>
 <div id="connecting-to-and-querying-h5seurat-files" class="section level2">
 <h2 class="hasAnchor">
 <a href="#connecting-to-and-querying-h5seurat-files" class="anchor"></a>Connecting to and querying h5Seurat files</h2>
 <p>Unlike most data formats, HDF5 files can be connected to and explored without loading the data into memory. To facilitate this, we’ve built an <a href="https://mojaveazure.github.io/seurat-disk/reference/h5Seurat-class.html"><code>h5Seurat</code> object</a> to serve as an interface to h5Seurat files in R. <code>h5Seurat</code> objects are built off of the <a href="https://hhoeflin.github.io/hdf5r/reference/H5File-class.html"><code>H5File</code> object</a> from <a href="https://hhoeflin.github.io/hdf5r/">hdf5r</a>.</p>
-<p><details><summary><code>h5Seurat</code> objects and R6 classes</summary> One thing to note, <code>h5Seurat</code> and <code>H5File</code> objects are R6 objects. Unlike most R objects (called S3 and S4), and more like objects in Python, R6 objects are <em>encapsulated</em> objects; this means that methods are attached directly to the object instead of to a generic function. <br> In Seurat, most functions take an object as input and return an object as output. These functions actually run differently depending on the class of the object passed to them. For example, <code>RunUMAP</code> has 3 different modes of operation, depending on the type of object that’s passed to it. One can see which objects trigger different routines by using the <a href="https://stat.ethz.ch/R-manual/R-patched/library/utils/html/methods.html"><code>methods</code></a> function. Functions that change behavior are known as “generics” and the exact implementations are known as “methods”; these methods are associated with the generic instead of with the object itself. <br> R6 objects, however, have their methods attached directly to the object. Calling an R6 method is done similarly to data access in R’s S3 and S4 object system: using the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> operator. For example, creating a new Seurat object is done with <code>CreateSeuratObject</code> or <code>new(Class = "Seurat")</code> (for advanced users), while initializing a new <code>h5Seurat</code> object is done with <code>h5Seurat$new()</code> <br> For more details about R6 objects, please see the <a href="https://r6.r-lib.org/">R6 website and documentation</a> </details></p>
-<p>Connecting to an h5Seurat file is as simple as instantiating an <code>h5Seurat</code> object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hfile &lt;-<span class="st"> </span><span class="kw"><a href="../reference/Connect.html">Connect</a></span>(<span class="st">"anterior1.h5Seurat"</span>)
-hfile
+<details><summary><code>h5Seurat</code> objects and R6 classes</summary> One thing to note, <code>h5Seurat</code> and <code>H5File</code> objects are R6 objects. Unlike most R objects (called S3 and S4), and more like objects in Python, R6 objects are <em>encapsulated</em> objects; this means that methods are attached directly to the object instead of to a generic function. <br> In Seurat, most functions take an object as input and return an object as output. These functions actually run differently depending on the class of the object passed to them. For example, <code>RunUMAP</code> has 3 different modes of operation, depending on the type of object that’s passed to it. One can see which objects trigger different routines by using the <a href="https://stat.ethz.ch/R-manual/R-patched/library/utils/html/methods.html"><code>methods</code></a> function. Functions that change behavior are known as “generics” and the exact implementations are known as “methods”; these methods are associated with the generic instead of with the object itself. <br> R6 objects, however, have their methods attached directly to the object. Calling an R6 method is done similarly to data access in R’s S3 and S4 object system: using the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> operator. For example, creating a new Seurat object is done with <code>CreateSeuratObject</code> or <code>new(Class = "Seurat")</code> (for advanced users), while initializing a new <code>h5Seurat</code> object is done with <code>h5Seurat$new()</code> <br> For more details about R6 objects, please see the <a href="https://r6.r-lib.org/">R6 website and documentation</a>
+</details><p>Connecting to an h5Seurat file is as simple as instantiating an <code>h5Seurat</code> object.</p>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">hfile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/Connect.html">Connect</a></span>(<span class="st">"anterior1.h5Seurat"</span>)
+<span class="no">hfile</span>
 <span class="co">#&gt; Class: h5Seurat</span>
 <span class="co">#&gt; Filename: /home/paul/software/seurat-disk/vignettes/anterior1.h5Seurat</span>
 <span class="co">#&gt; Access type: H5F_ACC_RDONLY</span>
@@ -146,13 +148,12 @@ hfile
 <span class="co">#&gt;    cell.names H5I_DATASET         2696         H5T_STRING</span>
 <span class="co">#&gt;      commands   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
 <span class="co">#&gt;        graphs   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
-<span class="co">#&gt;        images   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
 <span class="co">#&gt;     meta.data   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
 <span class="co">#&gt;          misc   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
 <span class="co">#&gt;    reductions   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
-<span class="co">#&gt;         tools   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span></code></pre></div>
+<span class="co">#&gt;         tools   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span></pre></body></html></div>
 <p>As seen, the h5Seurat file is structured similarly to a <code>Seurat</code> object, with different HDF5 groups sharing the names of slots in a <code>Seurat</code> object. However, it’s difficult to glean what data is present in this dataset similar to calling a <code>Seurat</code> object in the R console. To get around this, we’ve created an <code>index</code> method for <code>h5Seurat</code> objects; this method creates a summary of the data stored within the h5Seurat object. As <code>Seurat</code> objects are organized around the assay data, this h5Seurat index showcases the data grouped by assay.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hfile<span class="op">$</span><span class="kw">index</span>()
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">hfile</span>$<span class="fu">index</span>()
 <span class="co">#&gt; Data for assay SCT٭ (default assay)</span>
 <span class="co">#&gt;    counts      data    scale.data</span>
 <span class="co">#&gt;      ✓          ✓          ✓     </span>
@@ -165,12 +166,10 @@ hfile
 <span class="co">#&gt;  ─ SCT_snn</span>
 <span class="co">#&gt; Data for assay Spatial</span>
 <span class="co">#&gt;    counts      data    scale.data</span>
-<span class="co">#&gt;      ✓          ✓          x     </span>
-<span class="co">#&gt; Images:</span>
-<span class="co">#&gt;  ─ anterior1</span></code></pre></div>
+<span class="co">#&gt;      ✓          ✓          x</span></pre></body></html></div>
 <p>First we get a breakdown of what slots are filled within each assay, followed by a table of dimensional reduction information. This table shows which bits of information (eg. cell embeddings, feature loadings, JackStraw data) are present. these tables, we get a list of nearest-neighbor graphs and spatial image data. This way, we can see what data gets loaded on a per-assay basis as is required by Seurat.</p>
 <p>To explore an h5Seurat file deeper, we can use the double bracket <code><a href="https://rdrr.io/r/base/Extract.html">[[</a></code> operator to explore various aspects of the dataset. The double bracket <code><a href="https://rdrr.io/r/base/Extract.html">[[</a></code> operator takes a UNIX-style path comprised of dataset names.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hfile[[<span class="st">"assays"</span>]]
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">hfile</span><span class="kw">[[</span><span class="st">"assays"</span>]]
 <span class="co">#&gt; Class: H5Group</span>
 <span class="co">#&gt; Filename: /home/paul/software/seurat-disk/vignettes/anterior1.h5Seurat</span>
 <span class="co">#&gt; Group: /assays</span>
@@ -178,7 +177,7 @@ hfile
 <span class="co">#&gt;     name  obj_type dataset.dims dataset.type_class</span>
 <span class="co">#&gt;      SCT H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
 <span class="co">#&gt;  Spatial H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
-hfile[[<span class="st">"assays/SCT"</span>]]
+<span class="no">hfile</span><span class="kw">[[</span><span class="st">"assays/SCT"</span>]]
 <span class="co">#&gt; Class: H5Group</span>
 <span class="co">#&gt; Filename: /home/paul/software/seurat-disk/vignettes/anterior1.h5Seurat</span>
 <span class="co">#&gt; Group: /assays/SCT</span>
@@ -188,12 +187,12 @@ hfile[[<span class="st">"assays/SCT"</span>]]
 <span class="co">#&gt;             counts   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
 <span class="co">#&gt;               data   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
 <span class="co">#&gt;           features H5I_DATASET        17668         H5T_STRING</span>
-<span class="co">#&gt;      meta.features H5I_DATASET        17668       H5T_COMPOUND</span>
+<span class="co">#&gt;      meta.features   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
 <span class="co">#&gt;               misc   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
 <span class="co">#&gt;         scale.data H5I_DATASET  3000 x 2696          H5T_FLOAT</span>
 <span class="co">#&gt;    scaled.features H5I_DATASET         3000         H5T_STRING</span>
 <span class="co">#&gt;  variable.features H5I_DATASET         3000         H5T_STRING</span>
-hfile[[<span class="st">"reductions"</span>]]
+<span class="no">hfile</span><span class="kw">[[</span><span class="st">"reductions"</span>]]
 <span class="co">#&gt; Class: H5Group</span>
 <span class="co">#&gt; Filename: /home/paul/software/seurat-disk/vignettes/anterior1.h5Seurat</span>
 <span class="co">#&gt; Group: /reductions</span>
@@ -201,7 +200,7 @@ hfile[[<span class="st">"reductions"</span>]]
 <span class="co">#&gt;  name  obj_type dataset.dims dataset.type_class</span>
 <span class="co">#&gt;   pca H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
 <span class="co">#&gt;  umap H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span>
-hfile[[<span class="st">"reductions/umap"</span>]]
+<span class="no">hfile</span><span class="kw">[[</span><span class="st">"reductions/umap"</span>]]
 <span class="co">#&gt; Class: H5Group</span>
 <span class="co">#&gt; Filename: /home/paul/software/seurat-disk/vignettes/anterior1.h5Seurat</span>
 <span class="co">#&gt; Group: /reductions/umap</span>
@@ -209,93 +208,88 @@ hfile[[<span class="st">"reductions/umap"</span>]]
 <span class="co">#&gt; Listing:</span>
 <span class="co">#&gt;             name    obj_type dataset.dims dataset.type_class</span>
 <span class="co">#&gt;  cell.embeddings H5I_DATASET     2696 x 2          H5T_FLOAT</span>
-<span class="co">#&gt;             misc   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span></code></pre></div>
+<span class="co">#&gt;             misc   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;</span></pre></body></html></div>
 <p>When finished exploring an h5Seurat file, remember to close the connection. Because we’re working with file on disk directly rather than loading it into memory, we need to close it to prevent file corruption. You can also open the file in read-only mode (<code>mode = "r"</code>) to help alleviate file corruption, though it’s still a good habit to close the h5Seurat file when done working with it.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hfile<span class="op">$</span><span class="kw">close_all</span>()</code></pre></div>
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">hfile</span>$<span class="fu">close_all</span>()</pre></body></html></div>
 </div>
 <div id="loading-datasets" class="section level2">
 <h2 class="hasAnchor">
 <a href="#loading-datasets" class="anchor"></a>Loading datasets</h2>
 <p>Reading data from an h5Seurat file is as simple as calling <a href="https://mojaveazure.github.io/seurat-disk/reference/LoadH5Seurat.html"><code>LoadH5Seurat</code></a>; by default, it loads the entire object into memory.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>)
-brain2</code></pre></div>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">brain2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>)
+<span class="no">brain2</span></pre></body></html></div>
 <p>However, there are situations in which loading an entire <code>Seurat</code> object is not desirable. As such, we can leverage the HDF5 format and load only parts of a dataset at a time. <code>LoadH5Seurat</code> makes use of assay association to limit the data loaded. In <code>Seurat</code> objects, all dimensional reduction information, nearest-neighbor graphs, and spatial image data have an assay they “belong” to (see the help page for <a href="https://rdrr.io/cran/Seurat/man/DefaultAssay.html"><code>DefaultAssay</code></a> for more details). If only certain assays are requested, then only the object associated with those assays are loaded.</p>
 <p>There are four main parameters for controlling data loading. The first is the <code>assays</code> parameter; this parameter controls which assays are loaded and which slots of each assay are loaded. The simplest level of control is specifying the assays to load. For our brain dataset, we can choose from either “SCT” or “Spatial”; passing one of these will load the entire assay object for the assay specified.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="dt">assays =</span> <span class="st">"SCT"</span>)
-brain2
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">brain2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="kw">assays</span> <span class="kw">=</span> <span class="st">"SCT"</span>)
+<span class="no">brain2</span>
 <span class="co">#&gt; An object of class Seurat </span>
 <span class="co">#&gt; 17668 features across 2696 samples within 1 assay </span>
-<span class="co">#&gt; Active assay: SCT (17668 features, 3000 variable features)</span>
-<span class="co">#&gt;  2 dimensional reductions calculated: pca, umap</span></code></pre></div>
+<span class="co">#&gt; Active assay: SCT (17668 features)</span>
+<span class="co">#&gt;  2 dimensional reductions calculated: pca, umap</span></pre></body></html></div>
 <p>We can also choose the slots to load; the slots available are “counts” for the raw expression data, “data” for the normalized expression data, or “scale.data” for the scaled expression data. Specifying slots instead of assays will load the desired slots from all assays that have the requested slots. When specifying slots, one of either “counts” or “data” <strong>must</strong> be specified as the <code>Seurat</code> object uses these slots to control dataset dimensionality information.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="dt">assays =</span> <span class="st">"data"</span>)
-brain2
+<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">brain2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="kw">assays</span> <span class="kw">=</span> <span class="st">"data"</span>)
+<span class="no">brain2</span>
 <span class="co">#&gt; An object of class Seurat </span>
 <span class="co">#&gt; 48721 features across 2696 samples within 2 assays </span>
-<span class="co">#&gt; Active assay: SCT (17668 features, 3000 variable features)</span>
+<span class="co">#&gt; Active assay: SCT (17668 features)</span>
 <span class="co">#&gt;  1 other assay present: Spatial</span>
-<span class="co">#&gt;  2 dimensional reductions calculated: pca, umap</span></code></pre></div>
+<span class="co">#&gt;  2 dimensional reductions calculated: pca, umap</span></pre></body></html></div>
 <p>For more fine-tuned control, the <code>assays</code> parameter can also take a named list or vector, where the names are the names of the assays to load and the values are the slots to load.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="dt">assays =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">SCT =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"data"</span>, <span class="st">"scale.data"</span>), 
-    <span class="dt">Spatial =</span> <span class="st">"counts"</span>))
-brain2
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">brain2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="kw">assays</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">"SCT"</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"data"</span>, <span class="st">"scale.data"</span>), <span class="st">"Spatial"</span> <span class="kw">=</span> <span class="st">"counts"</span>))
+<span class="no">brain2</span>
 <span class="co">#&gt; An object of class Seurat </span>
 <span class="co">#&gt; 48721 features across 2696 samples within 2 assays </span>
-<span class="co">#&gt; Active assay: SCT (17668 features, 3000 variable features)</span>
+<span class="co">#&gt; Active assay: SCT (17668 features)</span>
 <span class="co">#&gt;  1 other assay present: Spatial</span>
-<span class="co">#&gt;  2 dimensional reductions calculated: pca, umap</span></code></pre></div>
+<span class="co">#&gt;  2 dimensional reductions calculated: pca, umap</span></pre></body></html></div>
 <p>Finally, passing <code>NULL</code> to <code>assays</code> (the default behavior) loads all assays and all slots.</p>
 <p>The second of the main parameters is the <code>reductions</code> parameter; this parameter controls which dimensional reductions are loaded. As dimensional reductions are tied to assays, the data request needs to be either associated to a loaded assay or marked as global to be loaded (see details below). For example, trying to load the “pca” reduction with the “Spatial” assay won’t work as the “pca” reduction is associated with the “SCT” assay and not marked as global.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="dt">assays =</span> <span class="st">"Spatial"</span>, <span class="dt">reductions =</span> <span class="st">"pca"</span>)
-brain2
+<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">brain2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="kw">assays</span> <span class="kw">=</span> <span class="st">"Spatial"</span>, <span class="kw">reductions</span> <span class="kw">=</span> <span class="st">"pca"</span>)
+<span class="no">brain2</span>
 <span class="co">#&gt; An object of class Seurat </span>
 <span class="co">#&gt; 31053 features across 2696 samples within 1 assay </span>
-<span class="co">#&gt; Active assay: Spatial (31053 features, 0 variable features)</span></code></pre></div>
+<span class="co">#&gt; Active assay: Spatial (31053 features)</span></pre></body></html></div>
 <p>There are three special values the <code>reductions</code> parameter can take: <code>NULL</code> for all dimensional reductions that can be loaded (the default behavior), <code>NA</code> for <em>global</em> dimensional reductions only, or <code>FALSE</code> for no dimensional reduction information.</p>
 <p>The <code>graphs</code> parameter is the third main parameter; this parameter controls which nearest-neighbor graphs to load. Just like dimensional reduction information, nearest-neighbor graphs are tied to assays, and thus are only loaded when their associated assay is loaded as well. There are two special values the <code>graphs</code> parameter can take: <code>NULL</code> for all graphs that can be loaded (the default behavior) or <code>FALSE</code> for no nearest-neighbor graphs.</p>
 <p>The final main parameter is the <code>images</code> parameter; this parameter controls which spatial image data is loaded. All spatial image data are marked global by default, so they are loaded whether or not their associated assays are loaded as well. The <code>images</code> parameter has three special values: <code>NULL</code> for all spatial image data (the default), <code>NA</code> for <em>global</em> spatial image data (typically the same as <code>NULL</code>), or <code>FALSE</code> for no spatial image data.</p>
 <p>With these four parameters, there is a lot of customization for loading <code>Seurat</code> objects from h5Seurat files. For example, the following will load the “data” slot from the “Spatial” assay, the “data” and “scale.data” slots from the “SCT” assay, <em>global</em> dimensional reductions, none of the nearest neighbor graphs, and all spatial images.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="dt">assays =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">SCT =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"data"</span>, <span class="st">"scale.data"</span>), 
-    <span class="dt">Spatial =</span> <span class="st">"counts"</span>), <span class="dt">reductions =</span> <span class="ot">NA</span>, <span class="dt">graphs =</span> <span class="ot">FALSE</span>, <span class="dt">images =</span> <span class="ot">NULL</span>)
-brain2
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">brain2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="kw">assays</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">"SCT"</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"data"</span>, <span class="st">"scale.data"</span>), <span class="st">"Spatial"</span> <span class="kw">=</span> <span class="st">"counts"</span>), <span class="kw">reductions</span> <span class="kw">=</span> <span class="fl">NA</span>, <span class="kw">graphs</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">images</span> <span class="kw">=</span> <span class="kw">NULL</span>)
+<span class="no">brain2</span>
 <span class="co">#&gt; An object of class Seurat </span>
 <span class="co">#&gt; 48721 features across 2696 samples within 2 assays </span>
-<span class="co">#&gt; Active assay: SCT (17668 features, 3000 variable features)</span>
+<span class="co">#&gt; Active assay: SCT (17668 features)</span>
 <span class="co">#&gt;  1 other assay present: Spatial</span>
-<span class="co">#&gt;  1 dimensional reduction calculated: umap</span></code></pre></div>
+<span class="co">#&gt;  1 dimensional reduction calculated: umap</span></pre></body></html></div>
 <p>In addition, there are four secondary parameters to <code>LoadH5Seurat</code>: <code>meta.data</code>, <code>commands</code>, <code>misc</code>, and <code>tools</code>; these all take simple <code>TRUE</code>/<code>FALSE</code> values to control the loading of cell-level metadata, command logs, miscellaneous information, or tool-specific results, respectively.</p>
-<p><details><summary>Global objects</summary> The concept of global objects in Seurat is designed as an extension to the assay-centric nature of <code>Seurat</code> objects. In Seurat, each assay is considered to be one experiment or measurement of data for a common group of cells. These assays are then used to generate working summaries, such as reduced dimension space or nearest-neighbor graphs. Generally, if an assay is removed from an object, the working summaries are of little use so they get removed as well. <br> However, there are some instances in which these working summaries are useful outside the context of their assay. For example, some reduced representations of the data such as tSNE or UMAP are useful for visualization regardless of the the assay. As such, certain reduced representations and all spatial image data are marked as <em>global</em>, allowing them to persist as useful visualization contexts without their associated assay and large expression matrices being present. <br> For more details about global objects, please see the documentation for <a href="https://rdrr.io/cran/Seurat/man/IsGlobal.html">globality in Seurat</a> </details></p>
-<p>Partial loading of datasets is an excellent way to limit memory usage and prevent the loading of massive datasets into memory. However, there can be instances in which a partial dataset was loaded, but then needs to be expanded with additional data from the h5Seurat file. Instead of redoing the partial load, we can make use of <a href="https://mojaveazure.github.io/seurat-disk/reference/AppendData.html"><code>AppendData</code></a> to add additional objects from an h5Seurat file to an already-loaded <code>Seurat</code> object. To show how this works, we’ll start off with by loading just the “data” slot from the “SCT” assay as well as all spatial image data, but not load any dimensional reduction information or nearest-neighbor graphs.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="dt">assays =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dt">SCT =</span> <span class="st">"data"</span>), <span class="dt">reductions =</span> <span class="ot">FALSE</span>, 
-    <span class="dt">graphs =</span> <span class="ot">FALSE</span>, <span class="dt">images =</span> <span class="ot">NULL</span>)
-brain2
+<details><summary>Global objects</summary> The concept of global objects in Seurat is designed as an extension to the assay-centric nature of <code>Seurat</code> objects. In Seurat, each assay is considered to be one experiment or measurement of data for a common group of cells. These assays are then used to generate working summaries, such as reduced dimension space or nearest-neighbor graphs. Generally, if an assay is removed from an object, the working summaries are of little use so they get removed as well. <br> However, there are some instances in which these working summaries are useful outside the context of their assay. For example, some reduced representations of the data such as tSNE or UMAP are useful for visualization regardless of the the assay. As such, certain reduced representations and all spatial image data are marked as <em>global</em>, allowing them to persist as useful visualization contexts without their associated assay and large expression matrices being present. <br> For more details about global objects, please see the documentation for <a href="https://rdrr.io/cran/Seurat/man/IsGlobal.html">globality in Seurat</a>
+</details><p>Partial loading of datasets is an excellent way to limit memory usage and prevent the loading of massive datasets into memory. However, there can be instances in which a partial dataset was loaded, but then needs to be expanded with additional data from the h5Seurat file. Instead of redoing the partial load, we can make use of <a href="https://mojaveazure.github.io/seurat-disk/reference/AppendData.html"><code>AppendData</code></a> to add additional objects from an h5Seurat file to an already-loaded <code>Seurat</code> object. To show how this works, we’ll start off with by loading just the “data” slot from the “SCT” assay as well as all spatial image data, but not load any dimensional reduction information or nearest-neighbor graphs.</p>
+<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">brain2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="kw">assays</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"SCT"</span> <span class="kw">=</span> <span class="st">"data"</span>), <span class="kw">reductions</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">graphs</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">images</span> <span class="kw">=</span> <span class="kw">NULL</span>)
+<span class="no">brain2</span>
 <span class="co">#&gt; An object of class Seurat </span>
 <span class="co">#&gt; 17668 features across 2696 samples within 1 assay </span>
-<span class="co">#&gt; Active assay: SCT (17668 features, 3000 variable features)</span></code></pre></div>
+<span class="co">#&gt; Active assay: SCT (17668 features)</span></pre></body></html></div>
 <p><code>AppendData</code> takes the h5Seurat file, the <code>Seurat</code> object generated from <code>LoadH5Seurat</code> and uses the four main paramters from <code>LoadH5Seurat</code> (<code>assays</code>, <code>reductions</code>, <code>graphs</code>, and <code>images</code>). These parameters are used in the same way as <code>LoadH5Seurat</code> with one exception: <code>assays</code> can now take <code>FALSE</code> as a value. By passing <code>FALSE</code>, we prevent other assay information from being loaded; this is useful if we only want to add other bits of data to our <code>Seurat</code> object. For example, we can choose to add only <em>global</em> dimensional reductions to the already existing <code>Seurat</code> object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/AppendData.html">AppendData</a></span>(<span class="st">"anterior1.h5Seurat"</span>, brain2, <span class="dt">assays =</span> <span class="ot">FALSE</span>, <span class="dt">reductions =</span> <span class="ot">NA</span>, 
-    <span class="dt">graphs =</span> <span class="ot">FALSE</span>, <span class="dt">images =</span> <span class="ot">NULL</span>)
-brain2
+<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="no">brain2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/AppendData.html">AppendData</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="no">brain2</span>, <span class="kw">assays</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">reductions</span> <span class="kw">=</span> <span class="fl">NA</span>, <span class="kw">graphs</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">images</span> <span class="kw">=</span> <span class="kw">NULL</span>)
+<span class="no">brain2</span>
 <span class="co">#&gt; An object of class Seurat </span>
 <span class="co">#&gt; 17668 features across 2696 samples within 1 assay </span>
-<span class="co">#&gt; Active assay: SCT (17668 features, 3000 variable features)</span>
-<span class="co">#&gt;  1 dimensional reduction calculated: umap</span></code></pre></div>
+<span class="co">#&gt; Active assay: SCT (17668 features)</span>
+<span class="co">#&gt;  1 dimensional reduction calculated: umap</span></pre></body></html></div>
 <p>The only limits to the number of times <code>AppendData</code> can be run is when the <code>h5Seurat</code> file has run out of data not present in the <code>Seurat</code> object. Otherwise, it can be run multiple times, adding new bits of data to our <code>Seurat</code> object. Here, we fill out the rest of the “SCT” assay, but load no other information</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/AppendData.html">AppendData</a></span>(<span class="st">"anterior1.h5Seurat"</span>, brain2, <span class="dt">assays =</span> <span class="st">"SCT"</span>, <span class="dt">reductions =</span> <span class="ot">FALSE</span>, 
-    <span class="dt">graphs =</span> <span class="ot">FALSE</span>, <span class="dt">images =</span> <span class="ot">FALSE</span>)
-brain2
+<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="no">brain2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/AppendData.html">AppendData</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="no">brain2</span>, <span class="kw">assays</span> <span class="kw">=</span> <span class="st">"SCT"</span>, <span class="kw">reductions</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">graphs</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">images</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+<span class="no">brain2</span>
 <span class="co">#&gt; An object of class Seurat </span>
 <span class="co">#&gt; 17668 features across 2696 samples within 1 assay </span>
-<span class="co">#&gt; Active assay: SCT (17668 features, 3000 variable features)</span>
-<span class="co">#&gt;  1 dimensional reduction calculated: umap</span></code></pre></div>
+<span class="co">#&gt; Active assay: SCT (17668 features)</span>
+<span class="co">#&gt;  1 dimensional reduction calculated: umap</span></pre></body></html></div>
 <p>If we want to perform a “full append” (loading all bits of data of a <code>Seurat</code> object from an h5Seurat file), we can set the four parameters to <code>NULL</code>, which happens to be the default values for these parmaters. This loads the rest of the <code>Seurat</code> object from the h5Seurat file into memory.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brain2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/AppendData.html">AppendData</a></span>(<span class="st">"anterior1.h5Seurat"</span>, brain2)
-brain2
+<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="no">brain2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/AppendData.html">AppendData</a></span>(<span class="st">"anterior1.h5Seurat"</span>, <span class="no">brain2</span>)
+<span class="no">brain2</span>
 <span class="co">#&gt; An object of class Seurat </span>
 <span class="co">#&gt; 48721 features across 2696 samples within 2 assays </span>
-<span class="co">#&gt; Active assay: SCT (17668 features, 3000 variable features)</span>
+<span class="co">#&gt; Active assay: SCT (17668 features)</span>
 <span class="co">#&gt;  1 other assay present: Spatial</span>
-<span class="co">#&gt;  2 dimensional reductions calculated: umap, pca</span></code></pre></div>
+<span class="co">#&gt;  2 dimensional reductions calculated: umap, pca</span></pre></body></html></div>
 </div>
 <div id="h5seurat-files-and-seuratdata" class="section level2">
 <h2 class="hasAnchor">
@@ -304,19 +298,11 @@ brain2
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#saving-a-dataset">Saving a dataset</a></li>
-      <li><a href="#connecting-to-and-querying-h5seurat-files">Connecting to and querying h5Seurat files</a></li>
-      <li><a href="#loading-datasets">Loading datasets</a></li>
-      <li><a href="#h5seurat-files-and-seuratdata">h5Seurat files and SeuratData</a></li>
-      </ul>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
 
@@ -327,7 +313,7 @@ brain2
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

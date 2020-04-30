@@ -6,19 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>h5Seurat File Format Specification • SeuratDisk</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="h5Seurat File Format Specification">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="SeuratDisk">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9005</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9006</span>
       </span>
     </div>
 
@@ -54,6 +54,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/convert-anndata.html">Conversions: h5Seurat and AnnData</a>
+    </li>
+    <li>
       <a href="../articles/h5Seurat-load.html">Saving and Loading Data from an h5Seurat File</a>
     </li>
     <li>
@@ -64,7 +67,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/mojaveazure/seurat-disk">
+  <a href="https://github.com/mojaveazure/seurat-disk/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -82,7 +85,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>h5Seurat File Format Specification</h1>
+      <h1 data-toc-skip>h5Seurat File Format Specification</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/mojaveazure/seurat-disk/blob/master/vignettes/h5Seurat-spec.Rmd"><code>vignettes/h5Seurat-spec.Rmd</code></a></small>
@@ -167,7 +170,7 @@
 #&gt; [3,]    1    1    0    0
 #&gt; Class: H5D
 #&gt; Dataset: /densemat
-#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
+#&gt; Filename: /tmp/RtmpAj9Sqr/file26037cf4bc09.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_IEEE_F64LE
 #&gt; Space: Type=Simple     Dims=3 x 4     Maxdims=Inf x Inf
@@ -187,7 +190,7 @@
 #&gt; [2,] . 1 1 1
 #&gt; [3,] 1 1 . .
 #&gt; Class: H5Group
-#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
+#&gt; Filename: /tmp/RtmpAj9Sqr/file26037cf4bc09.h5
 #&gt; Group: /sparsemat
 #&gt; Attributes: dims
 #&gt; Listing:
@@ -197,7 +200,7 @@
 #&gt;   indptr H5I_DATASET            5        H5T_INTEGER
 #&gt; Class: H5D
 #&gt; Dataset: /sparsemat/indices
-#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
+#&gt; Filename: /tmp/RtmpAj9Sqr/file26037cf4bc09.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_STD_I32LE
 #&gt; Space: Type=Simple     Dims=6     Maxdims=Inf
@@ -205,7 +208,7 @@
 #&gt; [1] 2 1 2 1 0 1
 #&gt; Class: H5D
 #&gt; Dataset: /sparsemat/data
-#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
+#&gt; Filename: /tmp/RtmpAj9Sqr/file26037cf4bc09.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_IEEE_F64LE
 #&gt; Space: Type=Simple     Dims=6     Maxdims=Inf
@@ -214,7 +217,7 @@
 <p>“indptr” represents the points in “data” at which a new column is started. This dataset is <span class="math inline">\(0\)</span>-based and should be <span class="math inline">\(n_{columns} + 1\)</span> in length.</p>
 <pre><code>#&gt; Class: H5D
 #&gt; Dataset: /sparsemat/indptr
-#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
+#&gt; Filename: /tmp/RtmpAj9Sqr/file26037cf4bc09.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_STD_I32LE
 #&gt; Space: Type=Simple     Dims=5     Maxdims=Inf
@@ -231,7 +234,7 @@
 <pre><code>#&gt; [1] g1 g2 g1 g1 g2
 #&gt; Levels: g1 g2
 #&gt; Class: H5Group
-#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
+#&gt; Filename: /tmp/RtmpAj9Sqr/file26037cf4bc09.h5
 #&gt; Group: /factor
 #&gt; Listing:
 #&gt;    name    obj_type dataset.dims dataset.type_class
@@ -240,7 +243,7 @@
 <p>The “levels” dataset should be a <a href="#character-representation">character</a> dataset with one entry per <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/levels.html">level</a></p>
 <pre><code>#&gt; Class: H5D
 #&gt; Dataset: /factor/levels
-#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
+#&gt; Filename: /tmp/RtmpAj9Sqr/file26037cf4bc09.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_STRING {
 #&gt;       STRSIZE H5T_VARIABLE;
@@ -254,14 +257,15 @@
 <p>The “values” dataset should be an integer dataset with one entry per value in the original factor. These integers should correspond to the factor level they had in R</p>
 <pre><code>#&gt; Class: H5D
 #&gt; Dataset: /factor/values
-#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
+#&gt; Filename: /tmp/RtmpAj9Sqr/file26037cf4bc09.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_STD_I32LE
 #&gt; Space: Type=Simple     Dims=5     Maxdims=Inf
 #&gt; Chunk: 2048
 #&gt; [1] 1 2 1 1 2</code></pre>
 <p>The number of unique entries in “values” should not exceed the number of unique entries in “levels”</p>
-<p><details><summary>Rationale</summary> Storing factors in this manner seems excessive from an R perspective. HDF5 has the concept of <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_ENUM-class.html">enumerated datasets (enums)</a> which are an efficient way to store R factors on-disk. However, <a href="http://docs.h5py.org/en/stable/special.html#enumerated-types">some implementations of HDF5 do not support enums</a> and thus lose factor level information. In order to make h5Seurat as cross-language as possible, we’ve opted to store factors as HDF5 groups instead of HDF5 enums. </details></p>
+<details><summary>Rationale</summary> Storing factors in this manner seems excessive from an R perspective. HDF5 has the concept of <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_ENUM-class.html">enumerated datasets (enums)</a> which are an efficient way to store R factors on-disk. However, <a href="http://docs.h5py.org/en/stable/special.html#enumerated-types">some implementations of HDF5 do not support enums</a> and thus lose factor level information. In order to make h5Seurat as cross-language as possible, we’ve opted to store factors as HDF5 groups instead of HDF5 enums.
+</details>
 </div>
 <div id="logical-representation" class="section level3">
 <h3 class="hasAnchor">
@@ -270,7 +274,7 @@
 <pre><code>#&gt; [1]  TRUE FALSE    NA
 #&gt; Class: H5D
 #&gt; Dataset: /logicals
-#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
+#&gt; Filename: /tmp/RtmpAj9Sqr/file26037cf4bc09.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Attributes: s3class
 #&gt; Datatype: H5T_STD_I32LE
@@ -278,14 +282,16 @@
 #&gt; Chunk: 2048
 #&gt; [1] 1 0 2</code></pre>
 <p>An optional HDF5 attribute named “s3class” with the value “logical” is allowed to enforce reading in the dataset as logical values. This HDF5 attribute is a single <a href="#character-representation">character</a> value.</p>
-<p><details><summary>Rationale</summary> Unlike most languages, <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/logical.html">logicals</a> (or booleans) can take one of <em>three</em> values: <code>TRUE</code>, <code>FALSE</code>, or <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/NA.html"><code>NA</code></a>; as such, an extra integer value is needed to handle the additional logical value. Typically, these values are stored as <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_ENUM-class.html">enums</a> with mappings between the logical representation and integer value. However, <a href="http://docs.h5py.org/en/stable/special.html#enumerated-types">some implementations of HDF5 do not support enums</a> and thus lose the logical representation. Since the mappings are lost, all logicals are stored as integers instead. </details></p>
+<details><p><summary>Rationale</summary></p>
+<p>Unlike most languages, <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/logical.html">logicals</a> (or booleans) can take one of <em>three</em> values: <code>TRUE</code>, <code>FALSE</code>, or <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/NA.html"><code>NA</code></a>; as such, an extra integer value is needed to handle the additional logical value. Typically, these values are stored as <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_ENUM-class.html">enums</a> with mappings between the logical representation and integer value. However, <a href="http://docs.h5py.org/en/stable/special.html#enumerated-types">some implementations of HDF5 do not support enums</a> and thus lose the logical representation. Since the mappings are lost, all logicals are stored as integers instead.</p>
+</details>
 </div>
 <div id="data-frame-representation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#data-frame-representation" class="anchor"></a>Data Frame Representation</h3>
 <p>There are two ways of storing <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/data.frame.html">data frames</a> in h5Seurat files: as <a href="#data-frame-datasets">datasets</a> or as <a href="#data-frame-groups">groups</a>. Data frame groups are required when data frames contain <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/factor.html">factors</a>; if no factors are present, data frames can be stored in either type.</p>
-<p><details><summary>Rationale</summary><a href="#factor-representation">Storing factors</a> on-disk in an HDF5 file poses a unique set of challenges. Namely, <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_ENUM-class.html">enumerated datasets (enums)</a>, which are an ideal method of storing mapping values, <a href="http://docs.h5py.org/en/stable/special.html#enumerated-types">are not supported in some implementations of HDF5</a>. As factor level information is lost under implementations that do not support HDF5 enums, we need a method of storing factors in a cross-language manner. Two options were presented: groups or <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_COMPOUND-class.html">compound datasets</a>. While the former seems excessive, the latter presents issues with unequal dataset length. Therefore, to accomodate factor level information in data frames, we utilize HDF5 groups to store data frames when one or more columns are <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/factor.html">factors</a>. </details></p>
-<div id="data-frame-datasets" class="section level4">
+<details><summary>Rationale</summary><a href="#factor-representation">Storing factors</a> on-disk in an HDF5 file poses a unique set of challenges. Namely, <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_ENUM-class.html">enumerated datasets (enums)</a>, which are an ideal method of storing mapping values, <a href="http://docs.h5py.org/en/stable/special.html#enumerated-types">are not supported in some implementations of HDF5</a>. As factor level information is lost under implementations that do not support HDF5 enums, we need a method of storing factors in a cross-language manner. Two options were presented: groups or <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_COMPOUND-class.html">compound datasets</a>. While the former seems excessive, the latter presents issues with unequal dataset length. Therefore, to accomodate factor level information in data frames, we utilize HDF5 groups to store data frames when one or more columns are <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/factor.html">factors</a>.
+</details><div id="data-frame-datasets" class="section level4">
 <h4 class="hasAnchor">
 <a href="#data-frame-datasets" class="anchor"></a>Data Frame Datasets</h4>
 <p>Data frames stored as datasets should be a one-dimensional <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_COMPOUND-class.html">compound dataset</a>. The single dimension should be equal to the number of observations (number of rows) in the data frame. Each data type in the compound dataset must adhere to the same requirements as standard datasets (eg. <a href="#character-representation">character encodings</a>, <a href="#logical-representation">logical mapping</a>, etc). The compound labels should correspond to the data frame column names.</p>
@@ -297,7 +303,7 @@
 #&gt; 5 g2 5
 #&gt; Class: H5D
 #&gt; Dataset: /dfdataset
-#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
+#&gt; Filename: /tmp/RtmpAj9Sqr/file26037cf4bc09.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_COMPOUND {
 #&gt;       H5T_STRING {
@@ -316,6 +322,7 @@
 #&gt; 3 g2 3
 #&gt; 4 g1 4
 #&gt; 5 g2 5</code></pre>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="no">op</span>)</pre></body></html></div>
 <p>Row names are not stored with the dataset itself, but may be stored elsewhere in the h5Seurat file, typically named <code>dataset_name.row.names</code>; an optional HDF5 attribute called “logicals” containing the names of <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/logical.html">logical</a> columns is allowed. This attribute consists of <a href="#character-representation">character values</a>.</p>
 </div>
 <div id="data-frame-groups" class="section level4">
@@ -323,7 +330,7 @@
 <a href="#data-frame-groups" class="anchor"></a>Data Frame Groups</h4>
 <p>Data frames stored as groups are used when <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/factor.html">factors</a> are present in the data frame. Within the data frame group, there should be one dataset or group per column. Columns that are factors are <a href="#factor-representation">stored as groups</a> while all other columns are stored as one-dimensional datasets. Each dataset within the group must adhere to the same requirements as standard datasets (eg. <a href="#character-representation">character encodings</a>, <a href="#logical-representation">logical mapping</a>, etc). The names of the datasets within the group correspond to the data frame column names</p>
 <pre><code>#&gt; Class: H5Group
-#&gt; Filename: /tmp/Rtmph39pit/file518d5a2ef213.h5
+#&gt; Filename: /tmp/RtmpAj9Sqr/file26037cf4bc09.h5
 #&gt; Group: /dfgroup
 #&gt; Attributes: colnames
 #&gt; Listing:
@@ -345,25 +352,11 @@
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#overall-file-structure">Overall File Structure</a></li>
-      <li><a href="#assay-expression-data">Assay Expression Data</a></li>
-      <li><a href="#dimensional-reductions">Dimensional Reductions</a></li>
-      <li><a href="#nearest-neighbor-graphs">Nearest-Neighbor Graphs</a></li>
-      <li><a href="#spatial-image-data">Spatial Image Data</a></li>
-      <li><a href="#cell-level-metadata">Cell-Level Metadata</a></li>
-      <li><a href="#command-logs">Command Logs</a></li>
-      <li><a href="#miscellaneous-information">Miscellaneous Information</a></li>
-      <li><a href="#tool-specific-results">Tool-Specific Results</a></li>
-      <li><a href="#common-data-structures">Common Data Structures</a></li>
-      </ul>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
 
@@ -374,7 +367,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

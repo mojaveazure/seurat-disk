@@ -59,6 +59,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/convert-anndata.html">Conversions: h5Seurat and AnnData</a>
+    </li>
+    <li>
       <a href="articles/h5Seurat-load.html">Saving and Loading Data from an h5Seurat File</a>
     </li>
     <li>
@@ -92,12 +95,12 @@
 <!-- badges: start -->
 
 <!-- Interfaces for HDF5-based Single Cell File Formats -->
-<p>As single-cell expression datasets grow in size, the computational requirements to store and handle them grow as well. To address the issues posed by large datasets, SeuratDisk provides an interface to various single-cell oriented HDF5-based file formats and provides infrastructure to perform disk-based computation on said files. In addition, SeuratDisk integrates with the Seurat framework and provides disk-based methods for Seuratâs toolkit.</p>
+<p>As single-cell expression datasets grow in size, the computational requirements to store and handle them grow as well. To address the issues posed by large datasets, SeuratDisk provides an interface to various single-cell oriented HDF5-based file formats and provides infrastructure to perform disk-based computation on said files. In addition, SeuratDisk integrates with the Seurat framework and provides disk-based methods for Seurat’s toolkit.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>SeuratDisk is not currently available on CRAN. You can install it from <a href="https://github.com/mojaveazure/seurat-disk">GitHub</a> with:</p>
-<div class="sourceCode"><pre class="r"><span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"remotes"</span>, <span class="kw">quietly</span> <span class="kw">=</span> <span class="fl">TRUE</span>)) {
+<div class="sourceCode" id="cb1"><pre class="r"><span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"remotes"</span>, <span class="kw">quietly</span> <span class="kw">=</span> <span class="fl">TRUE</span>)) {
   <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"remotes"</span>)
 }
 <span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"mojaveazure/seurat-disk"</span>)</pre></div>
@@ -118,13 +121,13 @@
 <td align="center">cli</td>
 <td align="center"><a href="https://cran.r-project.org/package=cli">CRAN</a></td>
 <td align="center"><a href="https://github.com/r-lib/cli#readme">GitHub</a></td>
-<td align="center">â</td>
+<td align="center">–</td>
 </tr>
 <tr class="even">
 <td align="center">crayon</td>
 <td align="center"><a href="https://cran.r-project.org/package=crayon">CRAN</a></td>
 <td align="center"><a href="https://github.com/r-lib/crayon#readme">GitHub</a></td>
-<td align="center">â</td>
+<td align="center">–</td>
 </tr>
 <tr class="odd">
 <td align="center">hdf5r</td>
@@ -135,14 +138,14 @@
 <tr class="even">
 <td align="center">Matrix</td>
 <td align="center"><a href="https://cran.r-project.org/package=Matrix">CRAN</a></td>
-<td align="center">â</td>
+<td align="center">–</td>
 <td align="center"><a href="http://Matrix.R-forge.R-project.org/">Website</a></td>
 </tr>
 <tr class="odd">
 <td align="center">methods</td>
-<td align="center">â</td>
-<td align="center">â</td>
-<td align="center">â</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">–</td>
 </tr>
 <tr class="even">
 <td align="center">R6</td>
@@ -164,26 +167,26 @@
 </tr>
 <tr class="odd">
 <td align="center">stats</td>
-<td align="center">â</td>
-<td align="center">â</td>
-<td align="center">â</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">–</td>
 </tr>
 <tr class="even">
 <td align="center">tools</td>
-<td align="center">â</td>
-<td align="center">â</td>
-<td align="center">â</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">–</td>
 </tr>
 <tr class="odd">
 <td align="center">utils</td>
-<td align="center">â</td>
-<td align="center">â</td>
-<td align="center">â</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">–</td>
 </tr>
 <tr class="even">
 <td align="center">withr</td>
 <td align="center"><a href="https://cran.r-project.org/package=withr">CRAN</a></td>
-<td align="center">â</td>
+<td align="center">–</td>
 <td align="center"><a href="http://withr.r-lib.org">Website</a></td>
 </tr>
 </tbody>
@@ -234,7 +237,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

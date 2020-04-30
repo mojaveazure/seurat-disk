@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Update slots in an object — UpdateSlots • SeuratDisk</title>
+<title>Pad a matrix — PadMatrix • SeuratDisk</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Update slots in an object — UpdateSlots" />
-<meta property="og:description" content="Update slots in an object" />
+<meta property="og:title" content="Pad a matrix — PadMatrix" />
+<meta property="og:description" content="Pad a matrix" />
 
 
 
@@ -126,29 +126,53 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Update slots in an object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/zzz.R'><code>R/zzz.R</code></a></small>
-    <div class="hidden name"><code>UpdateSlots.Rd</code></div>
+    <h1>Pad a matrix</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/PadMatrix.R'><code>R/PadMatrix.R</code></a></small>
+    <div class="hidden name"><code>PadMatrix.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Update slots in an object</p>
+    <p>Pad a matrix</p>
     </div>
 
-    <pre class="usage"><span class='fu'>UpdateSlots</span>(<span class='no'>object</span>)</pre>
+    <pre class="usage"><span class='fu'>PadMatrix</span>(<span class='no'>src</span>, <span class='no'>dest</span>, <span class='no'>dname</span>, <span class='no'>dims</span>, <span class='no'>index</span>)
+
+<span class='co'># S4 method for H5D</span>
+<span class='fu'>PadMatrix</span>(<span class='no'>src</span>, <span class='no'>dest</span>, <span class='no'>dname</span>, <span class='no'>dims</span>, <span class='no'>index</span>)
+
+<span class='co'># S4 method for H5Group</span>
+<span class='fu'>PadMatrix</span>(<span class='no'>src</span>, <span class='no'>dest</span>, <span class='no'>dname</span>, <span class='no'>dims</span>, <span class='no'>index</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
-      <td><p>An object to update</p></td>
+      <th>src</th>
+      <td><p>A source matrix</p></td>
+    </tr>
+    <tr>
+      <th>dest</th>
+      <td><p>Destination HDF5 file or group for the padded matrix</p></td>
+    </tr>
+    <tr>
+      <th>dname</th>
+      <td><p>Destination name for the padded matrix</p></td>
+    </tr>
+    <tr>
+      <th>dims</th>
+      <td><p>A two-length integer vector with the number of rows and number of
+columns in the padded matrix</p></td>
+    </tr>
+    <tr>
+      <th>index</th>
+      <td><p>A two-length list of integer vectors describing the rows and
+columns that <code>src</code> exists in</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>object</code> with the latest slot definitions</p>
+    <p>...</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
