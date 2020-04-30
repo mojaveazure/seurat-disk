@@ -1,4 +1,5 @@
 #' @include zzz.R
+#' @include h5Seurat.R
 #' @include GetObject.R
 #' @include AssembleObject.R
 #'
@@ -258,7 +259,7 @@ as.Seurat.h5Seurat <- function(
     object[[graph]] <- AssembleGraph(graph = graph, file = x, verbose = verbose)
   }
   # Load SpatialImages
-  if (packageVersion(pkg = 'Seurat') >= numeric_version(x = '3.1.4.9900')) {
+  if (packageVersion(pkg = 'Seurat') >= numeric_version(x = spatial.version)) {
     images <- GetImages(images = images, index = index, assays = assays)
     for (image in images) {
       if (verbose) {

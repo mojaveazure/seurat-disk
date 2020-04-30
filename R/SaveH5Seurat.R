@@ -241,7 +241,7 @@ as.h5Seurat.Seurat <- function(
   Project(object = hfile) <- Project(object = x)
   DefaultAssay(object = hfile) <- DefaultAssay(object = x)
   # Add Images
-  if (package_version(x = object.version) >= package_version(x = '3.1.4.9900')) {
+  if (package_version(x = object.version) >= package_version(x = spatial.version)) {
     # Older versions of Seurat don't have Images, call directly instead
     for (image in Seurat::Images(object = x)) {
       if (verbose) {

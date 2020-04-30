@@ -245,7 +245,12 @@ An optional HDF5 attribute named "s3class" with the value "logical" is allowed t
 
 <details>
   <summary>Rationale</summary>
-  Unlike most languages, <a href=`r plink("logical")`>logicals</a> (or booleans) can take one of _three_ values: `TRUE`, `FALSE`, or [`NA`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/NA.html); as such, an extra integer value is needed to handle the additional logical value. Typically, these values are stored as <a href=`r hlink("ENUM")`>enums</a> with mappings between the logical representation and integer value. However, [some implementations of HDF5 do not support enums](http://docs.h5py.org/en/stable/special.html#enumerated-types) and thus lose the logical representation. Since the mappings are lost, all logicals are stored as integers instead.
+  
+  Unlike most languages, <a href=`r plink("logical")`>logicals</a> (or booleans) can take one of _three_ values: `TRUE`, `FALSE`, or [`NA`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/NA.html); as such, an extra integer value is needed to handle the additional logical value.
+  Typically, these values are stored as <a href=`r hlink("ENUM")`>enums</a> with mappings between the logical representation and integer value.
+  However, [some implementations of HDF5 do not support enums](http://docs.h5py.org/en/stable/special.html#enumerated-types) and thus lose the logical representation.
+  Since the mappings are lost, all logicals are stored as integers instead.
+  
 </details>
 
 ### Data Frame Representation
@@ -261,6 +266,10 @@ There are two ways of storing <a href=`r plink("data.frame")`>data frames</a> in
 
 Data frames stored as datasets should be a one-dimensional <a href=`r hlink("COMPOUND")`>compound dataset</a>. The single dimension should be equal to the number of observations (number of rows) in the data frame. Each data type in the compound dataset must adhere to the same requirements as standard datasets (eg. <a href=`r vlink("char")`>character encodings</a>, <a href=`r vlink("log")`>logical mapping</a>, etc). The compound labels should correspond to the data frame column names.
 
+```{r df_options, echo=FALSE}
+op <- options(SeuratDisk.dtypes.dataframe_as_group = FALSE)
+```
+
 ```{r dfdataset, echo=FALSE}
 df <- data.frame(
   x = c("g1", "g1", "g2", "g1", "g2"),
@@ -271,6 +280,10 @@ df
 WriteH5Group(x = df, name = "dfdataset", hgroup = hfile)
 hfile[["dfdataset"]]
 hfile[["dfdataset"]][]
+```
+
+```{r df_restore}
+options(op)
 ```
 
 Row names are not stored with the dataset itself, but may be stored elsewhere in the h5Seurat file, typically named `dataset_name.row.names`; an optional HDF5 attribute called "logicals" containing the names of <a href=`r plink("logical")`>logical</a> columns is allowed. This attribute consists of <a href=`r vlink("char")`>character values</a>.

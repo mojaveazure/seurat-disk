@@ -9,3 +9,4 @@
 ^README\.Rmd$
 ^cran-comments\.md$
 ^.*\.h5Seurat$
+^vignettes/anndata-Rmd\.Rmd$
