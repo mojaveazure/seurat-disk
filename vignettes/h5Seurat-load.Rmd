@@ -17,9 +17,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette serves as a guide to saving and loading `Seurat` objects to h5Seurat files. H5Seurat files are a novel, [HDF5](https://en.wikipedia.org/wiki/Hierarchical_Data_Format)-based file format designed for storing multi-modal single-cell expression data and associated metadata, including nearest-neighbor graphs, dimensional reduction information, spatial coordinates and image data, clustering labels, and any other metadata. For more details about h5Seurat files, please see the [h5Seurat file specification](https://mojaveazure.github.io/seurat-disk/articles/h5Seurat-spec.html).
+The h5Seurat file format, based on [HDF5](https://en.wikipedia.org/wiki/Hierarchical_Data_Format), is on specifically designed for the storage and analysis of multi-modal single-cell and spatially-resolved expression experiments, for example, from CITE-seq or 10X Visium technologies. It holds all molecular information and associated metadata, including (for example) nearest-neighbor graphs, dimensional reduction information, spatial coordinates and image data, and cluster labels.
 
-*can't save unserializeable data
+This vignette serves as a guide to saving and loading `Seurat` objects to h5Seurat files. The h5Seurat file format, based on [HDF5](https://en.wikipedia.org/wiki/Hierarchical_Data_Format), is on specifically designed for the storage and analysis of multi-modal single-cell and spatially-resolved expression experiments, for example, from CITE-seq or 10X Visium technologies. It holds all molecular information and associated metadata, including (for example) nearest-neighbor graphs, dimensional reduction information, spatial coordinates and image data, and cluster labels. For more details about h5Seurat files, please see the [h5Seurat file specification](https://mojaveazure.github.io/seurat-disk/articles/h5Seurat-spec.html).
+
+<!-- *can't save unserializeable data -->
 
 ## Saving a dataset
 

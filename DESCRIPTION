@@ -1,18 +1,20 @@
 Package: SeuratDisk
 Type: Package
 Title: Interfaces for HDF5-Based Single Cell File Formats
-Version: 0.0.0.9006
-Date: 2020-04-13
+Version: 0.0.0.9007
+Date: 2020-04-30
 Authors@R: c(
   person(given = 'Paul', family = 'Hoffman', email = 'phoffman@nygenome.org', role = c('aut', 'cre'), comment = c(ORCID = '0000-0002-7693-8957')),
   person(given = 'Rahul', family = 'Satija', email = 'rsatija@nygenome.org', role = 'ctb', comment = c(ORCID = '0000-0001-9448-8833'))
   )
-Description: As single-cell expression datasets grow in size, the computational
-  requirements to store and handle them grow as well. To address the issues posed
-  by large datasets, SeuratDisk provides an interface to various single-cell
-  oriented HDF5-based file formats and provides infrastructure to perform
-  disk-based computation on said files. In addition, SeuratDisk integrates with
-  the Seurat framework and provides disk-based methods for Seurat's toolkit.
+Description: The h5Seurat file format is specifically designed for the storage
+  and analysis of multi-modal single-cell and spatially-resolved expression
+  experiments, for example, from CITE-seq or 10X Visium technologies. It holds
+  all molecular information and associated metadata, including (for example)
+  nearest-neighbor graphs, dimensional reduction information, spatial
+  coordinates and image data, and cluster labels. We also support rapid and
+  on-disk conversion between h5Seurat and AnnData objects, with the goal of
+  enhancing interoperability between Seurat and Scanpy.
 URL: https://mojaveazure.github.io/seurat-disk/, https://github.com/mojaveazure/seurat-disk
 BugReports: https://github.com/mojaveazure/seurat-disk/issues
 License: GPL-3 | file LICENSE

@@ -87,7 +87,7 @@ remotes::install_github("mojaveazure/seurat-disk")
 
 ## Dependencies
 
-`r pkg` depends on the following packages:
+`r pkg` depends on the following non-standard packages:
 
 | Package | CRAN Webpage | Source | Website |
 |:-------:|:------------:|:------:|:-------:|
@@ -99,12 +99,12 @@ url.na <- "| &ndash;"
 names(x = deps.md) <- deps
 for (dep in deps) {
   if (!dep %in% cran.pkgs$Package) {
-    deps.md[[dep]] <- paste(
-      "|", 
-      dep, 
-      paste(replicate(n = 3, expr = url.na), collapse = " "),
-      "|"
-    )
+    # deps.md[[dep]] <- paste(
+    #   "|", 
+    #   dep, 
+    #   paste(replicate(n = 3, expr = url.na), collapse = " "),
+    #   "|"
+    # )
     next
   }
   pkg.info <- subset(x = cran.pkgs, subset = Package == dep)[1, , drop = FALSE]
@@ -128,5 +128,5 @@ for (dep in deps) {
   }
   deps.md[[dep]] <- paste(dep, pkg.cran, pkg.github, pkg.other, "|")
 }
-cat("|", paste(deps.md, collapse = "\n"))
+cat("|", paste(Filter(f = nchar, x = deps.md), collapse = "\n"))
 ```
