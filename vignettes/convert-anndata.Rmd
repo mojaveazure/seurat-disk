@@ -1,0 +1,48 @@
+---
+title: "Conversions: h5Seurat and AnnData"
+---
+
+```{r setup, include = FALSE}
+library(reticulate)
+use_python(python = "/usr/local/bin/python3.8")
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+options(SeuratData.repo.use = "https://seurat.nygenome.org")
+```
+
+```{r cleanup, echo=FALSE, results='hide'}
+outs <- c(
+  "hcabm40k.h5Seurat",
+  "hcabm40k.h5ad"
+)
+file.remove(outs)
+```
+
+```{r packages}
+library(Seurat)
+library(SeuratData)
+library(SeuratDisk)
+```
+
+## Converting from Seurat to AnnData via h5Seurat
+
+```{r get_data}
+InstallData("hcabm40k")
+data("hcabm40k")
+hcabm40k
+```
+
+```{r conversion, eval=FALSE}
+SaveH5Seurat(hcabm40k, filename = "hcabm40k.h5Seurat")
+Convert("hcabm40k.h5Seurat", dest = "h5ad")
+```
+
+```{python load_adata}
+import sys
+sys.version
+```
+
