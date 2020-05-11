@@ -185,8 +185,8 @@ as.Seurat.h5Seurat <- function(
   images = NULL,
   meta.data = TRUE,
   commands = TRUE,
-  misc = is.null(x = assays),
-  tools = is.null(x = assays),
+  misc = TRUE,
+  tools = TRUE,
   verbose = TRUE,
   ...
 ) {

@@ -130,11 +130,21 @@ will be added as an HDF5 group unless factors are \strong{not} present and
  \code{stdev} dataset of a dimensional reduction
 }
 \subsection{Nearest-neighbor graph:}{
-If a nearest neighbor graph is present in \code{/uns/neighbors/distances}, it
-will be added as a graph dataset in the h5Seurat file and associated with
-\code{assay}; if a value is present in \code{/uns/neighbors/params/method},
-the name of the graph will be \code{assay_method}, otherwise, it will be
-\code{assay_anndata}}
+ If a nearest neighbor graph is present in \code{/uns/neighbors/distances}, it
+ will be added as a graph dataset in the h5Seurat file and associated with
+ \code{assay}; if a value is present in \code{/uns/neighbors/params/method},
+ the name of the graph will be \code{assay_method}, otherwise, it will be
+ \code{assay_anndata}
+}
+\subsection{Miscellaneous information:}{
+ All groups and datasets from \code{/uns} will be copied to \code{misc} in
+ the h5Seurat file except for the following:
+ \itemize{
+  \item Any group or dataset named the same as a dimensional reduction (eg.
+  \code{/uns/pca})
+  \item \code{/uns/neighbors}
+ }
+}
 }
 
 \section{h5Seurat to AnnData/H5AD}{
