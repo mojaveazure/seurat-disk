@@ -18,6 +18,8 @@
 \alias{as.matrix.H5Group}
 \alias{as.sparse.H5Group}
 \alias{as.sparse}
+\alias{dimnames.H5D}
+\alias{dimnames}
 \title{Load data from an HDF5 File}
 \usage{
 \method{as.array}{H5D}(x, ...)
@@ -37,6 +39,8 @@
 \method{as.matrix}{H5Group}(x, ...)
 
 \method{as.sparse}{H5Group}(x, ...)
+
+\method{dimnames}{H5D}(x)
 }
 \arguments{
 \item{x}{An HDF5 dataset or group}
@@ -76,8 +80,11 @@ data from the HDF5 dataset
 \code{as.matrix}, \code{H5D} method: returns a
 \code{\link[base]{matrix}} with the data from the HDF5 dataset
 
-\code{as.sparse}; \code{as.matrix}, \code{H5Group} method: returns a
+\code{as.sparse}, \code{as.matrix}, \code{H5Group} method: returns a
 \code{\link[Matrix]{sparseMatrix}} with the data from the HDF5 group
+
+\code{dimnames}: returns a two-length list of character vectors for
+row and column names. Row names should be in a column named \code{index}
 }
 \description{
 HDF5 allows storing data in an arbitrary fashion, which makes reading data

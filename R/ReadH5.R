@@ -282,11 +282,10 @@ as.matrix.H5Group <- function(x, ...) {
   return(as.sparse(x = x, ...))
 }
 
-#' @importFrom hdf5r h5attr
 #' @importFrom Seurat as.sparse
 #' @importFrom Matrix sparseMatrix
 #'
-#' @return \code{as.sparse}; \code{as.matrix}, \code{H5Group} method: returns a
+#' @return \code{as.sparse}, \code{as.matrix}, \code{H5Group} method: returns a
 #' \code{\link[Matrix]{sparseMatrix}} with the data from the HDF5 group
 #'
 #' @aliases as.sparse
@@ -329,4 +328,34 @@ as.sparse.H5Group <- function(x, ...) {
     p = x[['indptr']][],
     x = x[['data']][]
   ))
+}
+
+#' @return \code{dimnames}: returns a two-length list of character vectors for
+#' row and column names. Row names should be in a column named \code{index}
+#'
+#' @aliases dimnames
+#'
+#' @rdname ReadH5
+#' @method dimnames H5D
+#' @export
+#'
+dimnames.H5D <- function(x) {
+  if (!IsDType(x = x, dtype = 'H5T_COMPOUND')) {
+    stop("'x' must be an HDF5 compound dataset", call. = FALSE)
+  }
+  colnames <- x$get_type()$get_cpd_labels()
+  index <- match(x = 'index', table = colnames)
+  if (is.na(x = index)) {
+    rownames <- NULL
+  } else {
+    colnames <- colnames[-index]
+    rownames <- unlist(
+      x = x$read_low_level(mem_type = H5T_COMPOUND$new(
+        labels = 'index',
+        dtypes = x$get_type()$get_cpd_types()[[index]]
+      )),
+      use.names = FALSE
+    )
+  }
+  return(list(rownames, colnames))
 }

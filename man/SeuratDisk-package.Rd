@@ -7,12 +7,14 @@
 \alias{SeuratDisk}
 \title{SeuratDisk: Interfaces for HDF5-Based Single Cell File Formats}
 \description{
-As single-cell expression datasets grow in size, the computational
-  requirements to store and handle them grow as well. To address the issues posed
-  by large datasets, SeuratDisk provides an interface to various single-cell
-  oriented HDF5-based file formats and provides infrastructure to perform
-  disk-based computation on said files. In addition, SeuratDisk integrates with
-  the Seurat framework and provides disk-based methods for Seurat's toolkit.
+The h5Seurat file format is specifically designed for the storage
+  and analysis of multi-modal single-cell and spatially-resolved expression
+  experiments, for example, from CITE-seq or 10X Visium technologies. It holds
+  all molecular information and associated metadata, including (for example)
+  nearest-neighbor graphs, dimensional reduction information, spatial
+  coordinates and image data, and cluster labels. We also support rapid and
+  on-disk conversion between h5Seurat and AnnData objects, with the goal of
+  enhancing interoperability between Seurat and Scanpy.
 }
 \section{Package options}{
 

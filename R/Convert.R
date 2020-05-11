@@ -287,6 +287,7 @@ H5ADToH5Seurat <- function(
     } else {
       # TODO: fix this
       stop("Don't know how to handle datasets", call. = FALSE)
+      # rownames(x = source[[dset]])
     }
     return(rownames)
   }
@@ -361,20 +362,46 @@ H5ADToH5Seurat <- function(
     yes = 'raw/var',
     no = 'var'
   )
-  features.dset <- GetRownames(dset = features.source)
-  assay.group$obj_copy_from(
-    src_loc = source,
-    src_name = paste(features.source, features.dset, sep = '/'),
-    dst_name = 'features'
-  )
-  scaled <- !is.null(x = ds.map['scale.data']) && !is.null(x = ds.map['scale.data'])
-  if (scaled) {
-    scaled.dset <- GetRownames(dset = 'var')
+  if (inherits(x = source[[features.source]], what = 'H5Group')) {
+    features.dset <- GetRownames(dset = features.source)
     assay.group$obj_copy_from(
       src_loc = source,
-      src_name = paste0('var/', scaled.dset),
-      dst_name = 'scaled.features'
+      src_name = paste(features.source, features.dset, sep = '/'),
+      dst_name = 'features'
     )
+  } else {
+    tryCatch(
+      expr = assay.group$create_dataset(
+        name = 'features',
+        robj = rownames(x = source[[features.source]]),
+        dtype = GuessDType(x = "")
+      ),
+      error = function(...) {
+        stop("Cannot find feature names in this H5AD file", call. = FALSE)
+      }
+    )
+  }
+  scaled <- !is.null(x = ds.map['scale.data'])
+  if (scaled) {
+    if (inherits(x = source[['var']], what = 'H5Group')) {
+      scaled.dset <- GetRownames(dset = 'var')
+      assay.group$obj_copy_from(
+        src_loc = source,
+        src_name = paste0('var/', scaled.dset),
+        dst_name = 'scaled.features'
+      )
+    } else {
+      tryCatch(
+        expr = assay.group$create_dataset(
+          name = 'scaled.features',
+          robj = rownames(x = source[['var']]),
+          dtype = GuessDType(x = "")
+        ),
+        error = function(...) {
+          stop("Cannot find scaled features in this H5AD file", call. = FALSE)
+        }
+      )
+    }
   }
   assay.group$create_attr(
     attr_name = 'key',
@@ -391,45 +418,64 @@ H5ADToH5Seurat <- function(
       immediate. = TRUE
     )
   }
-  if (source$exists(name = 'raw/var')) {
-    if (verbose) {
-      message("Adding meta.features from raw/var")
-    }
-    assay.group$obj_copy_from(
-      src_loc = source,
-      src_name = 'raw/var',
-      dst_name = 'meta.features'
-    )
-    if (scaled) {
-      features.use <- assay.group[['features']][] %in% assay.group[['scaled.features']][]
-      features.use <- which(x = features.use)
-      meta.scaled <- names(x = source[['var']])
-      meta.scaled <- meta.scaled[!meta.scaled %in% c('__categories', scaled.dset)]
-      for (mf in meta.scaled) {
-        if (!mf %in% names(x = assay.group[['meta.features']])) {
-          if (verbose) {
-            message("Adding ", mf, " from scaled feature-level metadata")
-          }
-          assay.group[['meta.features']]$create_dataset(
-            name = mf,
-            dtype = source[['var']][[mf]]$get_type(),
-            space = H5S$new(dims = assay.group[['features']]$dims)
-          )
-        } else if (verbose) {
-          message("Merging ", mf, " from scaled feature-level metadata")
-        }
-        assay.group[['meta.features']][[mf]][features.use] <- source[['var']][[mf]]$read()
+  # TODO: Support compound metafeatures
+  if (source$exists(name = 'raw') && source$exists(name = 'raw/var')) {
+    if (inherits(x = source[['raw/var']], what = 'H5Group')) {
+      if (verbose) {
+        message("Adding meta.features from raw/var")
       }
+      assay.group$obj_copy_from(
+        src_loc = source,
+        src_name = 'raw/var',
+        dst_name = 'meta.features'
+      )
+      if (scaled) {
+        features.use <- assay.group[['features']][] %in% assay.group[['scaled.features']][]
+        features.use <- which(x = features.use)
+        meta.scaled <- names(x = source[['var']])
+        meta.scaled <- meta.scaled[!meta.scaled %in% c('__categories', scaled.dset)]
+        for (mf in meta.scaled) {
+          if (!mf %in% names(x = assay.group[['meta.features']])) {
+            if (verbose) {
+              message("Adding ", mf, " from scaled feature-level metadata")
+            }
+            assay.group[['meta.features']]$create_dataset(
+              name = mf,
+              dtype = source[['var']][[mf]]$get_type(),
+              space = H5S$new(dims = assay.group[['features']]$dims)
+            )
+          } else if (verbose) {
+            message("Merging ", mf, " from scaled feature-level metadata")
+          }
+          assay.group[['meta.features']][[mf]][features.use] <- source[['var']][[mf]]$read()
+        }
+      }
+    } else {
+      warning(
+        "Cannot yet add feature-level metadata from compound datasets",
+        call. = FALSE,
+        immediate. = TRUE
+      )
+      assay.group$create_group(name = 'meta.features')
     }
   } else {
-    if (verbose) {
-      message("Adding meta.features from var")
+    if (inherits(x = source[['var']], what = 'H5Group')) {
+      if (verbose) {
+        message("Adding meta.features from var")
+      }
+      assay.group$obj_copy_from(
+        src_loc = source,
+        src_name = 'var',
+        dst_name = 'meta.features'
+      )
+    } else {
+      warning(
+        "Cannot yet add feature-level metadata from compound datasets",
+        call. = FALSE,
+        immediate. = TRUE
+      )
+      assay.group$create_group(name = 'meta.features')
     }
-    assay.group$obj_copy_from(
-      src_loc = source,
-      src_name = 'var',
-      dst_name = 'meta.features'
-    )
   }
   ColToFactor(dfgroup = assay.group[['meta.features']])
   if (assay.group[['meta.features']]$attr_exists(attr_name = 'column-order')) {
@@ -443,9 +489,11 @@ H5ADToH5Seurat <- function(
       dtype = GuessDType(x = colnames)
     )
   }
-  assay.group[['meta.features']]$link_delete(name = GetRownames(dset = 'var'))
+  if (inherits(x = source[['var']], what = 'H5Group')) {
+    assay.group[['meta.features']]$link_delete(name = GetRownames(dset = 'var'))
+  }
   # Add cell-level metadata
-  if (source$exists(name = 'obs')) {
+  if (source$exists(name = 'obs') && inherits(x = source[['obs']], what = 'H5Group')) {
     if (!source[['obs']]$exists(name = '__categories') && !getOption("SeuratDisk.dtypes.dataframe_as_group", x = TRUE)) {
       warning(
         "Conversion from H5AD to h5Seurat allowing compound datasets is not yet implemented",
@@ -647,7 +695,7 @@ H5ADToH5Seurat <- function(
     value = 1L
   )
   # Add nearest-neighbor graph
-  if (source$exists('uns/neighbors/distances')) {
+  if (source$exists('uns') && source$exists('uns/neighbors') && source$exists('uns/neighbors/distances')) {
     graph.name <- paste(
       assay,
       ifelse(
