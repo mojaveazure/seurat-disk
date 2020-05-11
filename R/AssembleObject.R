@@ -88,10 +88,12 @@ AssembleAssay <- function(assay, file, slots = NULL, verbose = TRUE) {
       x = assay.group[['meta.features']],
       row.names = features
     )
-    obj <- AddMetaData(
-      object = obj,
-      metadata = meta.data
-    )
+    if (ncol(x = meta.data)) {
+      obj <- AddMetaData(
+        object = obj,
+        metadata = meta.data
+      )
+    }
   }
   # Add variable feature information
   if (assay.group$exists(name = 'variable.features')) {

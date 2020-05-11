@@ -294,9 +294,10 @@ as.Seurat.h5Seurat <- function(
     if (verbose) {
       message("Adding cell-level metadata")
     }
-    md <- as.data.frame(x = x[['meta.data']])
-    rownames(x = md) <- Cells(x = x)
-    object <- AddMetaData(object = object, metadata = md)
+    md <- as.data.frame(x = x[['meta.data']], row.names = Cells(x = x))
+    if (ncol(x = md)) {
+      object <- AddMetaData(object = object, metadata = md)
+    }
   }
   # Set cell identities and object project
   Idents(object = object) <- Idents(object = x)
