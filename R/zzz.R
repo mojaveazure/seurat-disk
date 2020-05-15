@@ -551,6 +551,36 @@ MakeSpace <- function(n) {
   return(paste(rep_len(x = ' ', length.out = n), collapse = ''))
 }
 
+#' Add names for unnamed or partially named objects
+#'
+#' @param x An object that can be named
+#' @param prefix A prefix to be added to each name
+#'
+#' @return \code{x} with unnamed values named
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \donttest{
+#' a <- list(1, b = 2, 3)
+#' SeuratDisk:::PadNames(a)
+#' }
+#'
+PadNames <- function(x, prefix = 'index') {
+  if (length(x = x)) {
+    xnames <- names(x = x) %||% paste0(
+      prefix,
+      seq.int(from = 1L, to = length(x = x))
+    )
+    missing <- which(x = !nchar(x = xnames))
+    if (length(x = missing)) {
+      xnames[missing] <- paste0(prefix, missing)
+    }
+    names(x = x) <- xnames
+  }
+  return(x)
+}
+
 #' Create a progress bar
 #'
 #' Progress bars are useful ways of getting updates on how close a task is to
@@ -719,29 +749,6 @@ WriteAttribute <- function(
     space = H5S$new(type = space.type, dims = dims, ...)
   )
   return(invisible(x = NULL))
-}
-
-#' Is an HDF5 file or group writeable
-#'
-#' @param x An \code{\link[hdf5r]{H5File}} or \code{\link[hdf5r]{H5Group}}
-#' object
-#' @param error Throw an error
-#'
-#' @return ...
-#'
-#' @keywords internal
-#'
-Writeable <- function(x, error = TRUE) {
-  mode <- as.character(x = x$get_file_id()$get_intent()) == 'H5F_ACC_RDONLY'
-  if (isTRUE(x = mode)) {
-    msg <- paste("File", x$get_filename(), "is not writeable")
-    if (isTRUE(x = error)) {
-      stop(msg, call. = FALSE)
-    } else {
-      warning(msg, immediate. = TRUE, call. = FALSE)
-    }
-  }
-  return(invisible(x = !mode))
 }
 
 #' Get the proper HDF5 connection mode for writing depending on overwrite status

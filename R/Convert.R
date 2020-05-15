@@ -172,7 +172,7 @@ Convert.h5Seurat <- function(
 #' @section AnnData/H5AD to h5Seurat:
 #' The AnnData/H5AD to h5Seurat conversion will try to automatically fill in
 #' datasets based on data presence. It works in the following manner:
-#' \subsection{Expression data:}{
+#' \subsection{Expression data}{
 #'  The expression matrices \code{counts}, \code{data}, and \code{scale.data}
 #'  are filled by \code{/X} and \code{/raw/X} in the following manner:
 #'  \itemize{
@@ -185,7 +185,7 @@ Convert.h5Seurat <- function(
 #'  }
 #'  Feature names are taken from the feature-level metadata
 #' }
-#' \subsection{Feature-level metadata:}{
+#' \subsection{Feature-level metadata}{
 #' Feature-level metadata is added to the \code{meta.features} datasets in each
 #' assay. Feature names are taken from the dataset specified by the
 #' \dQuote{_index} attribute, the \dQuote{_index} dataset, or the \dQuote{index}
@@ -199,7 +199,7 @@ Convert.h5Seurat <- function(
 #' \code{/var} will be overwritten, with the metadata for features \emph{not}
 #' present in \code{/var} remaining as they were in \code{/raw/var} or empty
 #' }
-#' \subsection{Cell-level metadata:}{
+#' \subsection{Cell-level metadata}{
 #' Cell-level metadata is added to \code{meta.data}; the row names of the
 #' metadata (as determined by the value of the \dQuote{_index} attribute, the
 #' \dQuote{_index} dataset, or the \dQuote{index} dataset, in that order) are
@@ -243,14 +243,17 @@ Convert.h5Seurat <- function(
 #'  the variances will be converted to standard deviations and added to the
 #'  \code{stdev} dataset of a dimensional reduction
 #' }
-#' \subsection{Nearest-neighbor graph:}{
+#' \subsection{Nearest-neighbor graph}{
 #'  If a nearest neighbor graph is present in \code{/uns/neighbors/distances}, it
 #'  will be added as a graph dataset in the h5Seurat file and associated with
 #'  \code{assay}; if a value is present in \code{/uns/neighbors/params/method},
 #'  the name of the graph will be \code{assay_method}, otherwise, it will be
 #'  \code{assay_anndata}
 #' }
-#' \subsection{Miscellaneous information:}{
+#' \subsection{Layers}{
+#'  TODO: add this
+#' }
+#' \subsection{Miscellaneous information}{
 #'  All groups and datasets from \code{/uns} will be copied to \code{misc} in
 #'  the h5Seurat file except for the following:
 #'  \itemize{
@@ -429,7 +432,7 @@ H5ADToH5Seurat <- function(
     )
   }
   # TODO: Support compound metafeatures
-  if (source$exists(name = 'raw') && source$exists(name = 'raw/var')) {
+  if (Exists(x = source, name = 'raw/var')) {
     if (inherits(x = source[['raw/var']], what = 'H5Group')) {
       if (verbose) {
         message("Adding meta.features from raw/var")
@@ -705,7 +708,7 @@ H5ADToH5Seurat <- function(
     value = 1L
   )
   # Add nearest-neighbor graph
-  if (source$exists('uns') && source$exists('uns/neighbors') && source$exists('uns/neighbors/distances')) {
+  if (Exists(x = source, name = 'uns/neighbors/distances')) {
     graph.name <- paste(
       assay,
       ifelse(
@@ -770,7 +773,7 @@ H5ADToH5Seurat <- function(
 #' The h5Seurat to AnnData/H5AD conversion will try to automatically fill in
 #' datasets based on data presence. Data presense is determined by the h5Seurat
 #' index (\code{source$index()}). It works in the following manner:
-#' \subsection{Assay data:}{
+#' \subsection{Assay data}{
 #'  \itemize{
 #'   \item \code{X} will be filled with \code{scale.data} if \code{scale.data}
 #'   is present; otherwise, it will be filled with \code{data}
@@ -786,7 +789,7 @@ H5ADToH5Seurat <- function(
 #'   \code{raw.var} will not be filled
 #'  }
 #' }
-#' \subsection{Cell-level metadata:}{
+#' \subsection{Cell-level metadata}{
 #'  Cell-level metadata is added to \code{obs}
 #' }
 #' \subsection{Dimensional reduction information}{
@@ -808,6 +811,16 @@ H5ADToH5Seurat <- function(
 #'  If a nearest-neighbor graph is associated with \code{assay}, it will be
 #'  added to \code{uns/neighbors/distances}; if more than one graph is present,
 #'  then \strong{only} the last graph according to the index will be added.
+#' }
+#' \subsection{Layers}{
+#'  Data from other assays can be added to \code{layers} if they have the same
+#'  shape as \code{X} (same number of cells and features). To determine this,
+#'  the shape of each alternate assays's \code{scale.data} and \code{data} slots
+#'  are determined. If they are the same shape as \code{X}, then that slot
+#'  (\code{scale.data} is given priority over \code{data}) will be added as a
+#'  layer named the name of the assay (eg. \dQuote{SCT}). In addition, the
+#'  features names will be added to \code{var} as \code{assay_features}
+#'  (eg. \dQuote{SCT_features}).
 #' }
 #'
 #' @keywords internal
@@ -1129,5 +1142,74 @@ H5SeuratToH5AD <- function(
       dtype = GuessDType(x = graph)
     )
   }
+  # Add layers
+  other.assays <- setdiff(
+    x = names(x = source$index()),
+    y = c(assay, 'global', 'no.assay')
+  )
+  if (length(x = other.assays)) {
+    x.dims <- Dims(x = dfile[['X']])
+    layers <- dfile$create_group(name = 'layers')
+    for (other in other.assays) {
+      layer.slot <- NULL
+      for (slot in c('scale.data', 'data')) {
+        slot.dims <- if (source$index()[[other]]$slots[[slot]]) {
+          Dims(x = source[['assays']][[other]][[slot]])
+        } else {
+          NA_integer_
+        }
+        if (isTRUE(all.equal(slot.dims, x.dims))) {
+          layer.slot <- slot
+          break
+        }
+      }
+      if (!is.null(x = layer.slot)) {
+        if (verbose) {
+          message("Adding ", layer.slot, " from ", other, " as a layer")
+        }
+        layers$obj_copy_from(
+          src_loc = source[['assays']][[other]],
+          src_name = layer.slot,
+          dst_name = other
+        )
+        if (layers[[other]]$attr_exists(attr_name = 'dims')) {
+          dims <- h5attr(x = layers[[other]], which = 'dims')
+          layers[[other]]$create_attr(
+            attr_name = 'shape',
+            robj = rev(x = dims),
+            dtype = GuessDType(x = dims)
+          )
+          layers[[other]]$attr_delete(attr_name = 'dims')
+        }
+        layer.features <- switch(
+          EXPR = layer.slot,
+          'scale.data' = 'scaled.features',
+          'features'
+        )
+        var.name <- paste0(other, '_features')
+        dfile[['var']]$obj_copy_from(
+          src_loc = source[['assays']][[other]],
+          src_name = layer.features,
+          dst_name = var.name
+        )
+        col.order <- h5attr(x = dfile[['var']], which = 'column-order')
+        col.order <- c(col.order, var.name)
+        dfile[['var']]$attr_rename(
+          old_attr_name = 'column-order',
+          new_attr_name = 'old-column-order'
+        )
+        dfile[['var']]$create_attr(
+          attr_name = 'column-order',
+          robj = col.order,
+          dtype = GuessDType(x = col.order)
+        )
+        dfile[['var']]$attr_delete(attr_name = 'old-column-order')
+      }
+    }
+    if (!length(x = names(x = layers))) {
+      dfile$link_delete(name = 'layers')
+    }
+  }
+  dfile$flush()
   return(dfile)
 }

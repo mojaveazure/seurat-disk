@@ -28,7 +28,7 @@ Convert AnnData/H5AD files to h5Seurat files
 
 The AnnData/H5AD to h5Seurat conversion will try to automatically fill in
 datasets based on data presence. It works in the following manner:
-\subsection{Expression data:}{
+\subsection{Expression data}{
  The expression matrices \code{counts}, \code{data}, and \code{scale.data}
  are filled by \code{/X} and \code{/raw/X} in the following manner:
  \itemize{
@@ -41,7 +41,7 @@ datasets based on data presence. It works in the following manner:
  }
  Feature names are taken from the feature-level metadata
 }
-\subsection{Feature-level metadata:}{
+\subsection{Feature-level metadata}{
 Feature-level metadata is added to the \code{meta.features} datasets in each
 assay. Feature names are taken from the dataset specified by the
 \dQuote{_index} attribute, the \dQuote{_index} dataset, or the \dQuote{index}
@@ -55,7 +55,7 @@ than \code{/raw/var}; if this is the case, then only the features present in
 \code{/var} will be overwritten, with the metadata for features \emph{not}
 present in \code{/var} remaining as they were in \code{/raw/var} or empty
 }
-\subsection{Cell-level metadata:}{
+\subsection{Cell-level metadata}{
 Cell-level metadata is added to \code{meta.data}; the row names of the
 metadata (as determined by the value of the \dQuote{_index} attribute, the
 \dQuote{_index} dataset, or the \dQuote{index} dataset, in that order) are
@@ -99,14 +99,17 @@ will be added as an HDF5 group unless factors are \strong{not} present and
  the variances will be converted to standard deviations and added to the
  \code{stdev} dataset of a dimensional reduction
 }
-\subsection{Nearest-neighbor graph:}{
+\subsection{Nearest-neighbor graph}{
  If a nearest neighbor graph is present in \code{/uns/neighbors/distances}, it
  will be added as a graph dataset in the h5Seurat file and associated with
  \code{assay}; if a value is present in \code{/uns/neighbors/params/method},
  the name of the graph will be \code{assay_method}, otherwise, it will be
  \code{assay_anndata}
 }
-\subsection{Miscellaneous information:}{
+\subsection{Layers}{
+ TODO: add this
+}
+\subsection{Miscellaneous information}{
  All groups and datasets from \code{/uns} will be copied to \code{misc} in
  the h5Seurat file except for the following:
  \itemize{

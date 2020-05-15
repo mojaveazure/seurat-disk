@@ -58,7 +58,7 @@ provided below
 
 The AnnData/H5AD to h5Seurat conversion will try to automatically fill in
 datasets based on data presence. It works in the following manner:
-\subsection{Expression data:}{
+\subsection{Expression data}{
  The expression matrices \code{counts}, \code{data}, and \code{scale.data}
  are filled by \code{/X} and \code{/raw/X} in the following manner:
  \itemize{
@@ -71,7 +71,7 @@ datasets based on data presence. It works in the following manner:
  }
  Feature names are taken from the feature-level metadata
 }
-\subsection{Feature-level metadata:}{
+\subsection{Feature-level metadata}{
 Feature-level metadata is added to the \code{meta.features} datasets in each
 assay. Feature names are taken from the dataset specified by the
 \dQuote{_index} attribute, the \dQuote{_index} dataset, or the \dQuote{index}
@@ -85,7 +85,7 @@ than \code{/raw/var}; if this is the case, then only the features present in
 \code{/var} will be overwritten, with the metadata for features \emph{not}
 present in \code{/var} remaining as they were in \code{/raw/var} or empty
 }
-\subsection{Cell-level metadata:}{
+\subsection{Cell-level metadata}{
 Cell-level metadata is added to \code{meta.data}; the row names of the
 metadata (as determined by the value of the \dQuote{_index} attribute, the
 \dQuote{_index} dataset, or the \dQuote{index} dataset, in that order) are
@@ -129,14 +129,17 @@ will be added as an HDF5 group unless factors are \strong{not} present and
  the variances will be converted to standard deviations and added to the
  \code{stdev} dataset of a dimensional reduction
 }
-\subsection{Nearest-neighbor graph:}{
+\subsection{Nearest-neighbor graph}{
  If a nearest neighbor graph is present in \code{/uns/neighbors/distances}, it
  will be added as a graph dataset in the h5Seurat file and associated with
  \code{assay}; if a value is present in \code{/uns/neighbors/params/method},
  the name of the graph will be \code{assay_method}, otherwise, it will be
  \code{assay_anndata}
 }
-\subsection{Miscellaneous information:}{
+\subsection{Layers}{
+ TODO: add this
+}
+\subsection{Miscellaneous information}{
  All groups and datasets from \code{/uns} will be copied to \code{misc} in
  the h5Seurat file except for the following:
  \itemize{
@@ -152,7 +155,7 @@ will be added as an HDF5 group unless factors are \strong{not} present and
 The h5Seurat to AnnData/H5AD conversion will try to automatically fill in
 datasets based on data presence. Data presense is determined by the h5Seurat
 index (\code{source$index()}). It works in the following manner:
-\subsection{Assay data:}{
+\subsection{Assay data}{
  \itemize{
   \item \code{X} will be filled with \code{scale.data} if \code{scale.data}
   is present; otherwise, it will be filled with \code{data}
@@ -168,7 +171,7 @@ index (\code{source$index()}). It works in the following manner:
   \code{raw.var} will not be filled
  }
 }
-\subsection{Cell-level metadata:}{
+\subsection{Cell-level metadata}{
  Cell-level metadata is added to \code{obs}
 }
 \subsection{Dimensional reduction information}{
@@ -190,6 +193,16 @@ index (\code{source$index()}). It works in the following manner:
  If a nearest-neighbor graph is associated with \code{assay}, it will be
  added to \code{uns/neighbors/distances}; if more than one graph is present,
  then \strong{only} the last graph according to the index will be added.
+}
+\subsection{Layers}{
+ Data from other assays can be added to \code{layers} if they have the same
+ shape as \code{X} (same number of cells and features). To determine this,
+ the shape of each alternate assays's \code{scale.data} and \code{data} slots
+ are determined. If they are the same shape as \code{X}, then that slot
+ (\code{scale.data} is given priority over \code{data}) will be added as a
+ layer named the name of the assay (eg. \dQuote{SCT}). In addition, the
+ features names will be added to \code{var} as \code{assay_features}
+ (eg. \dQuote{SCT_features}).
 }
 }
 

@@ -22,6 +22,7 @@ BasicWrite <- function(x, name, hgroup, verbose = TRUE) {
   if (is.data.frame(x = x)) {
     WriteH5Group(x = x, name = name, hgroup = hgroup, verbose = verbose)
   } else if (is.list(x = x)) {
+    x <- PadNames(x = x)
     xgroup <- hgroup$create_group(name = name)
     for (i in seq_along(along.with = x)) {
       WriteH5Group(

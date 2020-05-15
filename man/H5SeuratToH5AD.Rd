@@ -36,7 +36,7 @@ Convert h5Seurat files to H5AD files
 The h5Seurat to AnnData/H5AD conversion will try to automatically fill in
 datasets based on data presence. Data presense is determined by the h5Seurat
 index (\code{source$index()}). It works in the following manner:
-\subsection{Assay data:}{
+\subsection{Assay data}{
  \itemize{
   \item \code{X} will be filled with \code{scale.data} if \code{scale.data}
   is present; otherwise, it will be filled with \code{data}
@@ -52,7 +52,7 @@ index (\code{source$index()}). It works in the following manner:
   \code{raw.var} will not be filled
  }
 }
-\subsection{Cell-level metadata:}{
+\subsection{Cell-level metadata}{
  Cell-level metadata is added to \code{obs}
 }
 \subsection{Dimensional reduction information}{
@@ -74,6 +74,16 @@ index (\code{source$index()}). It works in the following manner:
  If a nearest-neighbor graph is associated with \code{assay}, it will be
  added to \code{uns/neighbors/distances}; if more than one graph is present,
  then \strong{only} the last graph according to the index will be added.
+}
+\subsection{Layers}{
+ Data from other assays can be added to \code{layers} if they have the same
+ shape as \code{X} (same number of cells and features). To determine this,
+ the shape of each alternate assays's \code{scale.data} and \code{data} slots
+ are determined. If they are the same shape as \code{X}, then that slot
+ (\code{scale.data} is given priority over \code{data}) will be added as a
+ layer named the name of the assay (eg. \dQuote{SCT}). In addition, the
+ features names will be added to \code{var} as \code{assay_features}
+ (eg. \dQuote{SCT_features}).
 }
 }
 
