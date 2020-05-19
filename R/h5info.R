@@ -67,6 +67,19 @@ Exists <- function(x, name) {
   return(exists)
 }
 
+#' Create an HDF5 object path
+#'
+#' @inheritParams base::paste
+#'
+#' @return A character vector with path ready for accessing data in an HDF5 file
+#' or group
+#'
+#' @keywords internal
+#'
+H5Path <- function(..., collapse = NULL) {
+  return(paste(..., sep = '/', collapse = collapse))
+}
+
 #' Is an HDF5 file or group writeable
 #'
 #' @param x An \code{\link[hdf5r]{H5File}} or \code{\link[hdf5r]{H5Group}}

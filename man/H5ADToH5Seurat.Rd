@@ -100,8 +100,8 @@ will be added as an HDF5 group unless factors are \strong{not} present and
  \code{stdev} dataset of a dimensional reduction
 }
 \subsection{Nearest-neighbor graph}{
- If a nearest neighbor graph is present in \code{/uns/neighbors/distances}, it
- will be added as a graph dataset in the h5Seurat file and associated with
+ If a nearest neighbor graph is present in \code{/uns/neighbors/distances},
+ it will be added as a graph dataset in the h5Seurat file and associated with
  \code{assay}; if a value is present in \code{/uns/neighbors/params/method},
  the name of the graph will be \code{assay_method}, otherwise, it will be
  \code{assay_anndata}

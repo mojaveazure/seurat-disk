@@ -244,8 +244,8 @@ Convert.h5Seurat <- function(
 #'  \code{stdev} dataset of a dimensional reduction
 #' }
 #' \subsection{Nearest-neighbor graph}{
-#'  If a nearest neighbor graph is present in \code{/uns/neighbors/distances}, it
-#'  will be added as a graph dataset in the h5Seurat file and associated with
+#'  If a nearest neighbor graph is present in \code{/uns/neighbors/distances},
+#'  it will be added as a graph dataset in the h5Seurat file and associated with
 #'  \code{assay}; if a value is present in \code{/uns/neighbors/params/method},
 #'  the name of the graph will be \code{assay_method}, otherwise, it will be
 #'  \code{assay_anndata}
@@ -310,23 +310,44 @@ H5ADToH5Seurat <- function(
         tname <- basename(path = tempfile(tmpdir = ''))
         dfgroup$obj_copy_to(dst_loc = dfgroup, dst_name = tname, src_name = i)
         dfgroup$link_delete(name = i)
-        dfgroup$create_group(name = i)
-        # dfgroup$obj_copy_to(
-        #   dst_loc = dfgroup,
-        #   dst_name = paste0(i, '/values'),
-        #   src_name = tname
-        # )
-        dfgroup[[i]]$create_dataset(
-          name = 'values',
-          robj = dfgroup[[tname]][] + 1L,
-          dtype = dfgroup[[tname]]$get_type()
-        )
-        dfgroup$obj_copy_to(
-          dst_loc = dfgroup,
-          dst_name = paste0(i, '/levels'),
-          src_name = paste0('__categories/', i)
-        )
+        # Because AnnData stores logicals as factors, but have too many levels
+        # for factors
+        bool.check <- dfgroup[['__categories']][[i]]$dims == 2
+        if (isTRUE(x = bool.check)) {
+          bool.check <- all(sort(x = dfgroup[['__categories']][[i]][]) == c('False', 'True'))
+        }
+        if (isTRUE(x = bool.check)) {
+          dfgroup$create_dataset(
+            name = i,
+            robj = dfgroup[[tname]][] + 1L,
+            dtype = dfgroup[[tname]]$get_type()
+          )
+        } else {
+          dfgroup$create_group(name = i)
+          dfgroup[[i]]$create_dataset(
+            name = 'values',
+            robj = dfgroup[[tname]][] + 1L,
+            dtype = dfgroup[[tname]]$get_type()
+          )
+          dfgroup$obj_copy_to(
+            dst_loc = dfgroup,
+            dst_name = paste0(i, '/levels'),
+            src_name = paste0('__categories/', i)
+          )
+        }
         dfgroup$link_delete(name = tname)
+        # col.order <- h5attr(x = dfile[['var']], which = 'column-order')
+        # col.order <- c(col.order, var.name)
+        # dfile[['var']]$attr_rename(
+        #   old_attr_name = 'column-order',
+        #   new_attr_name = 'old-column-order'
+        # )
+        # dfile[['var']]$create_attr(
+        #   attr_name = 'column-order',
+        #   robj = col.order,
+        #   dtype = GuessDType(x = col.order)
+        # )
+        # dfile[['var']]$attr_delete(attr_name = 'old-column-order')
       }
       dfgroup$link_delete(name = '__categories')
     }
@@ -368,6 +389,7 @@ H5ADToH5Seurat <- function(
         robj = dims,
         dtype = GuessDType(x = dims)
       )
+      assay.group[[dst]]$attr_delete(attr_name = 'shape')
     }
   }
   features.source <- ifelse(
@@ -394,7 +416,7 @@ H5ADToH5Seurat <- function(
       }
     )
   }
-  scaled <- !is.null(x = ds.map['scale.data'])
+  scaled <- !is.null(x = ds.map['scale.data']) && !is.na(x = ds.map['scale.data'])
   if (scaled) {
     if (inherits(x = source[['var']], what = 'H5Group')) {
       scaled.dset <- GetRownames(dset = 'var')
@@ -735,6 +757,7 @@ H5ADToH5Seurat <- function(
           which = 'shape'
         ))
       )
+      dfile[['graphs']][[graph.name]]$attr_delete(attr_name = 'shape')
     }
     dfile[['graphs']][[graph.name]]$create_attr(
       attr_name = 'assay.used',
@@ -757,6 +780,45 @@ H5ADToH5Seurat <- function(
         src_name = i,
         dst_name = i
       )
+    }
+  }
+  # Add layers
+  if (Exists(x = source, name = 'layers')) {
+    slots <- c('data')
+    if (!isTRUE(x = scaled)) {
+      slots <- c(slots, 'counts')
+    }
+    for (layer in names(x = source[['layers']])) {
+      layer.assay <- dfile[['assays']]$create_group(name = layer)
+      layer.assay$obj_copy_from(
+        src_loc = dfile[['assays']][[assay]],
+        src_name = 'features',
+        dst_name = 'features'
+      )
+      layer.assay$create_attr(
+        attr_name = 'key',
+        robj = UpdateKey(key = layer),
+        dtype = GuessDType(x = layer)
+      )
+      for (slot in slots) {
+        if (verbose) {
+          message("Adding layer ", layer, " as ", slot, " in assay ", layer)
+        }
+        layer.assay$obj_copy_from(
+          src_loc = source[['layers']],
+          src_name = layer,
+          dst_name = slot
+        )
+        if (layer.assay[[slot]]$attr_exists(attr_name = 'shape')) {
+          dims <- rev(x = h5attr(x = layer.assay[[slot]], which = 'shape'))
+          layer.assay[[slot]]$create_attr(
+            attr_name = 'dims',
+            robj = dims,
+            dtype = GuessDType(x = dims)
+          )
+          layer.assay[[slot]]$attr_delete(attr_name = 'shape')
+        }
+      }
     }
   }
   return(dfile)
@@ -905,10 +967,6 @@ H5SeuratToH5AD <- function(
       dtype = src$get_type(),
       space = H5S$new(dims = mtx.dims, maxdims = mtx.dims)
     )
-    # chunk.points <- source$chunk.points(
-    #   dataset = src$get_obj_name(),
-    #   MARGIN = 1L
-    # )
     chunk.points <- ChunkPoints(
       dsize = src$dims[1L],
       csize = src$chunk_dims[1L]
@@ -919,6 +977,39 @@ H5SeuratToH5AD <- function(
         to = chunk.points[i, 'end']
       )
       dset[, select] <- src[select, ]
+    }
+    return(invisible(x = NULL))
+  }
+  # Because AnnData can't figure out that sparse matrices are stored as groups
+  AddEncoding <- function(dname) {
+    encoding.info <- c('type' = 'csr_matrix', 'version' = '0.1.0')
+    names(x = encoding.info) <- paste0('encoding-', names(x = encoding.info))
+    if (inherits(x = dfile[[dname]], what = 'H5Group')) {
+      for (i in seq_along(along.with = encoding.info)) {
+        attr.name <- names(x = encoding.info)[i]
+        attr.value <- encoding.info[i]
+        if (dfile[[dname]]$attr_exists(attr_name = attr.name)) {
+          dfile[[dname]]$attr_delete(attr_name = attr.name)
+        }
+        dfile[[dname]]$create_attr(
+          attr_name = attr.name,
+          robj = attr.value,
+          dtype = GuessDType(x = attr.value),
+          space = Scalar()
+        )
+      }
+      # dfile[[dname]]$create_attr(
+      #   attr_name = 'encoding-type',
+      #   robj = 'csr_matrix',
+      #   dtype = StringType(),
+      #   space = Scalar()
+      # )
+      # dfile[[dname]]$create_attr(
+      #   attr_name = 'encoding-version',
+      #   robj = '0.1.0',
+      #   dtype = StringType(),
+      #   space = Scalar()
+      # )
     }
     return(invisible(x = NULL))
   }
@@ -948,6 +1039,7 @@ H5SeuratToH5AD <- function(
     )
     dfile[['X']]$attr_delete(attr_name = 'dims')
   }
+  AddEncoding(dname = 'X')
   x.features <- switch(
     EXPR = x.data,
     'scale.data' = which(x = assay.group[['features']][] %in% assay.group[['scaled.features']][]),
@@ -1015,6 +1107,7 @@ H5SeuratToH5AD <- function(
       )
       dfile[['raw/X']]$attr_delete(attr_name = 'dims')
     }
+    AddEncoding(dname = 'raw/X')
     # Add meta.features
     if (assay.group$exists(name = 'meta.features')) {
       TransferDF(
@@ -1181,6 +1274,7 @@ H5SeuratToH5AD <- function(
           )
           layers[[other]]$attr_delete(attr_name = 'dims')
         }
+        AddEncoding(dname = paste('layers', other, sep = '/'))
         layer.features <- switch(
           EXPR = layer.slot,
           'scale.data' = 'scaled.features',

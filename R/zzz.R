@@ -613,6 +613,26 @@ PB <- function() {
   return(txtProgressBar(char = '=', style = 3, file = stderr()))
 }
 
+#' Generate a random string of characters
+#'
+#' @param length Length (\code{\link[base]{nchar}}) of string to generate
+#' @param ... Extra parameters passed to \code{\link[base]{sample}}
+#'
+#' @return A random string of characters of length (\code{\link[base]{nchar}})
+#' of \code{length}
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \donttest{
+#' SeuratDisk:::RandomName()
+#' }
+#'
+RandomName <- function(length = 5L, ...) {
+  # CheckDots(..., fxns = "sample")
+  return(paste(sample(x = letters, size = length, ...), collapse = ""))
+}
+
 #' Create a scalar space
 #'
 #' @return An object of type \code{\link[hdf5r:H5S]{H5S}} denoting a scalar HDF5
@@ -656,6 +676,43 @@ StringType <- function(stype = c('utf8', 'ascii7')) {
     'utf8' = H5T_STRING$new(size = Inf)$set_cset(cset = h5const$H5T_CSET_UTF8),
     'ascii7' = H5T_STRING$new(size = 7L)
   ))
+}
+
+#' Update a Seurat key
+#'
+#' Attempts to validate a string to use as a Seurat key. Valid keys must match
+#' the regular expression \code{^[[:alnum:]]+_$}; if \code{key} fails this
+#' regular expression, an attempt to modify it to said key will be made by
+#' removing all non-alphanumeric characters, collapsing the resulting vector,
+#' and appending \dQuote{_}. If this stil fails, a random string of lowercase
+#' characters will be generated, followed by \dQuote{_}, to be used as the key
+#'
+#' @param key A key to validate and update
+#'
+#' @return \code{key}, updated if invalid
+#'
+#' @seealso \code{\link[Seurat]{Key}} \code{\link{RandomName}}
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \donttest{
+#' SeuratDisk:::UpdateKey("RNA_")
+#' SeuratDisk:::UpdateKey("potato")
+#' SeuratDisk:::UpdateKey("*@)")
+#' }
+#'
+UpdateKey <- function(key) {
+  if (grepl(pattern = "^[[:alnum:]]+_$", x = key)) {
+    return(key)
+  } else {
+    new.key <- regmatches(x = key, m = gregexpr(pattern = "[[:alnum:]]+",text = key))
+    new.key <- paste0(paste(unlist(x = new.key), collapse = ""), "_")
+    if (new.key == "_") {
+      new.key <- paste0(RandomName(length = 3), "_")
+    }
+    return(new.key)
+  }
 }
 
 #' Update slots in an object
