@@ -1193,7 +1193,7 @@ H5SeuratToH5AD <- function(
     }
   }
   # Add global dimensional reduction information
-  global.reduc <- source$index()[['globals']][['reductions']]
+  global.reduc <- source$index()[['global']][['reductions']]
   for (reduc in global.reduc) {
     if (reduc %in% names(x = reductions)) {
       next
