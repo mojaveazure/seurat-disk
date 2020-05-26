@@ -929,8 +929,8 @@ H5SeuratToH5AD <- function(
         if (IsFactor(x = src[[i]])) {
           dfile[[dname]]$create_dataset(
             name = i,
-            robj = src[[i]][['values']][index],
-            dtype = GuessDType(x = 1L)
+            robj = src[[i]][['values']][index] - 1L,
+            dtype = src[[H5Path(i, 'values')]]$get_type()
           )
           if (!dfile[[dname]]$exists(name = '__categories')) {
             dfile[[dname]]$create_group(name = '__categories')
@@ -938,13 +938,13 @@ H5SeuratToH5AD <- function(
           dfile[[dname]][['__categories']]$create_dataset(
             name = i,
             robj = src[[i]][['levels']][],
-            GuessDType(x = src[[i]][['levels']][])
+            dtype = src[[H5Path(i, 'levels')]]$get_type()
           )
         } else {
           dfile[[dname]]$create_dataset(
             name = i,
             robj = src[[i]][index],
-            dtype = GuessDType(x = src[[i]][1])
+            dtype = src[[i]]$get_type()
           )
         }
       }
@@ -955,28 +955,21 @@ H5SeuratToH5AD <- function(
           dtype = GuessDType(x = h5attr(x = src, which = 'colnames'))
         )
       }
-    }
-    return(invisible(x = NULL))
-  }
-  # @rdname TransferDF
-  #
-  TransferMatrix <- function(src, dname) {
-    mtx.dims <- rev(x = src$dims)
-    dset <- dfile$create_dataset(
-      name = dname,
-      dtype = src$get_type(),
-      space = H5S$new(dims = mtx.dims, maxdims = mtx.dims)
-    )
-    chunk.points <- ChunkPoints(
-      dsize = src$dims[1L],
-      csize = src$chunk_dims[1L]
-    )
-    for (i in 1:nrow(x = chunk.points)) {
-      select <- seq.default(
-        from = chunk.points[i, 'start'],
-        to = chunk.points[i, 'end']
-      )
-      dset[, select] <- src[select, ]
+      encoding.info <- c('type' = 'dataframe', 'version' = '0.1.0')
+      names(x = encoding.info) <- paste0('encoding-', names(x = encoding.info))
+      for (i in seq_along(along.with = encoding.info)) {
+        attr.name <- names(x = encoding.info)[i]
+        attr.value <- encoding.info[i]
+        if (dfile[[dname]]$attr_exists(attr_name = attr.name)) {
+          dfile[[dname]]$attr_delete(attr_name = attr.name)
+        }
+        dfile[[dname]]$create_attr(
+          attr_name = attr.name,
+          robj = attr.value,
+          dtype = GuessDType(x = attr.value),
+          space = Scalar()
+        )
+      }
     }
     return(invisible(x = NULL))
   }
@@ -1149,16 +1142,18 @@ H5SeuratToH5AD <- function(
     space = Scalar()
   )
   # Add dimensional reduction information
-  dfile$create_group(name = 'obsm')
-  dfile$create_group(name = 'varm')
+  obsm <- dfile$create_group(name = 'obsm')
+  varm <- dfile$create_group(name = 'varm')
   reductions <- source$index()[[assay]]$reductions
   for (reduc in names(x = reductions)) {
     if (verbose) {
       message("Adding dimensional reduction information for ", reduc)
     }
-    TransferMatrix(
-      src = source[['reductions']][[reduc]][['cell.embeddings']],
-      dname = paste0('obsm/X_', reduc)
+    Transpose(
+      x = source[[H5Path('reductions', reduc, 'cell.embeddings')]],
+      dest = obsm,
+      dname = paste0('X_', reduc),
+      verbose = FALSE
     )
     if (reductions[[reduc]]['feature.loadings']) {
       if (verbose) {
@@ -1186,7 +1181,7 @@ H5SeuratToH5AD <- function(
         )
         loadings <- dfile[['varm']][[pad]]
       }
-      TransferMatrix(src = loadings, dname = paste0('varm/', varm.name))
+      Transpose(x = loadings, dest = varm, dname = varm.name, verbose = FALSE)
       if (reduc.features < x.features) {
         dfile$link_delete(name = loadings$get_obj_name())
       }
@@ -1200,9 +1195,11 @@ H5SeuratToH5AD <- function(
     } else if (verbose) {
       message("Adding dimensional reduction information for ", reduc, " (global)")
     }
-    TransferMatrix(
-      src = source[['reductions']][[reduc]][['cell.embeddings']],
-      dname = paste0('obsm/X_', reduc)
+    Transpose(
+      x = source[[H5Path('reductions', reduc, 'cell.embeddings')]],
+      dest = obsm,
+      dname = paste0('X_', reduc),
+      verbose = FALSE
     )
   }
   # Create uns
@@ -1228,12 +1225,52 @@ H5SeuratToH5AD <- function(
         dtype = GuessDType(x = dims)
       )
     }
+    AddEncoding(dname = 'uns/neighbors/distances')
+    # Add parameters
     dgraph$create_group(name = 'params')
     dgraph[['params']]$create_dataset(
       name = 'method',
       robj = gsub(pattern = paste0('^', assay, '_'), replacement = '', x = graph),
       dtype = GuessDType(x = graph)
     )
+    cmdlog <- paste(
+      paste0('FindNeighbors.', assay),
+      unique(x = c(names(x = reductions), source$index()$global$reductions)),
+      sep = '.',
+      collapse = '|'
+    )
+    cmdlog <- grep(
+      pattern = cmdlog,
+      x = names(x = source[['commands']]),
+      value = TRUE
+    )
+    if (length(x = cmdlog) > 1) {
+      timestamps <- sapply(
+        X = cmdlog,
+        FUN = function(cmd) {
+          ts <- if (source[['commands']][[cmd]]$attr_exists(attr_name = 'time.stamp')) {
+            h5attr(x = source[['commands']][[cmd]], which = 'time.stamp')
+          } else {
+            NULL
+          }
+          return(ts)
+        },
+        simplify = TRUE,
+        USE.NAMES = FALSE
+      )
+      timestamps <- Filter(f = Negate(f = is.null), x = timestamps)
+      cmdlog <- cmdlog[order(timestamps, decreasing = TRUE)][1]
+    }
+    if (length(x = cmdlog) && !is.na(x = cmdlog)) {
+      cmdlog <- source[['commands']][[cmdlog]]
+      if ('k.param' %in% names(x = cmdlog)) {
+        dgraph[['params']]$obj_copy_from(
+          src_loc = cmdlog,
+          src_name = 'k.param',
+          dst_name = 'n_neighbors'
+        )
+      }
+    }
   }
   # Add layers
   other.assays <- setdiff(
@@ -1303,6 +1340,10 @@ H5SeuratToH5AD <- function(
     if (!length(x = names(x = layers))) {
       dfile$link_delete(name = 'layers')
     }
+  }
+  # Because AnnData can't handle an empty /uns
+  if (!length(x = names(x = dfile[['uns']]))) {
+    dfile$link_delete(name = 'uns')
   }
   dfile$flush()
   return(dfile)

@@ -97,8 +97,12 @@ Transpose.H5D <- function(
       from = chunk.points[i, 'start'],
       to = chunk.points[i, 'end']
     )
+    # tmtx$write(
+    #   args = dims[c(MARGIN, c(1, 2)[-MARGIN])],
+    #   value = t(x = x$read(args = dims))
+    # )
     tmtx$write(
-      args = dims[c(MARGIN, c(1, 2)[-MARGIN])],
+      args = dims[c(c(1, 2)[-MARGIN], MARGIN)],
       value = t(x = x$read(args = dims))
     )
     if (verbose) {
