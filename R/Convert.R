@@ -529,7 +529,7 @@ H5ADToH5Seurat <- function(
   }
   # Add cell-level metadata
   if (source$exists(name = 'obs') && inherits(x = source[['obs']], what = 'H5Group')) {
-    if (!source[['obs']]$exists(name = '__categories') && !getOption("SeuratDisk.dtypes.dataframe_as_group", x = TRUE)) {
+    if (!source[['obs']]$exists(name = '__categories') && !getOption(x="SeuratDisk.dtypes.dataframe_as_group", default = TRUE)) {
       warning(
         "Conversion from H5AD to h5Seurat allowing compound datasets is not yet implemented",
         call. = FALSE,
