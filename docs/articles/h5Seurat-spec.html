@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9007</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9010</span>
       </span>
     </div>
 
@@ -101,19 +101,19 @@
 <div id="required-attributes" class="section level3">
 <h3 class="hasAnchor">
 <a href="#required-attributes" class="anchor"></a>Required Attributes</h3>
-<p>There are three required top-level HDF5 attributes: “project”, “active.assay”, and “version”. Each of these must be a single <a href="#character-representation">character</a>. The “project” attribute corresponds to the project value of a <code>Seurat</code> object; the “active.assay” attribute is the name of the default assay and must be present in the <a href="#assay-expression-data">“assays” group</a>. The “version” corresponds to the version of Seurat that the h5Seurat file is based on.</p>
+<p>There are three required top-level HDF5 attributes: "project", "active.assay", and "version". Each of these must be a single <a href="#character-representation">character</a>. The "project" attribute corresponds to the project value of a <code>Seurat</code> object; the "active.assay" attribute is the name of the default assay and must be present in the <a href="#assay-expression-data">"assays" group</a>. The "version" corresponds to the version of Seurat that the h5Seurat file is based on.</p>
 </div>
 <div id="top-level-datasets-and-groups" class="section level3">
 <h3 class="hasAnchor">
 <a href="#top-level-datasets-and-groups" class="anchor"></a>Top-Level Datasets and Groups</h3>
-<p>There are two required top-level HDF5 datasets: “cell.names” and “meta.data”. The “cell.names” dataset should be a one-dimensional <a href="#character-representation">character</a> dataset, with a length equal to the number of cells present in the data. Cell names are not stored anywhere else in the h5Seurat file.</p>
-<p>The “meta.data” dataset contains cell-level metadata. It should be stored as either an <a href="#data-frame-representation">HDF5 dataset or group</a>, depending on the contents of the meta data. See the <a href="#data-frame-representation">data frame representation</a> for more details.</p>
+<p>There are two required top-level HDF5 datasets: "cell.names" and "meta.data". The "cell.names" dataset should be a one-dimensional <a href="#character-representation">character</a> dataset, with a length equal to the number of cells present in the data. Cell names are not stored anywhere else in the h5Seurat file.</p>
+<p>The "meta.data" dataset contains cell-level metadata. It should be stored as either an <a href="#data-frame-representation">HDF5 dataset or group</a>, depending on the contents of the meta data. See the <a href="#data-frame-representation">data frame representation</a> for more details.</p>
 </div>
 </div>
 <div id="assay-expression-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#assay-expression-data" class="anchor"></a>Assay Expression Data</h2>
-<p><a href="https://rdrr.io/cran/Seurat/man/Assay-class.html"><code>Assay</code></a> objects are stored in the top-level group “assays”; each assay is stored as its own group within the “assays” group.</p>
+<p><a href="https://rdrr.io/cran/Seurat/man/Assay-class.html"><code>Assay</code></a> objects are stored in the top-level group "assays"; each assay is stored as its own group within the "assays" group.</p>
 </div>
 <div id="dimensional-reductions" class="section level2">
 <h2 class="hasAnchor">
@@ -122,7 +122,7 @@
 <div id="nearest-neighbor-graphs" class="section level2">
 <h2 class="hasAnchor">
 <a href="#nearest-neighbor-graphs" class="anchor"></a>Nearest-Neighbor Graphs</h2>
-<p><a href="https://rdrr.io/cran/Seurat/man/Graph-class.html">Nearest-neighbor graphs</a> are stored in the top-level group “graphs”; each graph is stored as its own group within the “graphs” group. Graph names become graph group names. Graphs are stored as <a href="#sparse-matrix-representation">sparse matrices</a> with an additional HDF5 attribute: “assay.used”. This HDF5 attribute should be a single <a href="#character-representation">character</a> value.</p>
+<p><a href="https://rdrr.io/cran/Seurat/man/Graph-class.html">Nearest-neighbor graphs</a> are stored in the top-level group "graphs"; each graph is stored as its own group within the "graphs" group. Graph names become graph group names. Graphs are stored as <a href="#sparse-matrix-representation">sparse matrices</a> with an additional HDF5 attribute: "assay.used". This HDF5 attribute should be a single <a href="#character-representation">character</a> value.</p>
 </div>
 <div id="spatial-image-data" class="section level2">
 <h2 class="hasAnchor">
@@ -170,7 +170,7 @@
 #&gt; [3,]    1    1    0    0
 #&gt; Class: H5D
 #&gt; Dataset: /densemat
-#&gt; Filename: /tmp/RtmpYwfQhA/file1d5a354df5d1.h5
+#&gt; Filename: /tmp/Rtmpl5vuN4/file36614ef68f1.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_IEEE_F64LE
 #&gt; Space: Type=Simple     Dims=3 x 4     Maxdims=Inf x Inf
@@ -183,14 +183,14 @@
 <div id="sparse-matrix-representation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#sparse-matrix-representation" class="anchor"></a>Sparse Matrix Representation</h3>
-<p>Sparse matrices are stored as an HDF5 group with three datasets: “indices”, “indptr”, and “data”; the “indices” and “data” datasets must be the same length. “data” represents each non-zero element of the matrix. “indices” represents the <span class="math inline">\(0\)</span>-based row numbers for each value in “data”</p>
+<p>Sparse matrices are stored as an HDF5 group with three datasets: "indices", "indptr", and "data"; the "indices" and "data" datasets must be the same length. "data" represents each non-zero element of the matrix. "indices" represents the <span class="math inline">\(0\)</span>-based row numbers for each value in "data"</p>
 <pre><code>#&gt; 3 x 4 sparse Matrix of class "dgCMatrix"
 #&gt;             
 #&gt; [1,] . . . 1
 #&gt; [2,] . 1 1 1
 #&gt; [3,] 1 1 . .
 #&gt; Class: H5Group
-#&gt; Filename: /tmp/RtmpYwfQhA/file1d5a354df5d1.h5
+#&gt; Filename: /tmp/Rtmpl5vuN4/file36614ef68f1.h5
 #&gt; Group: /sparsemat
 #&gt; Attributes: dims
 #&gt; Listing:
@@ -200,7 +200,7 @@
 #&gt;   indptr H5I_DATASET            5        H5T_INTEGER
 #&gt; Class: H5D
 #&gt; Dataset: /sparsemat/indices
-#&gt; Filename: /tmp/RtmpYwfQhA/file1d5a354df5d1.h5
+#&gt; Filename: /tmp/Rtmpl5vuN4/file36614ef68f1.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_STD_I32LE
 #&gt; Space: Type=Simple     Dims=6     Maxdims=Inf
@@ -208,42 +208,42 @@
 #&gt; [1] 2 1 2 1 0 1
 #&gt; Class: H5D
 #&gt; Dataset: /sparsemat/data
-#&gt; Filename: /tmp/RtmpYwfQhA/file1d5a354df5d1.h5
+#&gt; Filename: /tmp/Rtmpl5vuN4/file36614ef68f1.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_IEEE_F64LE
 #&gt; Space: Type=Simple     Dims=6     Maxdims=Inf
 #&gt; Chunk: 1024
 #&gt; [1] 1 1 1 1 1 1</code></pre>
-<p>“indptr” represents the points in “data” at which a new column is started. This dataset is <span class="math inline">\(0\)</span>-based and should be <span class="math inline">\(n_{columns} + 1\)</span> in length.</p>
+<p>"indptr" represents the points in "data" at which a new column is started. This dataset is <span class="math inline">\(0\)</span>-based and should be <span class="math inline">\(n_{columns} + 1\)</span> in length.</p>
 <pre><code>#&gt; Class: H5D
 #&gt; Dataset: /sparsemat/indptr
-#&gt; Filename: /tmp/RtmpYwfQhA/file1d5a354df5d1.h5
+#&gt; Filename: /tmp/Rtmpl5vuN4/file36614ef68f1.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_STD_I32LE
 #&gt; Space: Type=Simple     Dims=5     Maxdims=Inf
 #&gt; Chunk: 2048
 #&gt; [1] 0 1 3 4 6</code></pre>
-<p>The “indices”, “indptr”, and “data” datasets correspond to the “i”, “p”, and “x” slots in a <a href="https://rdrr.io/cran/Matrix/man/dgCMatrix-class.html"><code>dgCMatrix</code></a>, respectively.</p>
-<p>There may optionally be an HDF5 attribute called “dims”; this attribute should be a two <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_INTEGER-class.html">integer</a> values corresponding to the number of rows and number of columns, in that order, in the sparse matrix.</p>
+<p>The "indices", "indptr", and "data" datasets correspond to the "i", "p", and "x" slots in a <a href="https://rdrr.io/cran/Matrix/man/dgCMatrix-class.html"><code>dgCMatrix</code></a>, respectively.</p>
+<p>There may optionally be an HDF5 attribute called "dims"; this attribute should be a two <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_INTEGER-class.html">integer</a> values corresponding to the number of rows and number of columns, in that order, in the sparse matrix.</p>
 <pre><code>#&gt; [1] 3 4</code></pre>
 </div>
 <div id="factor-representation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#factor-representation" class="anchor"></a>Factor Representation</h3>
-<p><a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/factor.html">Factors</a> should be stored as an HDF5 group with two datasets: “levels” and “values”</p>
+<p><a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/factor.html">Factors</a> should be stored as an HDF5 group with two datasets: "levels" and "values"</p>
 <pre><code>#&gt; [1] g1 g2 g1 g1 g2
 #&gt; Levels: g1 g2
 #&gt; Class: H5Group
-#&gt; Filename: /tmp/RtmpYwfQhA/file1d5a354df5d1.h5
+#&gt; Filename: /tmp/Rtmpl5vuN4/file36614ef68f1.h5
 #&gt; Group: /factor
 #&gt; Listing:
 #&gt;    name    obj_type dataset.dims dataset.type_class
 #&gt;  levels H5I_DATASET            2         H5T_STRING
 #&gt;  values H5I_DATASET            5        H5T_INTEGER</code></pre>
-<p>The “levels” dataset should be a <a href="#character-representation">character</a> dataset with one entry per <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/levels.html">level</a></p>
+<p>The "levels" dataset should be a <a href="#character-representation">character</a> dataset with one entry per <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/levels.html">level</a></p>
 <pre><code>#&gt; Class: H5D
 #&gt; Dataset: /factor/levels
-#&gt; Filename: /tmp/RtmpYwfQhA/file1d5a354df5d1.h5
+#&gt; Filename: /tmp/Rtmpl5vuN4/file36614ef68f1.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_STRING {
 #&gt;       STRSIZE H5T_VARIABLE;
@@ -254,18 +254,17 @@
 #&gt; Space: Type=Simple     Dims=2     Maxdims=Inf
 #&gt; Chunk: 1024
 #&gt; [1] "g1" "g2"</code></pre>
-<p>The “values” dataset should be an integer dataset with one entry per value in the original factor. These integers should correspond to the factor level they had in R</p>
+<p>The "values" dataset should be an integer dataset with one entry per value in the original factor. These integers should correspond to the factor level they had in R</p>
 <pre><code>#&gt; Class: H5D
 #&gt; Dataset: /factor/values
-#&gt; Filename: /tmp/RtmpYwfQhA/file1d5a354df5d1.h5
+#&gt; Filename: /tmp/Rtmpl5vuN4/file36614ef68f1.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_STD_I32LE
 #&gt; Space: Type=Simple     Dims=5     Maxdims=Inf
 #&gt; Chunk: 2048
 #&gt; [1] 1 2 1 1 2</code></pre>
-<p>The number of unique entries in “values” should not exceed the number of unique entries in “levels”</p>
-<details><summary>Rationale</summary> Storing factors in this manner seems excessive from an R perspective. HDF5 has the concept of <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_ENUM-class.html">enumerated datasets (enums)</a> which are an efficient way to store R factors on-disk. However, <a href="http://docs.h5py.org/en/stable/special.html#enumerated-types">some implementations of HDF5 do not support enums</a> and thus lose factor level information. In order to make h5Seurat as cross-language as possible, we’ve opted to store factors as HDF5 groups instead of HDF5 enums.
-</details>
+<p>The number of unique entries in "values" should not exceed the number of unique entries in "levels"</p>
+<p><details><summary>Rationale</summary> Storing factors in this manner seems excessive from an R perspective. HDF5 has the concept of <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_ENUM-class.html">enumerated datasets (enums)</a> which are an efficient way to store R factors on-disk. However, <a href="http://docs.h5py.org/en/stable/special.html#enumerated-types">some implementations of HDF5 do not support enums</a> and thus lose factor level information. In order to make h5Seurat as cross-language as possible, we’ve opted to store factors as HDF5 groups instead of HDF5 enums. </details></p>
 </div>
 <div id="logical-representation" class="section level3">
 <h3 class="hasAnchor">
@@ -274,24 +273,24 @@
 <pre><code>#&gt; [1]  TRUE FALSE    NA
 #&gt; Class: H5D
 #&gt; Dataset: /logicals
-#&gt; Filename: /tmp/RtmpYwfQhA/file1d5a354df5d1.h5
+#&gt; Filename: /tmp/Rtmpl5vuN4/file36614ef68f1.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Attributes: s3class
 #&gt; Datatype: H5T_STD_I32LE
 #&gt; Space: Type=Simple     Dims=3     Maxdims=Inf
 #&gt; Chunk: 2048
 #&gt; [1] 1 0 2</code></pre>
-<p>An optional HDF5 attribute named “s3class” with the value “logical” is allowed to enforce reading in the dataset as logical values. This HDF5 attribute is a single <a href="#character-representation">character</a> value.</p>
-<details><p><summary>Rationale</summary></p>
+<p>An optional HDF5 attribute named "s3class" with the value "logical" is allowed to enforce reading in the dataset as logical values. This HDF5 attribute is a single <a href="#character-representation">character</a> value.</p>
+<p><details><summary>Rationale</summary></details></p>
 <p>Unlike most languages, <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/logical.html">logicals</a> (or booleans) can take one of <em>three</em> values: <code>TRUE</code>, <code>FALSE</code>, or <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/NA.html"><code>NA</code></a>; as such, an extra integer value is needed to handle the additional logical value. Typically, these values are stored as <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_ENUM-class.html">enums</a> with mappings between the logical representation and integer value. However, <a href="http://docs.h5py.org/en/stable/special.html#enumerated-types">some implementations of HDF5 do not support enums</a> and thus lose the logical representation. Since the mappings are lost, all logicals are stored as integers instead.</p>
-</details>
+<p></p>
 </div>
 <div id="data-frame-representation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#data-frame-representation" class="anchor"></a>Data Frame Representation</h3>
 <p>There are two ways of storing <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/data.frame.html">data frames</a> in h5Seurat files: as <a href="#data-frame-datasets">datasets</a> or as <a href="#data-frame-groups">groups</a>. Data frame groups are required when data frames contain <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/factor.html">factors</a>; if no factors are present, data frames can be stored in either type.</p>
-<details><summary>Rationale</summary><a href="#factor-representation">Storing factors</a> on-disk in an HDF5 file poses a unique set of challenges. Namely, <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_ENUM-class.html">enumerated datasets (enums)</a>, which are an ideal method of storing mapping values, <a href="http://docs.h5py.org/en/stable/special.html#enumerated-types">are not supported in some implementations of HDF5</a>. As factor level information is lost under implementations that do not support HDF5 enums, we need a method of storing factors in a cross-language manner. Two options were presented: groups or <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_COMPOUND-class.html">compound datasets</a>. While the former seems excessive, the latter presents issues with unequal dataset length. Therefore, to accomodate factor level information in data frames, we utilize HDF5 groups to store data frames when one or more columns are <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/factor.html">factors</a>.
-</details><div id="data-frame-datasets" class="section level4">
+<p><details><summary>Rationale</summary><a href="#factor-representation">Storing factors</a> on-disk in an HDF5 file poses a unique set of challenges. Namely, <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_ENUM-class.html">enumerated datasets (enums)</a>, which are an ideal method of storing mapping values, <a href="http://docs.h5py.org/en/stable/special.html#enumerated-types">are not supported in some implementations of HDF5</a>. As factor level information is lost under implementations that do not support HDF5 enums, we need a method of storing factors in a cross-language manner. Two options were presented: groups or <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_COMPOUND-class.html">compound datasets</a>. While the former seems excessive, the latter presents issues with unequal dataset length. Therefore, to accomodate factor level information in data frames, we utilize HDF5 groups to store data frames when one or more columns are <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/factor.html">factors</a>. </details></p>
+<div id="data-frame-datasets" class="section level4">
 <h4 class="hasAnchor">
 <a href="#data-frame-datasets" class="anchor"></a>Data Frame Datasets</h4>
 <p>Data frames stored as datasets should be a one-dimensional <a href="https://hhoeflin.github.io/hdf5r/reference/H5T_COMPOUND-class.html">compound dataset</a>. The single dimension should be equal to the number of observations (number of rows) in the data frame. Each data type in the compound dataset must adhere to the same requirements as standard datasets (eg. <a href="#character-representation">character encodings</a>, <a href="#logical-representation">logical mapping</a>, etc). The compound labels should correspond to the data frame column names.</p>
@@ -303,7 +302,7 @@
 #&gt; 5 g2 5
 #&gt; Class: H5D
 #&gt; Dataset: /dfdataset
-#&gt; Filename: /tmp/RtmpYwfQhA/file1d5a354df5d1.h5
+#&gt; Filename: /tmp/Rtmpl5vuN4/file36614ef68f1.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Datatype: H5T_COMPOUND {
 #&gt;       H5T_STRING {
@@ -322,23 +321,23 @@
 #&gt; 3 g2 3
 #&gt; 4 g1 4
 #&gt; 5 g2 5</code></pre>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="no">op</span>)</pre></body></html></div>
-<p>Row names are not stored with the dataset itself, but may be stored elsewhere in the h5Seurat file, typically named <code>dataset_name.row.names</code>; an optional HDF5 attribute called “logicals” containing the names of <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/logical.html">logical</a> columns is allowed. This attribute consists of <a href="#character-representation">character values</a>.</p>
+<div class="sourceCode"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="no">op</span>)</pre></body></html></div>
+<p>Row names are not stored with the dataset itself, but may be stored elsewhere in the h5Seurat file, typically named <code>dataset_name.row.names</code>; an optional HDF5 attribute called "logicals" containing the names of <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/logical.html">logical</a> columns is allowed. This attribute consists of <a href="#character-representation">character values</a>.</p>
 </div>
 <div id="data-frame-groups" class="section level4">
 <h4 class="hasAnchor">
 <a href="#data-frame-groups" class="anchor"></a>Data Frame Groups</h4>
 <p>Data frames stored as groups are used when <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/factor.html">factors</a> are present in the data frame. Within the data frame group, there should be one dataset or group per column. Columns that are factors are <a href="#factor-representation">stored as groups</a> while all other columns are stored as one-dimensional datasets. Each dataset within the group must adhere to the same requirements as standard datasets (eg. <a href="#character-representation">character encodings</a>, <a href="#logical-representation">logical mapping</a>, etc). The names of the datasets within the group correspond to the data frame column names</p>
 <pre><code>#&gt; Class: H5Group
-#&gt; Filename: /tmp/RtmpYwfQhA/file1d5a354df5d1.h5
+#&gt; Filename: /tmp/Rtmpl5vuN4/file36614ef68f1.h5
 #&gt; Group: /dfgroup
 #&gt; Attributes: colnames
 #&gt; Listing:
 #&gt;  name    obj_type dataset.dims dataset.type_class
 #&gt;     x   H5I_GROUP         &lt;NA&gt;               &lt;NA&gt;
 #&gt;     y H5I_DATASET            5        H5T_INTEGER</code></pre>
-<p>Data frame row names may be stored in a dataset called “row.names” within the group; this dataset should be a one-dimensional <a href="#character-representation">character</a> dataset. There are two optional attributes allowed: “colnames” and “logicals”; the “colnames” attribute contains the column names in the same order as was present in the in-memory <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/data.frame.html">data frame</a> as <a href="#character-representation">character values</a>. This is used to control column order when reading the data frame back into memory. Note, the “colnames” attribute does not need to contain the name of every dataset.</p>
-<p>The “logicals” attribute contains the names of <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/logical.html">logical</a> columns; this attribute should consist of <a href="#character-representation">character values</a>.</p>
+<p>Data frame row names may be stored in a dataset called "row.names" within the group; this dataset should be a one-dimensional <a href="#character-representation">character</a> dataset. There are two optional attributes allowed: "colnames" and "logicals"; the "colnames" attribute contains the column names in the same order as was present in the in-memory <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/data.frame.html">data frame</a> as <a href="#character-representation">character values</a>. This is used to control column order when reading the data frame back into memory. Note, the "colnames" attribute does not need to contain the name of every dataset.</p>
+<p>The "logicals" attribute contains the names of <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/logical.html">logical</a> columns; this attribute should consist of <a href="#character-representation">character values</a>.</p>
 </div>
 </div>
 <div id="generic-s3-object-representation" class="section level3">

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9007</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9010</span>
       </span>
     </div>
 
@@ -171,7 +171,7 @@ out; converting to <code><a href='h5Seurat-class.html'>h5Seurat</a></code>: name
     
 
 <p>The AnnData/H5AD to h5Seurat conversion will try to automatically fill in
-datasets based on data presence. It works in the following manner:</p><h3>Expression data:</h3>
+datasets based on data presence. It works in the following manner:</p><h3>Expression data</h3>
 <p>The expression matrices <code>counts</code>, <code>data</code>, and <code>scale.data</code>
  are filled by <code>/X</code> and <code>/raw/X</code> in the following manner:</p><ul>
 <li><p><code>counts</code> will be filled with <code>/raw/X</code> if present;
@@ -181,7 +181,7 @@ datasets based on data presence. It works in the following manner:</p><h3>Expres
 <li><p><code>scale.data</code> will be filled with <code>/X</code> if it dense;
   otherwise, it will be empty</p></li>
 </ul><p>Feature names are taken from the feature-level metadata</p>
-<h3>Feature-level metadata:</h3>
+<h3>Feature-level metadata</h3>
 <p>Feature-level metadata is added to the <code>meta.features</code> datasets in each
 assay. Feature names are taken from the dataset specified by the
 &#8220;_index&#8221; attribute, the &#8220;_index&#8221; dataset, or the &#8220;index&#8221;
@@ -194,7 +194,7 @@ instead. <strong>Note</strong>: it is possible for <code>/var</code> to have few
 than <code>/raw/var</code>; if this is the case, then only the features present in
 <code>/var</code> will be overwritten, with the metadata for features <em>not</em>
 present in <code>/var</code> remaining as they were in <code>/raw/var</code> or empty</p>
-<h3>Cell-level metadata:</h3>
+<h3>Cell-level metadata</h3>
 <p>Cell-level metadata is added to <code>meta.data</code>; the row names of the
 metadata (as determined by the value of the &#8220;_index&#8221; attribute, the
 &#8220;_index&#8221; dataset, or the &#8220;index&#8221; dataset, in that order) are
@@ -232,12 +232,22 @@ will be added as an HDF5 group unless factors are <strong>not</strong> present a
  Standard deviations are taken from a dataset <code>/uns/reduction/variance</code>;
  the variances will be converted to standard deviations and added to the
  <code>stdev</code> dataset of a dimensional reduction</p>
-<h3>Nearest-neighbor graph:</h3>
-<p>If a nearest neighbor graph is present in <code>/uns/neighbors/distances</code>, it
-will be added as a graph dataset in the h5Seurat file and associated with
-<code>assay</code>; if a value is present in <code>/uns/neighbors/params/method</code>,
-the name of the graph will be <code>assay_method</code>, otherwise, it will be
-<code>assay_anndata</code></p>
+<h3>Nearest-neighbor graph</h3>
+<p>If a nearest neighbor graph is present in <code>/uns/neighbors/distances</code>,
+ it will be added as a graph dataset in the h5Seurat file and associated with
+ <code>assay</code>; if a value is present in <code>/uns/neighbors/params/method</code>,
+ the name of the graph will be <code>assay_method</code>, otherwise, it will be
+ <code>assay_anndata</code></p>
+<h3>Layers</h3>
+<p>TODO: add this</p>
+<h3>Miscellaneous information</h3>
+<p>All groups and datasets from <code>/uns</code> will be copied to <code>misc</code> in
+ the h5Seurat file except for the following:</p><ul>
+<li><p>Any group or dataset named the same as a dimensional reduction (eg.
+  <code>/uns/pca</code>)</p></li>
+<li><p><code>/uns/neighbors</code></p></li>
+</ul>
+
 
 
   </div>

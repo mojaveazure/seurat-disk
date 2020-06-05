@@ -76,7 +76,7 @@ h5Seurat file specification." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9007</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9010</span>
       </span>
     </div>
 
@@ -168,7 +168,10 @@ details regarding how data should be stored on disk, please see the
 <span class='fu'>as.matrix</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for H5Group</span>
-<span class='fu'>as.sparse</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>as.sparse</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for H5D</span>
+<span class='fu'>dimnames</span>(<span class='no'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -217,8 +220,10 @@ the HDF5 group</p>
 data from the HDF5 dataset</p>
 <p><code>as.matrix</code>, <code>H5D</code> method: returns a
 <code><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></code> with the data from the HDF5 dataset</p>
-<p><code>as.sparse</code>; <code>as.matrix</code>, <code>H5Group</code> method: returns a
+<p><code>as.sparse</code>, <code>as.matrix</code>, <code>H5Group</code> method: returns a
 <code><a href='https://rdrr.io/pkg/Matrix/man/sparseMatrix.html'>sparseMatrix</a></code> with the data from the HDF5 group</p>
+<p><code>dimnames</code>: returns a two-length list of character vectors for
+row and column names. Row names should be in a column named <code>index</code></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
