@@ -91,19 +91,15 @@ Transpose.H5D <- function(
     csize = x$chunk_dims[MARGIN]
   )
   dims <- vector(mode = 'list', length = 2L)
-  dims[[-MARGIN]] <- seq.default(from = 1, to = x$dims[-MARGIN])
+  dims[[MARGIN]] <- seq.default(from = 1, to = tmtx$dims[MARGIN])
   for (i in seq.default(from = 1, to = nrow(x = chunk.points))) {
-    dims[[MARGIN]] <- seq.default(
+    dims[[-MARGIN]] <- seq.default(
       from = chunk.points[i, 'start'],
       to = chunk.points[i, 'end']
     )
-    # tmtx$write(
-    #   args = dims[c(MARGIN, c(1, 2)[-MARGIN])],
-    #   value = t(x = x$read(args = dims))
-    # )
     tmtx$write(
-      args = dims[c(c(1, 2)[-MARGIN], MARGIN)],
-      value = t(x = x$read(args = dims))
+      args = dims,
+      value = t(x = x$read(args = rev(x = dims)))
     )
     if (verbose) {
       setTxtProgressBar(pb = pb, value = i / nrow(x = chunk.points))
