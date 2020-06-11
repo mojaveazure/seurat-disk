@@ -288,7 +288,8 @@ H5ADToH5Seurat <- function(
   #
   GetRownames <- function(dset) {
     if (inherits(x = source[[dset]], what = 'H5Group')) {
-      rownames <- if (source[[dset]]$attr_exists(attr_name = '_index')) {
+      # rownames <- if (source[[dset]]$attr_exists(attr_name = '_index')) {
+      rownames <- if (isTRUE(x = AttrExists(x = source[[dset]], name = '_index'))) {
         h5attr(x = source[[dset]], which = '_index')
       } else if (source[[dset]]$exists(name = '_index')) {
         '_index'
@@ -382,7 +383,8 @@ H5ADToH5Seurat <- function(
       src_name = ds.map[[i]],
       dst_name = dst
     )
-    if (assay.group[[dst]]$attr_exists(attr_name = 'shape')) {
+    # if (assay.group[[dst]]$attr_exists(attr_name = 'shape')) {
+    if (isTRUE(x = AttrExists(x = assay.group[[dst]], name = 'shape'))) {
       dims <- rev(x = h5attr(x = assay.group[[dst]], which = 'shape'))
       assay.group[[dst]]$create_attr(
         attr_name = 'dims',
@@ -513,7 +515,8 @@ H5ADToH5Seurat <- function(
     }
   }
   ColToFactor(dfgroup = assay.group[['meta.features']])
-  if (assay.group[['meta.features']]$attr_exists(attr_name = 'column-order')) {
+  # if (assay.group[['meta.features']]$attr_exists(attr_name = 'column-order')) {
+  if (isTRUE(x = AttrExists(x = assay.group[['meta.features']], name = 'column-order'))) {
     colnames <- h5attr(
       x = assay.group[['meta.features']],
       which = 'column-order'
@@ -529,7 +532,7 @@ H5ADToH5Seurat <- function(
   }
   # Add cell-level metadata
   if (source$exists(name = 'obs') && inherits(x = source[['obs']], what = 'H5Group')) {
-    if (!source[['obs']]$exists(name = '__categories') && !getOption(x="SeuratDisk.dtypes.dataframe_as_group", default = TRUE)) {
+    if (!source[['obs']]$exists(name = '__categories') && !getOption(x = "SeuratDisk.dtypes.dataframe_as_group", default = TRUE)) {
       warning(
         "Conversion from H5AD to h5Seurat allowing compound datasets is not yet implemented",
         call. = FALSE,
@@ -542,7 +545,8 @@ H5ADToH5Seurat <- function(
       dst_name = 'meta.data'
     )
     ColToFactor(dfgroup = dfile[['meta.data']])
-    if (dfile[['meta.data']]$attr_exists(attr_name = 'column-order')) {
+    # if (dfile[['meta.data']]$attr_exists(attr_name = 'column-order')) {
+    if (isTRUE(x = AttrExists(x = dfile[['meta.data']], name = 'column-order'))) {
       colnames <- h5attr(x = dfile[['meta.data']], which = 'column-order')
       dfile[['meta.data']]$create_attr(
         attr_name = 'colnames',
@@ -748,7 +752,8 @@ H5ADToH5Seurat <- function(
       src_name = 'uns/neighbors/distances',
       dst_name = graph.name
     )
-    if (dfile[['graphs']][[graph.name]]$attr_exists(attr_name = 'shape')) {
+    # if (dfile[['graphs']][[graph.name]]$attr_exists(attr_name = 'shape')) {
+    if (isTRUE(x = AttrExists(x = dfile[['graphs']], name = 'shape'))) {
       dfile[['graphs']][[graph.name]]$create_attr(
         attr_name = 'dims',
         robj = h5attr(x = dfile[['graphs']][[graph.name]], which = 'shape'),
@@ -809,7 +814,8 @@ H5ADToH5Seurat <- function(
           src_name = layer,
           dst_name = slot
         )
-        if (layer.assay[[slot]]$attr_exists(attr_name = 'shape')) {
+        # if (layer.assay[[slot]]$attr_exists(attr_name = 'shape')) {
+        if (isTRUE(x = AttrExists(x = layer.assay[[slot]], name = 'shape'))) {
           dims <- rev(x = h5attr(x = layer.assay[[slot]], which = 'shape'))
           layer.assay[[slot]]$create_attr(
             attr_name = 'dims',
