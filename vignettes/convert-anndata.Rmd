@@ -56,7 +56,7 @@ We can view the AnnData file in Scanpy by using the `read_h5ad` function
 
 ```{python load_adata}
 import scanpy
-adata = scanpy.read_h5ad("pbmc3k.h5ad", backed="r+")
+adata = scanpy.read_h5ad("pbmc3k.h5ad")
 adata
 ```
 

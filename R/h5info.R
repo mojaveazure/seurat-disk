@@ -3,6 +3,32 @@
 #'
 NULL
 
+#' Check to see if a dataset, group, or attribute exists in an HDF5 file,
+#' group, or dataset
+#'
+#' @param x An HDF5 \link[hdf5r:H5File]{file} or \link[hdf5r:H5Group]{group};
+#' for \code{AttrExists}, may also be a \link[hdf5r:H5D]{dataset}
+#' @param name Name of dataset, group, or attribute to test for
+#'
+#' @return \code{TRUE} if \code{name} exists in \code{x}, otherwise \code{FALSE}
+#'
+#' @name H5Exists
+#' @rdname H5Exists
+#'
+#' @keywords internal
+#'
+AttrExists <- function(x, name) {
+  if (!inherits(x = x, what = c('H5File', 'H5Group', 'H5D'))) {
+    stop("'x' must be an HDF5 file, group, or dataset", call. = FALSE)
+  }
+  exists <- x$attr_exists(attr_name = name)
+  if (isTRUE(x = exists)) {
+    space <- x$attr_open(attr_name = name)$get_space()
+    exists <- !(length(x = space$dims) > 0 && space$dims == 0)
+  }
+  return(exists)
+}
+
 #' Get the dimensions of an HDF5 dataset or sparse matrix
 #'
 #' @param x An HDF5 dataset or sparse matrix
@@ -41,12 +67,7 @@ Dims.H5Group <- function(x) {
   return(c(NA_integer_, NA_integer_))
 }
 
-#' Check to see if a dataset or group exists in an HDF5 file or group
-#'
-#' @param x An HDF5 \link[hdf5r:H5File]{file} or \link[hdf5r:H5Group]{group}
-#' @param name Name of the dataset or group to test for
-#'
-#' @return \code{TRUE} if \code{name} exists in \code{x}, otherwise \code{FALSE}
+#' @rdname H5Exists
 #'
 #' @keywords internal
 #'

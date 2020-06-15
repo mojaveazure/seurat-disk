@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9007</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9010</span>
       </span>
     </div>
 
@@ -179,7 +179,7 @@ object</p>
 
 <p>The h5Seurat to AnnData/H5AD conversion will try to automatically fill in
 datasets based on data presence. Data presense is determined by the h5Seurat
-index (<code>source$index()</code>). It works in the following manner:</p><h3>Assay data:</h3>
+index (<code>source$index()</code>). It works in the following manner:</p><h3>Assay data</h3>
 <p></p><ul>
 <li><p><code>X</code> will be filled with <code>scale.data</code> if <code>scale.data</code>
   is present; otherwise, it will be filled with <code>data</code></p></li>
@@ -195,7 +195,7 @@ index (<code>source$index()</code>). It works in the following manner:</p><h3>As
   <code>raw.var</code> will not be filled</p></li>
 </ul>
 
-<h3>Cell-level metadata:</h3>
+<h3>Cell-level metadata</h3>
 <p>Cell-level metadata is added to <code>obs</code></p>
 <h3>Dimensional reduction information</h3>
 <p>Only dimensional reductions associated with <code>assay</code> or marked as
@@ -213,6 +213,15 @@ index (<code>source$index()</code>). It works in the following manner:</p><h3>As
 <p>If a nearest-neighbor graph is associated with <code>assay</code>, it will be
  added to <code>uns/neighbors/distances</code>; if more than one graph is present,
  then <strong>only</strong> the last graph according to the index will be added.</p>
+<h3>Layers</h3>
+<p>Data from other assays can be added to <code>layers</code> if they have the same
+ shape as <code>X</code> (same number of cells and features). To determine this,
+ the shape of each alternate assays's <code>scale.data</code> and <code>data</code> slots
+ are determined. If they are the same shape as <code>X</code>, then that slot
+ (<code>scale.data</code> is given priority over <code>data</code>) will be added as a
+ layer named the name of the assay (eg. &#8220;SCT&#8221;). In addition, the
+ features names will be added to <code>var</code> as <code>assay_features</code>
+ (eg. &#8220;SCT_features&#8221;).</p>
 
 
   </div>
