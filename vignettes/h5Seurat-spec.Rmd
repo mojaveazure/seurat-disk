@@ -128,6 +128,7 @@ The "meta.data" dataset contains cell-level metadata. It should be stored as eit
 <a href=`r plink("Assay-class")`>`Assay`</a> objects are stored in the top-level group "assays"; each assay is stored as its own group within the "assays" group. Within each assay group, there must be a dataset named "features" and either a dataset or group named "data"; the "features" dataset must be a one-dimensional <a href=`r vlink("char")`>character</a> dataset with a length equal to the number of total features within the assay. The "data" entry is a matrix, with dimensions of $m_{features} x n_{cells}$; this entry may be either a dataset, if "data" is a <a href=`r vlink("dense")`>dense matrix</a>, or a group, if "data" is a <a href=`r vlink("sparse")`>sparse matrix</a>. Assay groups must also have an attribute named "key"; this is a single <a href=`r vlink("char")`>character</a> value.
 
 Assay groups may also have the following optional groups and datasets:
+
  - "counts": either a <a href=`r vlink("dense")`>dense</a> or <a href=`r vlink("sparse")`>sparse</a> matrix; must have the same dimesions as "data"
  - "scale.data": a <a href=`r vlink("dense")`>dense</a> matrix; if "scale.data" is present, a one-dimensional <a href=`r vlink("char")`>character</a> dataset must also be present. The "scale.data" matrix must be of dimensions $m_{scaled features} x n_{cells}$
  - "meta.features": a <a href=`r vlink("data-frame-rep")`>data frame</a> with the same number of rows as values present in "features"
@@ -138,7 +139,14 @@ Subclasses of <a href=`r plink("Assay-class")`>`Assay`</a> objects must also fol
 
 ## Dimensional Reductions
 
-<a href=`r plink("DimReduc-class")`>Dimensional reduction information</a> is stored in the top-level group "reductions"; each dimensional reduction is stored as its own group within the "reductions" group.
+<a href=`r plink("DimReduc-class")`>Dimensional reduction information</a> is stored in the top-level group "reductions"; each dimensional reduction is stored as its own group within the "reductions" group. Within each dimensional reduction group, there are three required attributes: "active.assay", "key", and "global"; "active.assay" must be one or more <a href=`r vlink("char")`>character</a> values where each value is a name of an [assay](#assay-expression-data), "key" must be a single a <a href=`r vlink("char")`>character</a> value, and "global" must be a single <a href=`r vlink("log")`>logical</a> value. In addition, there must also be a dataset named "cell.embeddings" representing a <a href=`r vlink("dense")`>dense matrix</a>. This matrix must have the same number of rows as cells present in the h5Seurat file.
+
+Dimensional reduction groups may also have the following optional groups and datasets:
+
+ - "feature.loadings": ...
+ - "feature.loadings.projected": ...
+ - "misc": a <a href=`r vlink("list")`>list</a>
+ - "jackstraw": a <a href=`r vlink("list")`>custom S4 group</a>
 
 ## Nearest-Neighbor Graphs
 
