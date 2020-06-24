@@ -2,6 +2,7 @@
 *.html
 *.R
 
-# Ignore h5Seurat data files
+# Ignore h5Seurat and H5AD data files
 *.h5seurat
 *.h5Seurat
+*.h5ad
