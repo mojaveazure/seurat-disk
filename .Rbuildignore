@@ -1,6 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.git$
+^\.github$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
@@ -9,4 +10,7 @@
 ^README\.Rmd$
 ^cran-comments\.md$
 ^.*\.h5Seurat$
+^.*\.h5ad$
+^.*\.rds$
+^.*\.Rds$
 ^vignettes/anndata-Rmd\.Rmd$
