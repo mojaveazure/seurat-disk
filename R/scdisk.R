@@ -1,3 +1,7 @@
+#' @include zzz.R
+#'
+NULL
+
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Class definition
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -134,3 +138,135 @@ scdisk <- R6Class(
     }
   )
 )
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# External Functions
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#' Get and Register \code{\link{scdisk}} Subclasses
+#'
+#' Mechanisms for registration of \code{\link{scdisk}} subclass generators for
+#' use in functions that rely on the class definition instead of an object.
+#'
+#' @inheritParams IsSCDisk
+#'
+#' @return \code{GetSCDisk}: if \code{r6class} is \code{NULL}, then a vector of
+#' all registered \code{scdisk} subclasses; otherwise, a
+#' \link[R6::R6Class]{generator} for the requested \code{scdisk} subclass
+#'
+#' @name RegisterSCDisk
+#' @rdname RegisterSCDisk
+#'
+#' @details
+#' While \code{scdisk}-subclassed objects (eg. \code{\link{h5Seurat}} objects)
+#' follow traditional inheritance patterns (can be determined through
+#' \code{\link{inherits}}), the class definitions and object generators do not.
+#' These functions provide a simple mechanism for adding and getting the
+#' defintions of \code{scdisk} subclasses for functions that utilize the object
+#' generators or other aspects of the class definition (such as
+#' \code{\link{Convert}})
+#'
+#' To register a subclass of \code{scdisk}, simply add a call to
+#' \code{RegisterSCDisk} in your \link[base::ns-hooks]{load hook}
+#'
+#' \preformatted{
+#' .onLoad <- function(libname, pkgname) {
+#'   RegisterSCDisk(classgen)
+#'   # Other code to be run on load
+#' }
+#' }
+#'
+#' @export
+#'
+#' @examples
+#' GetSCDisk()
+#' GetSCDisk("h5Seurat")
+#'
+GetSCDisk <- function(r6class = NULL) {
+  if (is.null(x = r6class)) {
+    return(names(x = scdisk.types))
+  }
+  classname <- grep(
+    pattern = paste0('^', r6class, '$'),
+    x = names(x = scdisk.types),
+    ignore.case = TRUE,
+    value = TRUE
+  )
+  if (!length(x = classname)) {
+    stop("Unknown file type: ", r6class, call. = FALSE)
+  }
+  return(scdisk.types[[classname]])
+}
+
+#' @name RegisterSCDisk
+#' @rdname RegisterSCDisk
+#'
+#' @return \code{RegisterSCDisk}: adds \code{r6class} to the internal subclass
+#' registry and invisibly returns \code{NULL}
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' RegisterSCDisk(h5Seurat)
+#' }
+#'
+RegisterSCDisk <- function(r6class) {
+  if (isTRUE(x = IsSCDisk(r6class = scdisk))) {
+    r6pkg <- environmentName(env = r6class$parent_env)
+    scpkg <- environmentName(env = scdisk$parent_env)
+    # Ensure unique scdisk classes
+    if (r6class$classname %in% names(x = scdisk.types) && r6pkg != scpkg) {
+      stop(
+        r6class$classname, " already registered by package ",
+        r6pkg,
+        call. = FALSE
+      )
+    }
+    scdisk.types[[r6class$classname]] <- r6class
+  } else {
+    warning(
+      r6class$classname,
+      " does not inherit from scdisk",
+      call. = FALSE,
+      immediate. = TRUE
+    )
+  }
+  return(invisible(x = NULL))
+}
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Internal Functions
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#' Does an R6 class inherit from scdisk
+#'
+#' @param r6class An \link[R6::R6Class]{R6 class generator} or a character name
+#' of an R6 class generator
+#'
+#' @return If \code{r6class} inherits from scdisk, returns \code{TRUE};
+#' otherwise, returns \code{FALSE}
+#'
+#' @importFrom R6 is.R6Class
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \donttest{
+#' SeuratDisk:::IsSCDisk("H5File")
+#' SeuratDisk:::IsSCDisk("scdisk")
+#' SeuratDisk:::IsSCDisk("h5Seurat")
+#' }
+#'
+IsSCDisk <- function(r6class) {
+  if (is.character(x = r6class)) {
+    r6class <- eval(expr = as.symbol(x = r6class))
+  }
+  if (is.R6Class(x = r6class)) {
+    if (identical(x = r6class, y = scdisk)) {
+      return(TRUE)
+    }
+    return(IsSCDisk(r6class = r6class$get_inherit()))
+  }
+  return(FALSE)
+}
