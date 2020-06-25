@@ -37,13 +37,12 @@ Connect <- function(
     stop("Cannot find ", type, " file ", filename, call. = FALSE)
   }
   return(tryCatch(
-    expr = switch(
-      EXPR = type,
-      'h5seurat' = h5Seurat$new(filename = filename, mode = mode),
-      stop("Unknown file type: ", type, call. = FALSE)
-    ),
+    expr = {
+      cls <- GetSCDisk(r6class = type)
+      cls$new(filename = filename, mode = mode)
+    },
     error = function(err) {
-      if (!force) {
+      if (!isTRUE(x = force)) {
         stop(err$message, call. = FALSE)
       }
       warning(err$message, call. = FALSE, immediate. = TRUE)
