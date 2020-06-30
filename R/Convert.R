@@ -330,11 +330,19 @@ H5ADToH5Seurat <- function(
             robj = dfgroup[[tname]][] + 1L,
             dtype = dfgroup[[tname]]$get_type()
           )
-          dfgroup$obj_copy_to(
-            dst_loc = dfgroup,
-            dst_name = paste0(i, '/levels'),
-            src_name = paste0('__categories/', i)
-          )
+          if (IsDType(x = dfgroup[['__categories']][[i]], dtype = 'H5T_STRING')) {
+            dfgroup$obj_copy_to(
+              dst_loc = dfgroup,
+              dst_name = paste0(i, '/levels'),
+              src_name = paste0('__categories/', i)
+            )
+          } else {
+            dfgroup[[i]]$create_dataset(
+              name = 'levels',
+              robj = as.character(x = dfgroup[[H5Path('__categories', i)]][]),
+              dtype = StringType()
+            )
+          }
         }
         dfgroup$link_delete(name = tname)
         # col.order <- h5attr(x = dfile[['var']], which = 'column-order')
