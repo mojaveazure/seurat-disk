@@ -1,9 +1,23 @@
+# Ignore RStudio development files
 .Rproj.user
 *.Rproj
 .Rhistory
 .RData
 .Ruserdata
+
+# Ignore built vignettes
 inst/doc
 doc
 Meta
+
+# Ignore extra pkgdown files
 *_files
+
+# Ignore data and script files in the top-level directory
+/*.h5ad
+/*.h5seurat
+/*.h5Seurat
+/*.r
+/*.R
+/*.rds
+/*.Rds
