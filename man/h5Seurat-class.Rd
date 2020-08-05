@@ -101,6 +101,8 @@ A class for connections to h5Seurat files
 \item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="chunk.points">}\href{../../SeuratDisk/html/scdisk.html#method-chunk.points}{\code{SeuratDisk::scdisk$chunk.points()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="finalizer">}\href{../../SeuratDisk/html/scdisk.html#method-finalizer}{\code{SeuratDisk::scdisk$finalizer()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="initialize">}\href{../../SeuratDisk/html/scdisk.html#method-initialize}{\code{SeuratDisk::scdisk$initialize()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="last.modified">}\href{../../SeuratDisk/html/scdisk.html#method-last.modified}{\code{SeuratDisk::scdisk$last.modified()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="timestamp">}\href{../../SeuratDisk/html/scdisk.html#method-timestamp}{\code{SeuratDisk::scdisk$timestamp()}}\out{</span>}
 }
 \out{</details>}
 }

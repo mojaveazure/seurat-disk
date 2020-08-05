@@ -1,3 +1,7 @@
+#' @include zzz.R
+#'
+NULL
+
 #' Figure out which objects to load from an h5Seurat file
 #'
 #' @inheritParams LoadH5Seurat

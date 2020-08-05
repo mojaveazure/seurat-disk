@@ -20,7 +20,7 @@ BugReports: https://github.com/mojaveazure/seurat-disk/issues
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Remotes: satijalab/seurat-data
 Depends:
   R (>= 3.6.0)
@@ -38,25 +38,29 @@ Imports:
   utils,
   withr (>= 2.1.2)
 Collate:
-    'GetObject.R'
     'zzz.R'
+    'GetObject.R'
     'AssembleObject.R'
     'AppendData.R'
+    'TestObject.R'
+    'TestH5.R'
+    'h5info.R'
     'scdisk.R'
     'h5Seurat.R'
     'Connect.R'
-    'TestObject.R'
-    'TestH5.R'
     'PadMatrix.R'
     'sparse_matrix.R'
     'Transpose.R'
     'Convert.R'
     'LoadH5Seurat.R'
+    'LoadLoom.R'
     'ReadH5.R'
     'WriteH5Group.R'
     'SaveH5Seurat.R'
+    'SaveLoom.R'
     'h5Seurat_bindings.R'
-    'h5info.R'
+    'loom.R'
+    'loom_bindings.R'
 Suggests:
     httr,
     knitr,

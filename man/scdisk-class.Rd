@@ -25,6 +25,8 @@ A disk-based object for single-cell analysis
 \item \href{#method-new}{\code{scdisk$new()}}
 \item \href{#method-finalizer}{\code{scdisk$finalizer()}}
 \item \href{#method-chunk.points}{\code{scdisk$chunk.points()}}
+\item \href{#method-timestamp}{\code{scdisk$timestamp()}}
+\item \href{#method-last.modified}{\code{scdisk$last.modified()}}
 }
 }
 \if{html}{
@@ -173,6 +175,69 @@ Generate chunk points for a dataset
 \subsection{Returns}{
 A matrix where each row is a chunk, column 1 is start points,
 column 2 is end points
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-timestamp"></a>}}
+\if{latex}{\out{\hypertarget{method-timestamp}{}}}
+\subsection{Method \code{timestamp()}}{
+Add a timestamp to a dataset or group as an HDF5 attribute
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{scdisk$timestamp(
+  name = NULL,
+  attr = "ts",
+  tz = "UTC",
+  format = TSFormats(type = "R")
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{Name of dataset or group to add timestamp to; if \code{NULL},
+timestamps the file as a whole}
+
+\item{\code{attr}}{Name of attribute to store timestamp ass}
+
+\item{\code{tz, format}}{See \code{\link{Timestamp}}}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisilby returns the object
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-last.modified"></a>}}
+\if{latex}{\out{\hypertarget{method-last.modified}{}}}
+\subsection{Method \code{last.modified()}}{
+Retrieve a timestamp from a dataset or group
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{scdisk$last.modified(
+  name = NULL,
+  attr = "ts",
+  locale = TRUE,
+  tz = "UTC",
+  format = TSFormats(type = "R")
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{Name of dataset or group to retrieve timestamp from; if
+\code{NULL}, retrieves timestamp from at the file-level}
+
+\item{\code{attr}}{Name of attribute to retrieve timestamp from}
+
+\item{\code{locale}}{Change the timestamp of to the timezone of the locale}
+
+\item{\code{tz, format}}{See \code{\link{Timestamp}}}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A character with the timestamp
 }
 }
 }
