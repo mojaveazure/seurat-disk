@@ -9,8 +9,10 @@
 ^Meta$
 ^README\.Rmd$
 ^cran-comments\.md$
-^.*\.h5Seurat$
+^.*\.loom$
 ^.*\.h5ad$
+^.*\.h5seurat$
+^.*\.h5Seurat$
 ^.*\.rds$
 ^.*\.Rds$
 ^vignettes/anndata-Rmd\.Rmd$

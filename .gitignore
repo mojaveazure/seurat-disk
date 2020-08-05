@@ -14,6 +14,7 @@ Meta
 *_files
 
 # Ignore data and script files in the top-level directory
+/*.loom
 /*.h5ad
 /*.h5seurat
 /*.h5Seurat
