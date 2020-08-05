@@ -96,7 +96,9 @@ scdisk <- R6Class(
       tz = 'UTC',
       format = TSFormats(type = 'R')
     ) {
-      .NotYetImplemented()
+      if (isTRUE(x = Writeable(x = self, error = FALSE))) {
+        .NotYetImplemented()
+      }
       return(invisible(x = self))
     },
     #' @description Retrieve a timestamp from a dataset or group

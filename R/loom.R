@@ -2,14 +2,48 @@
 #'
 NULL
 
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Validation Routines
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 loom.validate <- list(
   '0.1.0' = function(lfile, verbose = TRUE) {
     .NotYetImplemented()
   },
   '3.0.0' = function(lfile, verbose = TRUE) {
-    .NotYetImplemented()
+    # Check /matrix
+    CheckMatrix(lfile = lfile, name = 'matrix')
+    matrix.shape <- Dims(x = lfile[['matrix']])
+    # Check /layers
+    if (lfile$exists(name = 'layers')) {
+      if (!inherits(x = lfile[['layers']], what = 'H5Group')) {
+        stop("'layers' is not a group", call. = FALSE)
+      }
+      for (layer in names(x = lfile[['layers']])) {
+        CheckMatrix(
+          lfile = lfile,
+          name = H5Path('layers', layer),
+          dims = matrix.shape
+        )
+      }
+    }
+    # Check /attrs/LOOM_SPEC_VERSION
+    if (!Exists(x = lfile, name = 'attrs/LOOM_SPEC_VERSION')) {
+      stop("Cannot find the loom version", call. = FALSE)
+    } else if (FALSE) {
+      ''
+    }
+    # Check /row_attrs
+    # Check /col_attrs
+    # Check /row_graphs
+    # Check /col_graphs
+    return(invisible(x = TRUE))
   }
 )
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Class definition
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #' A class for connections to loom files
 #'
@@ -33,6 +67,20 @@ loom <- R6Class(
   lock_class = TRUE,
   public = list(
     # Methods
+    #' @description Get version information
+    #' @return A \code{\link[base]{numeric_version}} object with the loom
+    #' specification version information
+    version = function() {
+      loom.version <- 'LOOM_SPEC_VERSION'
+      if (AttrExists(x = self, loom.version)) {
+        version <- h5attr(x = self, which = loom.version)
+      } else if (Exists(x = self, name = H5Path('attrs', loom.version))) {
+        version <- self[[H5Path('attrs', loom.version)]][]
+      } else {
+        stop("Cannot find version information in this loom file", call. = FALSE)
+      }
+      return(numeric_version(x = version))
+    },
     #' @description Add a timestamp to a dataset or group as an HDF5 attribute
     #' @param name Name of dataset or group to add timestamp to; if \code{NULL},
     #' timestamps the file as a whole
@@ -79,3 +127,36 @@ loom <- R6Class(
     }
   )
 )
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Internal Functions
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#' Check that a dataset is a proper loom matrix
+#'
+#' @param lfile A \code{\link{loom}} or \code{\link[hdf5r]{H5File}} object
+#' @param name Name of matrix to check
+#' @param dims If provided, ensure \code{lfile[[name]]} has these dimensions;
+#' should be a two-dimensional numberic vector with ncells/ncol as the first
+#' value and nfeature/nrow as the second
+#'
+#' @return If all checks pass succesfully, invisibly returns \code{name}
+#'
+#' @keywords internal
+#'
+CheckMatrix <- function(lfile, name, dims = NULL) {
+  if (!inherits(x = lfile, what = "H5File")) {
+    stop("Not an HDF5 file", call. = FALSE)
+  }
+  if (!Exists(x = lfile, name = name)) {
+    stop("Cannot find '", name, "' in this file", call. = FALSE)
+  } else if (!inherits(x = lfile[[name]], what = 'H5D') || !IsMatrix(x = lfile[[name]])) {
+    stop("'", name, "' is not a matrix dataset", call. = FALSE)
+  }
+  if (is.numeric(x = dims) && length(x = dims) >= 2) {
+    if (!all(Dims(x = lfile[[name]]) == dims[1:2])) {
+      stop("'", name, "' does not match the provided dimensions", call. = FALSE)
+    }
+  }
+  return(invisible(x = name))
+}

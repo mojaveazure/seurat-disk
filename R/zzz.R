@@ -633,7 +633,6 @@ PB <- function() {
 #' }
 #'
 RandomName <- function(length = 5L, ...) {
-  # CheckDots(..., fxns = "sample")
   return(paste(sample(x = letters, size = length, ...), collapse = ""))
 }
 

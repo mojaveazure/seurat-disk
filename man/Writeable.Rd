@@ -10,10 +10,10 @@ Writeable(x, error = TRUE)
 \item{x}{An \code{\link[hdf5r]{H5File}} or \code{\link[hdf5r]{H5Group}}
 object}
 
-\item{error}{Throw an error}
+\item{error}{Throw an error if \code{x} is not writeable}
 }
 \value{
-...
+\code{TRUE} if \code{x} is writeable otherwise \code{FALSE}
 }
 \description{
 Is an HDF5 file or group writeable

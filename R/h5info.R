@@ -105,9 +105,9 @@ H5Path <- function(..., collapse = NULL) {
 #'
 #' @param x An \code{\link[hdf5r]{H5File}} or \code{\link[hdf5r]{H5Group}}
 #' object
-#' @param error Throw an error
+#' @param error Throw an error if \code{x} is not writeable
 #'
-#' @return ...
+#' @return \code{TRUE} if \code{x} is writeable otherwise \code{FALSE}
 #'
 #' @keywords internal
 #'
