@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate an HDF5 string dtype — StringType • SeuratDisk</title>
+<title>Does an R6 class inherit from scdisk — IsSCDisk • SeuratDisk</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Generate an HDF5 string dtype — StringType" />
-<meta property="og:description" content="Presets for encoding variations of H5T_STRING; used to
-generate HDF5 datatype specifications with specific string encodings" />
+<meta property="og:title" content="Does an R6 class inherit from scdisk — IsSCDisk" />
+<meta property="og:description" content="Does an R6 class inherit from scdisk" />
 
 
 
@@ -127,53 +126,35 @@ generate HDF5 datatype specifications with specific string encodings" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate an HDF5 string dtype</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/zzz.R'><code>R/zzz.R</code></a></small>
-    <div class="hidden name"><code>StringType.Rd</code></div>
+    <h1>Does an R6 class inherit from scdisk</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/scdisk.R'><code>R/scdisk.R</code></a></small>
+    <div class="hidden name"><code>IsSCDisk.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Presets for encoding variations of <code><a href='http://hhoeflin.github.io/hdf5r/reference/H5T_STRING-class.html'>H5T_STRING</a></code>; used to
-generate HDF5 datatype specifications with specific string encodings</p>
+    <p>Does an R6 class inherit from scdisk</p>
     </div>
 
-    <pre class="usage"><span class='fu'>StringType</span>(<span class='kw'>stype</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"utf8"</span>, <span class='st'>"ascii7"</span>))</pre>
+    <pre class="usage"><span class='fu'>IsSCDisk</span>(<span class='no'>r6class</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>stype</th>
-      <td><p>Type of string encoding to use, choose from:</p><dl'>
- <dt>utf8</dt><dd><p>Variable-width, UTF-8</p></dd>
- <dt>ascii7</dt><dd><p>Fixed-width (7 bits), ASCII</p></dd>
-
-</dl></td>
+      <th>r6class</th>
+      <td><p>An R6 class generator or a character name
+of an R6 class generator</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An <code><a href='http://hhoeflin.github.io/hdf5r/reference/H5T_STRING-class.html'>H5T_STRING</a></code> object</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='http://hhoeflin.github.io/hdf5r/reference/H5T_STRING-class.html'>H5T_STRING</a></code></p></div>
+    <p>If <code>r6class</code> inherits from scdisk, returns <code>TRUE</code>;
+otherwise, returns <code>FALSE</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>StringType</span>()</div><div class='output co'>#&gt; Class: H5T_STRING
-#&gt; Datatype: H5T_STRING {
-#&gt;       STRSIZE H5T_VARIABLE;
-#&gt;       STRPAD H5T_STR_NULLTERM;
-#&gt;       CSET H5T_CSET_UTF8;
-#&gt;       CTYPE H5T_C_S1;
-#&gt;    }</div><div class='input'><span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>StringType</span>(<span class='st'>'ascii7'</span>)</div><div class='output co'>#&gt; Class: H5T_STRING
-#&gt; Datatype: H5T_STRING {
-#&gt;       STRSIZE 7;
-#&gt;       STRPAD H5T_STR_NULLTERM;
-#&gt;       CSET H5T_CSET_ASCII;
-#&gt;       CTYPE H5T_C_S1;
-#&gt;    }</div><div class='input'># }
+<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>IsSCDisk</span>(<span class='st'>"H5File"</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>IsSCDisk</span>(<span class='st'>"scdisk"</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>IsSCDisk</span>(<span class='st'>"h5Seurat"</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'># }
 
 </div></pre>
   </div>

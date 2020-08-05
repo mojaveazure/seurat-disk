@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate an HDF5 string dtype — StringType • SeuratDisk</title>
+<title>Get and Register <code><a href='scdisk-class.html'>scdisk</a></code> Subclasses — RegisterSCDisk • SeuratDisk</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="Generate an HDF5 string dtype — StringType" />
-<meta property="og:description" content="Presets for encoding variations of H5T_STRING; used to
-generate HDF5 datatype specifications with specific string encodings" />
+<meta property="og:title" content="Get and Register <code><a href='scdisk-class.html'>scdisk</a></code> Subclasses — RegisterSCDisk" />
+<meta property="og:description" content="Mechanisms for registration of scdisk subclass generators for
+use in functions that rely on the class definition instead of an object." />
 
 
 
@@ -127,55 +127,77 @@ generate HDF5 datatype specifications with specific string encodings" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate an HDF5 string dtype</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/zzz.R'><code>R/zzz.R</code></a></small>
-    <div class="hidden name"><code>StringType.Rd</code></div>
+    <h1>Get and Register <code><a href='scdisk-class.html'>scdisk</a></code> Subclasses</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mojaveazure/seurat-disk/blob/master/R/scdisk.R'><code>R/scdisk.R</code></a></small>
+    <div class="hidden name"><code>RegisterSCDisk.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Presets for encoding variations of <code><a href='http://hhoeflin.github.io/hdf5r/reference/H5T_STRING-class.html'>H5T_STRING</a></code>; used to
-generate HDF5 datatype specifications with specific string encodings</p>
+    <p>Mechanisms for registration of <code><a href='scdisk-class.html'>scdisk</a></code> subclass generators for
+use in functions that rely on the class definition instead of an object.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>StringType</span>(<span class='kw'>stype</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"utf8"</span>, <span class='st'>"ascii7"</span>))</pre>
+    <pre class="usage"><span class='fu'>GetSCDisk</span>(<span class='kw'>r6class</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+
+<span class='fu'>RegisterSCDisk</span>(<span class='no'>r6class</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>stype</th>
-      <td><p>Type of string encoding to use, choose from:</p><dl'>
- <dt>utf8</dt><dd><p>Variable-width, UTF-8</p></dd>
- <dt>ascii7</dt><dd><p>Fixed-width (7 bits), ASCII</p></dd>
-
-</dl></td>
+      <th>r6class</th>
+      <td><p>An R6 class generator or a character name
+of an R6 class generator</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An <code><a href='http://hhoeflin.github.io/hdf5r/reference/H5T_STRING-class.html'>H5T_STRING</a></code> object</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <p><code>GetSCDisk</code>: if <code>r6class</code> is <code>NULL</code>, then a vector of
+all registered <code>scdisk</code> subclasses; otherwise, a
+generator for the requested <code>scdisk</code> subclass</p>
+<p><code>RegisterSCDisk</code>: adds <code>r6class</code> to the internal subclass
+registry and invisibly returns <code>NULL</code></p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <div class='dont-index'><p><code><a href='http://hhoeflin.github.io/hdf5r/reference/H5T_STRING-class.html'>H5T_STRING</a></code></p></div>
+    <p>While <code>scdisk</code>-subclassed objects (eg. <code><a href='h5Seurat-class.html'>h5Seurat</a></code> objects)
+follow traditional inheritance patterns (can be determined through
+<code><a href='https://rdrr.io/r/base/class.html'>inherits</a></code>), the class definitions and object generators do not.
+These functions provide a simple mechanism for adding and getting the
+defintions of <code>scdisk</code> subclasses for functions that utilize the object
+generators or other aspects of the class definition (such as
+<code><a href='Convert.html'>Convert</a></code>)</p>
+<p>To register a subclass of <code>scdisk</code>, simply add a call to
+<code>RegisterSCDisk</code> in your load hook</p>
+<pre>
+<span class='no'>.onLoad</span> <span class='kw'>&amp;</span><span class='no'>lt</span>;- <span class='kw'>function</span>(<span class='no'>libname</span>, <span class='no'>pkgname</span>) {
+  <span class='fu'>RegisterSCDisk</span>(<span class='no'>classgen</span>)
+  <span class='co'># Other code to be run on load</span>
+}</pre>
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>StringType</span>()</div><div class='output co'>#&gt; Class: H5T_STRING
-#&gt; Datatype: H5T_STRING {
-#&gt;       STRSIZE H5T_VARIABLE;
-#&gt;       STRPAD H5T_STR_NULLTERM;
-#&gt;       CSET H5T_CSET_UTF8;
-#&gt;       CTYPE H5T_C_S1;
-#&gt;    }</div><div class='input'><span class='kw pkg'>SeuratDisk</span><span class='kw ns'>:::</span><span class='fu'>StringType</span>(<span class='st'>'ascii7'</span>)</div><div class='output co'>#&gt; Class: H5T_STRING
-#&gt; Datatype: H5T_STRING {
-#&gt;       STRSIZE 7;
-#&gt;       STRPAD H5T_STR_NULLTERM;
-#&gt;       CSET H5T_CSET_ASCII;
-#&gt;       CTYPE H5T_C_S1;
-#&gt;    }</div><div class='input'># }
-
-</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>GetSCDisk</span>()</div><div class='output co'>#&gt; [1] "h5Seurat"</div><div class='input'><span class='fu'>GetSCDisk</span>(<span class='st'>"h5Seurat"</span>)</div><div class='output co'>#&gt; &lt;h5Seurat&gt; object generator
+#&gt;   Inherits from: &lt;scdisk&gt;
+#&gt;   Public:
+#&gt;     index: function () 
+#&gt;     set.version: function (version) 
+#&gt;     version: function () 
+#&gt;   Private:
+#&gt;     index.internal: list
+#&gt;     versions: 3.1.2 3.1.5.9900
+#&gt;     build.index: function (version) 
+#&gt;     create: function (version, verbose = TRUE) 
+#&gt;     validate: function (verbose = TRUE, ...) 
+#&gt;     v3.1.2: function () 
+#&gt;     v3.2.0: function () 
+#&gt;   Parent env: &lt;environment: namespace:SeuratDisk&gt;
+#&gt;   Locked objects: TRUE
+#&gt;   Locked class: TRUE
+#&gt;   Portable: TRUE</div><div class='input'>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'>RegisterSCDisk</span>(<span class='no'>h5Seurat</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

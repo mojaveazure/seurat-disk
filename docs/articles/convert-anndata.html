@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9010</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9011</span>
       </span>
     </div>
 
@@ -96,14 +96,14 @@
     
     
 <p>This vignette showcases how to convert from <code>Seurat</code> object to AnnData files via an intermediate step thorugh h5Seurat files. This allows interoperability between Seurat and <a href="https://scanpy.readthedocs.io/">Scanpy</a></p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">Seurat</span>)
+<div class="sourceCode"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">Seurat</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">SeuratData</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">SeuratDisk</span>)</pre></body></html></div>
 <div id="converting-from-seurat-to-anndata-via-h5seurat" class="section level2">
 <h2 class="hasAnchor">
 <a href="#converting-from-seurat-to-anndata-via-h5seurat" class="anchor"></a>Converting from Seurat to AnnData via h5Seurat</h2>
-<p>To showcase going from a <code>Seurat</code> object to an AnnData file, we’ll use the processed version of the PBMC 3k dataset, available on <a href="https://github.com/satijalab/seurat-data">SeuratData</a>; this dataset was created following <a href="https://satijalab.org/seurat/v3.1/pbmc3k_tutorial.html">Seurat’s PBMC 3k tutorial</a></p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/SeuratData/man/InstallData.html">InstallData</a></span>(<span class="st">"pbmc3k"</span>)
+<p>To showcase going from a <code>Seurat</code> object to an AnnData file, we'll use the processed version of the PBMC 3k dataset, available on <a href="https://github.com/satijalab/seurat-data">SeuratData</a>; this dataset was created following <a href="https://satijalab.org/seurat/v3.1/pbmc3k_tutorial.html">Seurat's PBMC 3k tutorial</a></p>
+<div class="sourceCode"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/SeuratData/man/InstallData.html">InstallData</a></span>(<span class="st">"pbmc3k"</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"pbmc3k.final"</span>)
 <span class="no">pbmc3k.final</span>
 <span class="co">#&gt; An object of class Seurat </span>
@@ -112,33 +112,32 @@
 <span class="co">#&gt;  2 dimensional reductions calculated: pca, umap</span></pre></body></html></div>
 <p>To see how this dataset was generated, please run <code>?pbmc3k.final</code></p>
 <p>Converting the <code>Seurat</code> object to an AnnData file is a two-step process. First, we <a href="https://mojaveazure.github.io/seurat-disk/reference/SaveH5Seurat.html">save the <code>Seurat</code> object</a> as an h5Seurat file. For more details about saving <code>Seurat</code> objects to h5Seurat files, please see <a href="https://mojaveazure.github.io/seurat-disk/articles/h5Seurat-load.html">this vignette</a>; after the file is saved, we can <a href="https://mojaveazure.github.io/seurat-disk/reference/Convert.html">convert</a> it to an AnnData file for use in Scanpy. Full details about the conversion processes are listed in the <a href="https://mojaveazure.github.io/seurat-disk/reference/Convert.html">manual page</a> for the <code>Convert</code> function</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="../reference/SaveH5Seurat.html">SaveH5Seurat</a></span>(<span class="no">pbmc3k.final</span>, <span class="kw">filename</span> <span class="kw">=</span> <span class="st">"pbmc3k.h5Seurat"</span>)
+<div class="sourceCode"><html><body><pre class="r"><span class="fu"><a href="../reference/SaveH5Seurat.html">SaveH5Seurat</a></span>(<span class="no">pbmc3k.final</span>, <span class="kw">filename</span> <span class="kw">=</span> <span class="st">"pbmc3k.h5Seurat"</span>)
 <span class="fu"><a href="../reference/Convert.html">Convert</a></span>(<span class="st">"pbmc3k.h5Seurat"</span>, <span class="kw">dest</span> <span class="kw">=</span> <span class="st">"h5ad"</span>)</pre></body></html></div>
 <p>We can view the AnnData file in Scanpy by using the <code>read_h5ad</code> function</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="im">import</span> scanpy</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co"># adata = scanpy.read_h5ad("pbmc3k.h5ad", backed="r+")</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt; /home/paul/.local/lib/python3.6/site-packages/anndata/_core/anndata.py:21: FutureWarning: pandas.core.index is deprecated and will be removed in a future version.  The public classes are available in the top-level namespace.</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt;   from pandas.core.index import RangeIndex</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; /home/paul/.local/lib/python3.6/site-packages/numba/core/errors.py:144: UserWarning: Insufficiently recent colorama version found. Numba requires colorama &gt;= 0.3.9</span></a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt;   warnings.warn(msg)</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7">adata <span class="op">=</span> scanpy.read_h5ad(<span class="st">"pbmc3k.h5ad"</span>)</a>
-<a class="sourceLine" id="cb4-8" data-line-number="8">adata</a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; AnnData object with n_obs × n_vars = 2638 × 13714 </span></a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt;     obs: 'orig.ident', 'nCount_RNA', 'nFeature_RNA', 'seurat_annotations', 'percent.mt', 'RNA_snn_res.0.5', 'seurat_clusters'</span></a>
-<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt;     var: 'vst.mean', 'vst.variance', 'vst.variance.expected', 'vst.variance.standardized', 'vst.variable'</span></a>
-<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt;     uns: 'neighbors'</span></a>
-<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt;     obsm: 'X_pca', 'X_umap'</span></a>
-<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt;     varm: 'PCs'</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> scanpy
+<span class="co">#&gt; /home/paul/.local/lib/python3.6/site-packages/anndata/_core/anndata.py:21: FutureWarning: pandas.core.index is deprecated and will be removed in a future version.  The public classes are available in the top-level namespace.</span>
+<span class="co">#&gt;   from pandas.core.index import RangeIndex</span>
+<span class="co">#&gt; /home/paul/.local/lib/python3.6/site-packages/numba/core/errors.py:144: UserWarning: Insufficiently recent colorama version found. Numba requires colorama &gt;= 0.3.9</span>
+<span class="co">#&gt;   warnings.warn(msg)</span>
+adata <span class="op">=</span> scanpy.read_h5ad(<span class="st">"pbmc3k.h5ad"</span>)
+adata
+<span class="co">#&gt; AnnData object with n_obs × n_vars = 2638 × 13714 </span>
+<span class="co">#&gt;     obs: 'orig.ident', 'nCount_RNA', 'nFeature_RNA', 'seurat_annotations', 'percent.mt', 'RNA_snn_res.0.5', 'seurat_clusters'</span>
+<span class="co">#&gt;     var: 'vst.mean', 'vst.variance', 'vst.variance.expected', 'vst.variance.standardized', 'vst.variable'</span>
+<span class="co">#&gt;     uns: 'neighbors'</span>
+<span class="co">#&gt;     obsm: 'X_pca', 'X_umap'</span>
+<span class="co">#&gt;     varm: 'PCs'</span></code></pre></div>
 </div>
 <div id="converting-from-anndata-to-seurat-via-h5seurat" class="section level2">
 <h2 class="hasAnchor">
 <a href="#converting-from-anndata-to-seurat-via-h5seurat" class="anchor"></a>Converting from AnnData to Seurat via h5Seurat</h2>
-<p>To shocwcase going from an AnnData file to a <code>Seurat</code> object, we’ll use a processed version of the PBMC 3k dataset; this dataset was processed using Scanpy following <a href="https://scanpy-tutorials.readthedocs.io/en/latest/pbmc3k.html">Scanpy’s PBMC 3k tutorial</a></p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">url</span> <span class="kw">&lt;-</span> <span class="st">"https://seurat.nygenome.org/pbmc3k_final.h5ad"</span>
+<p>To shocwcase going from an AnnData file to a <code>Seurat</code> object, we'll use a processed version of the PBMC 3k dataset; this dataset was processed using Scanpy following <a href="https://scanpy-tutorials.readthedocs.io/en/latest/pbmc3k.html">Scanpy's PBMC 3k tutorial</a></p>
+<div class="sourceCode"><html><body><pre class="r"><span class="no">url</span> <span class="kw">&lt;-</span> <span class="st">"https://seurat.nygenome.org/pbmc3k_final.h5ad"</span>
 <span class="kw pkg">curl</span><span class="kw ns">::</span><span class="fu"><a href="https://jeroen.cran.dev/curl/reference/curl_download.html">curl_download</a></span>(<span class="no">url</span>, <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span>(<span class="no">url</span>))</pre></body></html></div>
 <p>To see how this dataset was created, please see <a href="https://gist.github.com/mojaveazure/922aa904b9ac212e627f522c2b816a52">this script</a></p>
 <p>Converting the AnnData file to a <code>Seurat</code> object is a two-step process. First, convert the AnnData file to an h5Seurat file using the <a href="https://mojaveazure.github.io/seurat-disk/reference/Convert.html"><code>Convert</code> function</a>; full details about the conversion process are listed in the <a href="https://mojaveazure.github.io/seurat-disk/reference/Convert.html">manual page</a>. Then, we <a href="https://mojaveazure.github.io/seurat-disk/reference/LoadH5Seurat.html">load the h5Seurat file</a> into a <code>Seurat</code> object; for more details about loading <code>Seurat</code> objects from h5Seurat files, please see <a href="https://mojaveazure.github.io/seurat-disk/articles/h5Seurat-load.html">this vignette</a></p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="../reference/Convert.html">Convert</a></span>(<span class="st">"pbmc3k_final.h5ad"</span>, <span class="kw">dest</span> <span class="kw">=</span> <span class="st">"h5seurat"</span>, <span class="kw">overwrite</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<div class="sourceCode"><html><body><pre class="r"><span class="fu"><a href="../reference/Convert.html">Convert</a></span>(<span class="st">"pbmc3k_final.h5ad"</span>, <span class="kw">dest</span> <span class="kw">=</span> <span class="st">"h5seurat"</span>, <span class="kw">overwrite</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
 <span class="no">pbmc3k</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LoadH5Seurat.html">LoadH5Seurat</a></span>(<span class="st">"pbmc3k_final.h5seurat"</span>)
 <span class="no">pbmc3k</span>
 <span class="co">#&gt; An object of class Seurat </span>

@@ -59,6 +59,8 @@ modes <- list(
 
 version.regex <- '^\\d+(\\.\\d+){2}(\\.9\\d{3})?$'
 
+scdisk.types <- new.env()
+
 spatial.version <- '3.1.5.9900'
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -836,6 +838,7 @@ WriteMode <- function(overwrite = FALSE) {
   # Make the classes defined in SeuratDisk compatible with S4 generics/methods
   # setOldClass(Classes = c('scdisk', 'h5Seurat', 'loom'))
   setOldClass(Classes = c('scdisk', 'h5Seurat'))
+  RegisterSCDisk(r6class = h5Seurat)
   # Set some default options
   op <- options()
   toset <- !names(x = default.options) %in% names(x = op)

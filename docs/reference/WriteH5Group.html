@@ -79,7 +79,7 @@ details" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SeuratDisk</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9010</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9011</span>
       </span>
     </div>
 
@@ -229,7 +229,7 @@ from hdf5r)</p></td>
 <span class='co'># HDF5 compound dataset</span>
 <span class='fu'>WriteH5Group</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>df</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>'df'</span>, <span class='kw'>hgroup</span> <span class='kw'>=</span> <span class='no'>hfile</span>)
 <span class='no'>hfile</span><span class='kw'>[[</span><span class='st'>'df'</span>]]</div><div class='output co'>#&gt; Class: H5Group
-#&gt; Filename: /tmp/Rtmp6jXW3s/file1d9394a7d1f.h5
+#&gt; Filename: /tmp/RtmpVp8Dsb/file1e06c235d56.h5
 #&gt; Group: /df
 #&gt; Attributes: colnames
 #&gt; Listing:
@@ -242,7 +242,7 @@ from hdf5r)</p></td>
 <span class='no'>df</span>$<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>df</span>$<span class='no'>x</span>)
 <span class='fu'>WriteH5Group</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>df</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>'df.factor'</span>, <span class='kw'>hgroup</span> <span class='kw'>=</span> <span class='no'>hfile</span>)
 <span class='no'>hfile</span><span class='kw'>[[</span><span class='st'>'df.factor'</span>]]</div><div class='output co'>#&gt; Class: H5Group
-#&gt; Filename: /tmp/Rtmp6jXW3s/file1d9394a7d1f.h5
+#&gt; Filename: /tmp/RtmpVp8Dsb/file1e06c235d56.h5
 #&gt; Group: /df.factor
 #&gt; Attributes: colnames
 #&gt; Listing:
@@ -259,7 +259,7 @@ from hdf5r)</p></td>
 <span class='no'>fctr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'g1'</span>, <span class='st'>'g1'</span>, <span class='st'>'g2'</span>, <span class='st'>'g1'</span>, <span class='st'>'g2'</span>))
 <span class='fu'>WriteH5Group</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>fctr</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>'factor'</span>, <span class='kw'>hgroup</span> <span class='kw'>=</span> <span class='no'>hfile</span>)
 <span class='no'>hfile</span><span class='kw'>[[</span><span class='st'>'factor'</span>]]</div><div class='output co'>#&gt; Class: H5Group
-#&gt; Filename: /tmp/Rtmp6jXW3s/file1d9394a7d1f.h5
+#&gt; Filename: /tmp/RtmpVp8Dsb/file1e06c235d56.h5
 #&gt; Group: /factor
 #&gt; Listing:
 #&gt;    name    obj_type dataset.dims dataset.type_class
@@ -276,7 +276,7 @@ from hdf5r)</p></td>
 <span class='fu'>WriteH5Group</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>NA</span>), <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"logicals"</span>, <span class='kw'>hgroup</span> <span class='kw'>=</span> <span class='no'>hfile</span>)
 <span class='no'>hfile</span><span class='kw'>[[</span><span class='st'>"logicals"</span>]]</div><div class='output co'>#&gt; Class: H5D
 #&gt; Dataset: /logicals
-#&gt; Filename: /tmp/Rtmp6jXW3s/file1d9394a7d1f.h5
+#&gt; Filename: /tmp/RtmpVp8Dsb/file1e06c235d56.h5
 #&gt; Access type: H5F_ACC_RDWR
 #&gt; Attributes: s3class
 #&gt; Datatype: H5T_STD_I32LE
