@@ -315,12 +315,21 @@ as.sparse.H5Group <- function(x, ...) {
       dims = h5attr(x = x, which = 'dims')
     ))
   }
-  if (x$attr_exists(attr_name = 'h5sparse_shape')) {
+  # Because AnnData likes changing stuff
+  adata.shape <- vapply(
+    X = c('h5sparse_shape', 'shape'),
+    FUN = x$attr_exists,
+    FUN.VALUE = logical(length = 1L)
+  )
+  if (any(adata.shape)) {
     return(sparseMatrix(
       i = x[['indices']][] + 1,
       p = x[['indptr']][],
       x = x[['data']][],
-      dims = rev(x = h5attr(x = x, which = 'h5sparse_shape'))
+      dims = rev(x = h5attr(
+        x = x,
+        which = names(x = which(x = adata.shape))[1]
+      ))
     ))
   }
   return(sparseMatrix(
