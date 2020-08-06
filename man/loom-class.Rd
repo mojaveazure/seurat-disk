@@ -22,6 +22,7 @@ A class for connections to loom files
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
+\item \href{#method-version}{\code{loom$version()}}
 \item \href{#method-timestamp}{\code{loom$timestamp()}}
 \item \href{#method-last.modified}{\code{loom$last.modified()}}
 }
@@ -102,6 +103,20 @@ A class for connections to loom files
 \item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="initialize">}\href{../../SeuratDisk/html/scdisk.html#method-initialize}{\code{SeuratDisk::scdisk$initialize()}}\out{</span>}
 }
 \out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-version"></a>}}
+\if{latex}{\out{\hypertarget{method-version}{}}}
+\subsection{Method \code{version()}}{
+Get version information
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{loom$version()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A \code{\link[base]{numeric_version}} object with the loom
+specification version information
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-timestamp"></a>}}
