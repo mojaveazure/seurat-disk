@@ -32,7 +32,7 @@ Imports:
   methods (>= 3.6.1),
   R6 (>= 2.4.1),
   rlang (>= 0.4.4),
-  Seurat (>= 3.1.2),
+  Seurat (>= 3.2.0),
   stats,
   tools,
   utils,
@@ -53,13 +53,14 @@ Collate:
     'Transpose.R'
     'Convert.R'
     'LoadH5Seurat.R'
+    'loom.R'
+    'loom_bindings.R'
     'LoadLoom.R'
     'ReadH5.R'
     'WriteH5Group.R'
     'SaveH5Seurat.R'
     'SaveLoom.R'
     'h5Seurat_bindings.R'
-    'loom.R'
 Suggests:
     httr,
     knitr,

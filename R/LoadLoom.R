@@ -1,4 +1,6 @@
 #' @include zzz.R
+#' @include loom.R
+#' @include loom_bindings.R
 #'
 NULL
 
@@ -107,6 +109,17 @@ as.Seurat.loom <- function(
   verbose = TRUE,
   ...
 ) {
+  cells <- H5Path('col_attrs', cells)
+  features <- H5Path('row_attrs', features)
+  if (!Exists(x = x, name = features) || !inherits(x = x[[features]], what = 'H5D')) {
+    stop("Cannot find feature names dataset at ", features, call. = FALSE)
+  } else if (!Exists(x = x, name = cells) || !inherits(x = x[[cells]], what = 'H5D')) {
+    stop("Cannot find cell names dataset at ", cells, call. = FALSE)
+  } else if (length(x = Dims(x = x[[cells]])) != 1) {
+    stop("The cell names dataset must be one-dimensional", call. = FALSE)
+  } else if (length(x = Dims(x = x[[features]])) != 1) {
+    stop("The feature names dataset must be one-dimensional", call. = FALSE)
+  }
   version <- ClosestVersion(query = x$version(), targets = c('0.1.0', '3.0.0'))
   load.fxn <- switch(
     EXPR = version,
@@ -140,6 +153,8 @@ as.Seurat.loom <- function(
 #'
 #' @name LoomLoading
 #' @rdname LoomLoading
+#'
+#' @importFrom Seurat CreateAssayObject Key<- CreateSeuratObject
 #'
 #' @details
 #' \code{LoadLoom} will try to automatically fill slots of a \code{Seurat}
@@ -182,5 +197,16 @@ LoadLoom3.0 <- function(
   filter = c('cells', 'features', 'all', 'none'),
   verbose = TRUE
 ) {
-  .NotYetImplemented()
+  assay <- assay %||% suppressWarnings(expr = DefaultAssay(object = file)) %||% 'RNA'
+  counts <- t(x = as.matrix(x = file[['matrix']]))
+  colnames(x = counts) <- file[[cells]][]
+  rownames(x = counts) <- file[[features]][]
+  if (!is.null(x = normalized) && grepl(pattern = '^[/]?matrix$', x = normalized)) {
+    assay.obj <- CreateAssayObject(data = counts)
+  } else {
+    assay.obj <- CreateAssayObject(counts = counts)
+  }
+  Key(object = assay.obj) <- UpdateKey(key = tolower(x = assay))
+  object <- CreateSeuratObject(counts = assay.obj)
+  return(object)
 }

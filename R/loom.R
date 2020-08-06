@@ -3,45 +3,6 @@
 NULL
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-# Validation Routines
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-loom.validate <- list(
-  '0.1.0' = function(lfile, verbose = TRUE) {
-    .NotYetImplemented()
-  },
-  '3.0.0' = function(lfile, verbose = TRUE) {
-    # Check /matrix
-    CheckMatrix(lfile = lfile, name = 'matrix')
-    matrix.shape <- Dims(x = lfile[['matrix']])
-    # Check /layers
-    if (lfile$exists(name = 'layers')) {
-      if (!inherits(x = lfile[['layers']], what = 'H5Group')) {
-        stop("'layers' is not a group", call. = FALSE)
-      }
-      for (layer in names(x = lfile[['layers']])) {
-        CheckMatrix(
-          lfile = lfile,
-          name = H5Path('layers', layer),
-          dims = matrix.shape
-        )
-      }
-    }
-    # Check /attrs/LOOM_SPEC_VERSION
-    if (!Exists(x = lfile, name = 'attrs/LOOM_SPEC_VERSION')) {
-      stop("Cannot find the loom version", call. = FALSE)
-    } else if (FALSE) {
-      ''
-    }
-    # Check /row_attrs
-    # Check /col_attrs
-    # Check /row_graphs
-    # Check /col_graphs
-    return(invisible(x = TRUE))
-  }
-)
-
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Class definition
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -159,4 +120,57 @@ CheckMatrix <- function(lfile, name, dims = NULL) {
     }
   }
   return(invisible(x = name))
+}
+
+#' Validate Loom Files
+#'
+#' Functions for validating loom files before connection
+#'
+#' @param ... ...
+#'
+#' @return ...
+#'
+#' @name ValiateLoom
+#' @rdname ValidateLoom
+#'
+#' @keywords internal
+#'
+#' @seealso
+#' \href{http://linnarssonlab.org/loompy/format/index.html}{Loom file format}
+#'
+LoomValidate0.1 <- function(lfile, verbose = TRUE) {
+  .NotYetImplemented()
+}
+
+#' @name ValidateLoom
+#' @rdname ValidateLoom
+#'
+LoomValidate3.0.0 <- function(lfile, verbose = TRUE) {
+  # Check /matrix
+  CheckMatrix(lfile = lfile, name = 'matrix')
+  matrix.shape <- Dims(x = lfile[['matrix']])
+  # Check /layers
+  if (lfile$exists(name = 'layers')) {
+    if (!inherits(x = lfile[['layers']], what = 'H5Group')) {
+      stop("'layers' is not a group", call. = FALSE)
+    }
+    for (layer in names(x = lfile[['layers']])) {
+      CheckMatrix(
+        lfile = lfile,
+        name = H5Path('layers', layer),
+        dims = matrix.shape
+      )
+    }
+  }
+  # Check /attrs/LOOM_SPEC_VERSION
+  if (!Exists(x = lfile, name = 'attrs/LOOM_SPEC_VERSION')) {
+    stop("Cannot find the loom version", call. = FALSE)
+  } else if (FALSE) {
+    ''
+  }
+  # Check /row_attrs
+  # Check /col_attrs
+  # Check /row_graphs
+  # Check /col_graphs
+  return(invisible(x = TRUE))
 }
