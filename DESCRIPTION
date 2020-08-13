@@ -34,6 +34,7 @@ Imports:
   rlang (>= 0.4.4),
   Seurat (>= 3.2.0),
   stats,
+  stringi (>= 1.4.6),
   tools,
   utils,
   withr (>= 2.1.2)

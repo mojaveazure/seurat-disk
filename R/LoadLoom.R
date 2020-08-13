@@ -92,6 +92,8 @@ LoadLoom.loom <- function(file, ...) {
   return(as.Seurat(x = file, ...))
 }
 
+#' @importFrom stringi stri_count_fixed
+#'
 #' @aliases as.Seurat
 #'
 #' @rdname LoadLoom
@@ -120,11 +122,53 @@ as.Seurat.loom <- function(
   } else if (length(x = Dims(x = x[[features]])) != 1) {
     stop("The feature names dataset must be one-dimensional", call. = FALSE)
   }
+  if (!is.null(x = normalized) && !grepl(pattern = '^[/]?matrix$', x = normalized)) {
+    if (!grepl(pattern = '^[/]?layers', x = normalized)) {
+      normalized <- H5Path('layers', normalized)
+    }
+    if (stri_count_fixed(str = normalized, pattern = '/') != 1) {
+      stop(
+        "'normalized' must be a dataset within the 'layers' group",
+        call. = FALSE
+      )
+    }
+    if (!Exists(x = x, name = normalized)) {
+      warning(
+        "Cannot find ",
+        basename(path = normalized),
+        " in this loom file, not loading normalized data",
+        call. = FALSE,
+        immediate. = TRUE
+      )
+      normalized <- NULL
+    }
+  }
+  if (!is.null(x = scaled)) {
+    if (!grepl(pattern = '^[/]?layers', x = scaled)) {
+      scaled <- H5Path('layers', scaled)
+    }
+    if (stri_count_fixed(str = scaled, pattern = '/') != 1) {
+      stop(
+        "'scaled' must be a dataset within the 'layers' group",
+        call. = FALSE
+      )
+    }
+    if (!Exists(x = x, name = scaled)) {
+      warning(
+        "Cannot find ",
+        basename(path = scaled),
+        " in this loom file, not loading scaled data",
+        call. = FALSE,
+        immediate. = TRUE
+      )
+      scaled <- NULL
+    }
+  }
   version <- ClosestVersion(query = x$version(), targets = c('0.1.0', '3.0.0'))
   load.fxn <- switch(
     EXPR = version,
     '0.1.0' = LoadLoom0.1,
-    '0.3.0' = LoadLoom3.0
+    '3.0.0' = LoadLoom3.0
   )
   object <- load.fxn(
       file = x,
@@ -154,7 +198,8 @@ as.Seurat.loom <- function(
 #' @name LoomLoading
 #' @rdname LoomLoading
 #'
-#' @importFrom Seurat CreateAssayObject Key<- CreateSeuratObject
+#' @importFrom Seurat CreateAssayObject Key<- CreateSeuratObject SetAssayData
+#' as.Graph DefaultAssay<-
 #'
 #' @details
 #' \code{LoadLoom} will try to automatically fill slots of a \code{Seurat}
@@ -190,23 +235,136 @@ LoadLoom0.1 <- function(
 LoadLoom3.0 <- function(
   file,
   assay = NULL,
-  cells = 'CellID',
-  features = 'Gene',
+  cells = 'col_attrs/CellID',
+  features = 'row_attrs/Gene',
   normalized = NULL,
   scaled = NULL,
   filter = c('cells', 'features', 'all', 'none'),
   verbose = TRUE
 ) {
+  # TODO: implement filtering
+  filter <- filter[1]
+  filter <- match.arg(arg = filter)
   assay <- assay %||% suppressWarnings(expr = DefaultAssay(object = file)) %||% 'RNA'
+  # Read in /matrix
+  if (isTRUE(x = verbose)) {
+    message("Reading in /matrix")
+  }
   counts <- t(x = as.matrix(x = file[['matrix']]))
-  colnames(x = counts) <- file[[cells]][]
-  rownames(x = counts) <- file[[features]][]
+  dnames <- list(
+    features = file[[features]][],
+    cells = file[[cells]][]
+  )
+  if (anyDuplicated(x = dnames$features)) {
+    warning(
+      "Duplicate feature names found, making unique",
+      call. = FALSE,
+      immediate. = TRUE
+    )
+    dnames$features <- make.unique(names = dnames$features)
+  }
+  dimnames(x = counts) <- dnames
+  # Assemble the initial assay
   if (!is.null(x = normalized) && grepl(pattern = '^[/]?matrix$', x = normalized)) {
+    if (isTRUE(x = verbose)) {
+      message("Storing /matrix as data")
+    }
     assay.obj <- CreateAssayObject(data = counts)
   } else {
+    if (isTRUE(x = verbose)) {
+      message("Storing /matrix as counts")
+    }
     assay.obj <- CreateAssayObject(counts = counts)
   }
   Key(object = assay.obj) <- UpdateKey(key = tolower(x = assay))
-  object <- CreateSeuratObject(counts = assay.obj)
+  if (isTRUE(x = verbose)) {
+    message("Saving /matrix to assay '", assay, "'")
+  }
+  object <- CreateSeuratObject(counts = assay.obj, assay = assay)
+  # Load in normalized data
+  if (!is.null(x = normalized) && !grepl(pattern = '^[/]?matrix$', x = normalized)) {
+    if (verbose) {
+      message("Saving ", basename(path = normalized), " as data")
+    }
+    norm.data <- t(x = as.matrix(x = file[[normalized]]))
+    dimnames(x = norm.data) <- dnames
+    object <- SetAssayData(
+      object = object,
+      assay = assay,
+      slot = 'data',
+      new.data = norm.data
+    )
+  }
+  # Load in scaled data
+  if (!is.null(x = scaled)) {
+    if (verbose) {
+      message("Saving ", basename(path = scaled), " as scaled data")
+    }
+    scaled.data <- t(x = as.matrix(x = file[[scaled]]))
+    dimnames(x = scaled.data) <- dnames
+    object <- SetAssayData(
+      object = object,
+      assay = assay,
+      slot = 'scaled.data',
+      new.data = scaled.data
+    )
+  }
+  # Load in feature-level metadata
+  mf.remove <- c(basename(path = features))
+  meta.features <- as.data.frame(x = file[['row_attrs']])
+  meta.features <- meta.features[, !colnames(x = meta.features) %in% mf.remove, drop = FALSE]
+  rownames(x = meta.features) <- dnames$features
+  object[[assay]] <- AddMetaData(
+    object = object[[assay]],
+    metadata = meta.features
+  )
+  # Load in cell-level metadata
+  md.remove <- c(basename(path = cells))
+  meta.data <- as.data.frame(x = file[['col_attrs']])
+  meta.data <- meta.data[, !colnames(x = meta.data) %in% md.remove, drop = FALSE]
+  rownames(x = meta.data) <- dnames$cells
+  object <- AddMetaData(object = object, metadata = meta.data)
+  # TODO: Load in dimensional reductions?
+  # TODO: Load in cell graphs
+  for (i in names(x = file[['col_graphs']])) {
+    if (verbose) {
+      message("Loading graph ", i)
+      graph <- LoadGraph(graph = file[['col_graphs']][[i]])
+      colnames(x = graph) <- rownames(x = graph) <- colnames(x = object)
+      graph <- as.Graph(x = graph)
+      DefaultAssay(object = graph) <- assay
+      object[[i]] <- graph
+    }
+  }
   return(object)
+}
+
+#' @importFrom Matrix sparseMatrix
+#'
+#' @keywords internal
+#'
+LoadGraph <- function(graph) {
+  if (!inherits(x = graph, what = 'H5Group')) {
+    stop(graph$get_obj_name(), " is not a loom graph", call. = FALSE)
+  }
+  OneD <- function(x) {
+    check <- Exists(x = graph, name = x)
+    if (isTRUE(x = check)) {
+      check <- inherits(x = graph[[x]], what = 'H5D')
+    }
+    if (isTRUE(x = check)) {
+      check <- length(x = Dims(x = graph[[x]])) == 1
+    }
+    return(check)
+  }
+  for (ds in c('a', 'b', 'w')) {
+    if (!isTRUE(x = OneD(x = ds))) {
+      stop("Missing one dimensional dataset '", ds, "'", call. = FALSE)
+    }
+  }
+  return(sparseMatrix(
+    i = graph[['a']][] + 1,
+    j = graph[['b']][],
+    x = graph[['w']][]
+  ))
 }
