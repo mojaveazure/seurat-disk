@@ -41,6 +41,9 @@ these with \code{\link[base]{options}}:
    \item{last}{Chunk along the last dimension}
   }
  }
+ \item{\code{SeuratDisk.dimreducs.allglobal}}{
+  Treat all DimReducs as global, regardless of actual global status
+ }
 }
 }
 

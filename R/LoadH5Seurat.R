@@ -244,11 +244,15 @@ as.Seurat.h5Seurat <- function(
     if (verbose) {
       message("Adding reduction ", reduc)
     }
-    object[[reduc]] <- AssembleDimReduc(
+    reduction <- AssembleDimReduc(
       reduction = reduc,
       file = x,
       verbose = verbose
     )
+    if (isTRUE(x = getOption(x = 'SeuratDisk.dimreducs.allglobal', default = FALSE))) {
+      slot(object = reduction, name = 'global') <- TRUE
+    }
+    object[[reduc]] <- reduction
   }
   # Load Graphs
   graphs <- GetGraphs(graphs = graphs, index = index, assays = assays)

@@ -20,7 +20,7 @@ BugReports: https://github.com/mojaveazure/seurat-disk/issues
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Remotes: satijalab/seurat-data
 Depends:
   R (>= 3.6.0)

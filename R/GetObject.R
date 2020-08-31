@@ -133,6 +133,9 @@ GetDimReducs <- function(reductions, index, assays = NULL) {
       }
     )))
   }
+  if (isTRUE(x = getOption(x = 'SeuratDisk.dimreducs.allglobal', default = FALSE))) {
+    return(reductions)
+  }
   assays <- GetAssays(assays = assays, index = index)
   assays.reducs <- lapply(
     X = names(x = assays),
