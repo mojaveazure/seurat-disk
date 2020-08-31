@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# SeuratDisk v0.0.0.9011
+# SeuratDisk v0.0.0.9013
 
 <!-- badges: start -->
 
@@ -40,7 +40,7 @@ SeuratDisk depends on the following non-standard packages:
 | :-----: | :-----------------------------------------------: | :----------------------------------------------: | :---------------------------------------------: |
 |   cli   |  [CRAN](https://cran.r-project.org/package=cli)   |  [GitHub](https://github.com/r-lib/cli#readme)   |                        –                        |
 | crayon  | [CRAN](https://cran.r-project.org/package=crayon) | [GitHub](https://github.com/r-lib/crayon#readme) |                        –                        |
-|  hdf5r  | [CRAN](https://cran.r-project.org/package=hdf5r)  |   [GitHub](https://github.com/hhoeflin/hdf5r)    |   [Website](https://hhoeflin.github.io/hdf5r)   |
+|  hdf5r  | [CRAN](https://cran.r-project.org/package=hdf5r)  |   [GitHub](https://github.com/hhoeflin/hdf5r)    |  [Website](https://hhoeflin.github.io/hdf5r/)   |
 | Matrix  | [CRAN](https://cran.r-project.org/package=Matrix) |                        –                         | [Website](http://Matrix.R-forge.R-project.org/) |
 |   R6    |   [CRAN](https://cran.r-project.org/package=R6)   |      [GitHub](https://github.com/r-lib/R6/)      |         [Website](https://r6.r-lib.org)         |
 |  rlang  | [CRAN](https://cran.r-project.org/package=rlang)  |     [GitHub](https://github.com/r-lib/rlang)     |        [Website](http://rlang.r-lib.org)        |
