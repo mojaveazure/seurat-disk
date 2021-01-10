@@ -58,6 +58,7 @@ LoadH5Seurat(file, ...)
   assays = NULL,
   reductions = NULL,
   graphs = NULL,
+  neighbors = NULL,
   images = NULL,
   meta.data = TRUE,
   commands = TRUE,

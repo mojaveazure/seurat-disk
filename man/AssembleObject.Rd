@@ -5,6 +5,7 @@
 \alias{AssembleAssay}
 \alias{AssembleDimReduc}
 \alias{AssembleGraph}
+\alias{AssembleNeighbor}
 \alias{AssembleImage}
 \alias{AssembleSeuratCommand}
 \title{Assemble an object from an h5Seurat file}
@@ -14,6 +15,8 @@ AssembleAssay(assay, file, slots = NULL, verbose = TRUE)
 AssembleDimReduc(reduction, file, verbose = TRUE)
 
 AssembleGraph(graph, file, verbose = TRUE)
+
+AssembleNeighbor(neighbor, file, verbose = TRUE)
 
 AssembleImage(image, file, verbose = TRUE)
 
