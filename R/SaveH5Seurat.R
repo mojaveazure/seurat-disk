@@ -222,6 +222,17 @@ as.h5Seurat.Seurat <- function(
       verbose = verbose
     )
   }
+  # Add Neighbors
+  neighbors <- names(x = slot(object = x, name = "neighbors"))
+  for (neighbor in neighbors){
+    WriteH5Group(
+      x = x[[neighbor]],
+      name = neighbor,
+      hgroup = hfile[['neighbors']],
+      verbose = verbose
+    )
+  }
+
   # Add Graphs
   graphs <- Filter(
     f = function(g) {

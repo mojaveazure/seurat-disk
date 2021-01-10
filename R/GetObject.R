@@ -173,6 +173,17 @@ GetGraphs <- function(graphs, index, assays = NULL) {
   return(intersect(x = graphs, y = assays.graphs))
 }
 
+GetNeighbors <- function(neighbor, index) {
+  if (is.null(neighbor)){
+    return(index[["global"]]$neighbors)
+  } else {
+    return(intersect(x = neighbor, y = index[["global"]]$neighbors))  
+  }
+}
+
+
+
+
 #' @return \code{GetImages}: A vector of image names
 #'
 #' @rdname GetObject

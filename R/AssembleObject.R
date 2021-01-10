@@ -229,6 +229,20 @@ AssembleGraph <- function(graph, file, verbose = TRUE) {
   return(obj)
 }
 
+
+#' @rdname AssembleObject
+#'
+AssembleNeighbor <- function(neighbor, file, verbose = TRUE) {
+  neighbor.group <- file[['neighbors']][[neighbor]]
+  obj <- Neighbor(
+    nn.idx =  as.matrix(x = neighbor.group[["nn.idx"]]),
+    nn.dist = as.matrix(x = neighbor.group[["nn.dist"]]),
+    cell.names =  as.matrix(x = neighbor.group[["cell.names"]])[,1]
+    )
+  return(obj)
+}
+
+
 #' @rdname AssembleObject
 #'
 AssembleImage <- function(image, file, verbose = TRUE) {

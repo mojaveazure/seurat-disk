@@ -182,6 +182,7 @@ as.Seurat.h5Seurat <- function(
   assays = NULL,
   reductions = NULL,
   graphs = NULL,
+  neighbors = NULL,
   images = NULL,
   meta.data = TRUE,
   commands = TRUE,
@@ -262,6 +263,20 @@ as.Seurat.h5Seurat <- function(
     }
     object[[graph]] <- AssembleGraph(graph = graph, file = x, verbose = verbose)
   }
+  
+  # Load Neighbors
+  neighbors <- GetNeighbors(neighbor = neighbors, index = index)
+  for (neighbor in neighbors) {
+    if (verbose) {
+      message("Adding neighbors ", neighbor)
+    }
+    object[[neighbor]] <- AssembleNeighbor(
+      neighbor = neighbor,
+      file = x,
+      verbose = verbose
+      )
+  }
+  
   # Load SpatialImages
   if (packageVersion(pkg = 'Seurat') >= numeric_version(x = spatial.version)) {
     images <- GetImages(images = images, index = index, assays = assays)
