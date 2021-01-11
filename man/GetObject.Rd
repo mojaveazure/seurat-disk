@@ -7,6 +7,7 @@
 \alias{GetDimReducs}
 \alias{GetGraphs}
 \alias{GetImages}
+\alias{GetNeighbors}
 \title{Figure out which objects to load from an h5Seurat file}
 \usage{
 GetAssays(assays, index)
@@ -18,6 +19,8 @@ GetDimReducs(reductions, index, assays = NULL)
 GetGraphs(graphs, index, assays = NULL)
 
 GetImages(images, index, assays = NULL)
+
+GetNeighbors(neighbors, index)
 }
 \arguments{
 \item{assays}{One of:
@@ -58,6 +61,13 @@ will be loaded}
  \item \code{NA} for \link[Seurat:IsGlobal]{global} images
  \item \code{FALSE} for no images
 }}
+
+\item{neighbors}{One of:
+\itemize{
+ \item A character vector with the names of neighbors
+ \item \code{NULL} for all neighbors
+ \item \code{FALSE} for no neighbors
+}}
 }
 \value{
 \code{GetAssays}: A named list where each entry is a vector
@@ -73,6 +83,8 @@ from an assay in \code{assays} or global dimensional reductions
 assay in \code{assays}
 
 \code{GetImages}: A vector of image names
+
+\code{GetNeighbors}: A vector of neighbor names
 }
 \description{
 Figure out which objects to load from an h5Seurat file

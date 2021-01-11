@@ -20,7 +20,10 @@ NULL
 GetAssays <- function(assays, index) {
   index.assays <- setdiff(x = names(x = index), y = c('global', 'no.assay'))
   assay.slots <- c('counts', 'data', 'scale.data')
-  assay.msg <- 'Assay specification must include either the name of an assay or one or more assay slots'
+  assay.msg <- paste(
+    'Assay specification must include either the name of an assay',
+    'or one or more assay slots'
+  )
   assays <- assays %||% index.assays
   if (!is.null(x = names(x = assays))) {
     assays <- as.list(x = assays)
@@ -173,17 +176,6 @@ GetGraphs <- function(graphs, index, assays = NULL) {
   return(intersect(x = graphs, y = assays.graphs))
 }
 
-GetNeighbors <- function(neighbor, index) {
-  if (is.null(neighbor)){
-    return(index[["global"]]$neighbors)
-  } else {
-    return(intersect(x = neighbor, y = index[["global"]]$neighbors))  
-  }
-}
-
-
-
-
 #' @return \code{GetImages}: A vector of image names
 #'
 #' @rdname GetObject
@@ -210,4 +202,18 @@ GetImages <- function(images, index, assays = NULL) {
   )
   assays.images <- unique(x = c(unlist(x = assays.images, index$global$images)))
   return(intersect(x = images, y = assays.images))
+}
+
+#' @return \code{GetNeighbors}: A vector of neighbor names
+#'
+#' @rdname GetObject
+#'
+GetNeighbors <- function(neighbors, index) {
+  if (isFALSE(x = neighbors)) {
+    return(NULL)
+  } else if (is.null(x = neighbors)) {
+    return(index[["global"]]$neighbors)
+  } else {
+    return(intersect(x = neighbors, y = index[["global"]]$neighbors))
+  }
 }
