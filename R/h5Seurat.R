@@ -194,8 +194,9 @@ h5Seurat <- R6Class(
         }
       }
       # Get neighbors information
-      index$global$neighbors <- names(x = self[["neighbors"]])
- 
+      if (Exists(x = self, name = 'neighbors')) {
+        index$global$neighbors <- names(x = self[['neighbors']])
+      }
       # TODO: Get metadata
       # TODO: Get miscellaneous data
       # TODO: Get tool-specific results
@@ -365,8 +366,6 @@ DefaultAssay.h5SI <- function(object) {
   return(attr(x = object, which = 'active.assay'))
 }
 
-#' @inheritParams base::print
-#'
 #' @return \code{print}: Invisibly returns \code{x}
 #'
 #' @importFrom cli symbol
