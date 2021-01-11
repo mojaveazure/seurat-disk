@@ -7,8 +7,8 @@ NULL
 
 #' Assemble an object from an h5Seurat file
 #'
-#' @param assay,reduction,graph,image,cmd Name of assay, reduction, graph,
-#' image, or command to load
+#' @param assay,reduction,graph,image,neighbor,cmd Name of assay, reduction,
+#' graph, image, or command to load
 #' @param file A connected h5Seurat file to pull the data from
 #' @param verbose Show progress updates
 #'
@@ -229,20 +229,6 @@ AssembleGraph <- function(graph, file, verbose = TRUE) {
   return(obj)
 }
 
-
-#' @rdname AssembleObject
-#'
-AssembleNeighbor <- function(neighbor, file, verbose = TRUE) {
-  neighbor.group <- file[['neighbors']][[neighbor]]
-  obj <- Neighbor(
-    nn.idx =  as.matrix(x = neighbor.group[["nn.idx"]]),
-    nn.dist = as.matrix(x = neighbor.group[["nn.dist"]]),
-    cell.names =  as.matrix(x = neighbor.group[["cell.names"]])[,1]
-    )
-  return(obj)
-}
-
-
 #' @rdname AssembleObject
 #'
 AssembleImage <- function(image, file, verbose = TRUE) {
@@ -254,6 +240,21 @@ AssembleImage <- function(image, file, verbose = TRUE) {
       DefaultAssay(object = obj) <- assay
     }
   }
+  return(obj)
+}
+
+#' @importClassesFrom Seurat Neighbor
+#'
+#' @rdname AssembleObject
+#'
+AssembleNeighbor <- function(neighbor, file, verbose = TRUE) {
+  neighbor.group <- file[['neighbors']][[neighbor]]
+  obj <- new(
+    Class = 'Neighbor',
+    nn.idx =  as.matrix(x = neighbor.group[["nn.idx"]]),
+    nn.dist = as.matrix(x = neighbor.group[["nn.dist"]]),
+    cell.names =  as.matrix(x = neighbor.group[["cell.names"]])[,1]
+  )
   return(obj)
 }
 
