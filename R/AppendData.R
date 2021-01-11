@@ -235,6 +235,7 @@ AppendData.h5Seurat <- function(
       verbose = verbose
     )
   }
+  # TODO: Load Neighbors
   # TODO: Load SpatialImages
   # Load SeuratCommands
   if ('commands' %in% extras) {
