@@ -604,6 +604,35 @@ setMethod(
   }
 )
 
+#' @importClassesFrom Seurat Neighbor
+#'
+#' @rdname WriteH5Group
+#'
+setMethod(
+  f = 'WriteH5Group',
+  signature = c('x' = 'Neighbor'),
+  definition = function(x, name, hgroup, verbose = TRUE) {
+    xgroup <- hgroup$create_group(name = name)
+    for (i in slotNames(x = x)) {
+      if (i == 'alg.idx' && !is.null(x = slot(object = x, name = i))) {
+        warning(
+          "We cannot save neighbor indexes at this time; ",
+          "please save the index separately",
+          call. = FALSE,
+          immediate. = TRUE
+        )
+        next
+      }
+      WriteH5Group(
+        x = slot(object = x, name = i),
+        name = i,
+        hgroup = xgroup,
+        verbose = verbose
+      )
+    }
+  }
+)
+
 #' @importClassesFrom Seurat SeuratCommand
 #'
 #' @rdname WriteH5Group

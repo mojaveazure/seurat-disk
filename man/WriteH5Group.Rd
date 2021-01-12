@@ -12,6 +12,7 @@
 \alias{WriteH5Group,Graph-method}
 \alias{WriteH5Group,list-method}
 \alias{WriteH5Group,logical-method}
+\alias{WriteH5Group,Neighbor-method}
 \alias{WriteH5Group,SeuratCommand-method}
 \title{Write data to an HDF5 group}
 \usage{
@@ -36,6 +37,8 @@ WriteH5Group(x, name, hgroup, verbose = TRUE)
 \S4method{WriteH5Group}{list}(x, name, hgroup, verbose = TRUE)
 
 \S4method{WriteH5Group}{logical}(x, name, hgroup, verbose = TRUE)
+
+\S4method{WriteH5Group}{Neighbor}(x, name, hgroup, verbose = TRUE)
 
 \S4method{WriteH5Group}{SeuratCommand}(x, name, hgroup, verbose = TRUE)
 }

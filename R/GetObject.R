@@ -82,7 +82,10 @@ GetAssays <- function(assays, index) {
   names(x = assays) <- unique.assays
   for (i in unique.assays) {
     assays.use <- which(x = names(x = assays.checked) == i)
-    slots.use <- unique(x = unlist(x = assays.checked[assays.use], use.names = FALSE))
+    slots.use <- unique(x = unlist(
+      x = assays.checked[assays.use],
+      use.names = FALSE
+    ))
     slots.use <- slots.use[match(x = names(x = index[[i]]$slots), table = slots.use)]
     slots.use <- as.character(x = na.omit(object = slots.use[index[[i]]$slots]))
     assays[[i]] <- slots.use
