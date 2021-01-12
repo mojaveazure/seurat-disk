@@ -38,6 +38,12 @@ NULL
 #' }
 #' \strong{Note}: Only graphs associated with an assay loaded in \code{assays}
 #' will be loaded
+#' @param neighbors One of:
+#' \itemize{
+#'  \item A character vector with the names of neighbors
+#'  \item \code{NULL} for all neighbors
+#'  \item \code{FALSE} for no neighbors
+#' }
 #' @param images One of:
 #' \itemize{
 #'  \item A character vector with names of images
@@ -75,6 +81,7 @@ LoadH5Seurat.character <- function(
   assays = NULL,
   reductions = NULL,
   graphs = NULL,
+  neighbors = NULL,
   images = NULL,
   meta.data = TRUE,
   commands = TRUE,
@@ -89,6 +96,7 @@ LoadH5Seurat.character <- function(
     file = hfile,assays = assays,
     reductions = reductions,
     graphs = graphs,
+    neighbors = neighbors,
     images = images,
     meta.data = meta.data,
     commands = commands,
@@ -108,6 +116,7 @@ LoadH5Seurat.H5File <- function(
   assays = NULL,
   reductions = NULL,
   graphs = NULL,
+  neighbors = NULL,
   images = NULL,
   meta.data = TRUE,
   commands = TRUE,
@@ -121,6 +130,7 @@ LoadH5Seurat.H5File <- function(
     assays = assays,
     reductions = reductions,
     graphs = graphs,
+    neighbors = neighbors,
     images = images,
     meta.data = meta.data,
     commands = commands,
@@ -142,6 +152,7 @@ LoadH5Seurat.h5Seurat <- function(
   assays = NULL,
   reductions = NULL,
   graphs = NULL,
+  neighbors = NULL,
   images = NULL,
   meta.data = TRUE,
   commands = TRUE,
@@ -155,6 +166,7 @@ LoadH5Seurat.h5Seurat <- function(
     assays = assays,
     reductions = reductions,
     graphs = graphs,
+    neighbors = neighbors,
     images = images,
     meta.data = meta.data,
     commands = commands,
@@ -182,6 +194,7 @@ as.Seurat.h5Seurat <- function(
   assays = NULL,
   reductions = NULL,
   graphs = NULL,
+  neighbors = NULL,
   images = NULL,
   meta.data = TRUE,
   commands = TRUE,
@@ -261,6 +274,18 @@ as.Seurat.h5Seurat <- function(
       message("Adding graph ", graph)
     }
     object[[graph]] <- AssembleGraph(graph = graph, file = x, verbose = verbose)
+  }
+  # Load Neighbors
+  neighbors <- GetNeighbors(neighbors = neighbors, index = index)
+  for (neighbor in neighbors) {
+    if (verbose) {
+      message("Adding neighbors ", neighbor)
+    }
+    object[[neighbor]] <- AssembleNeighbor(
+      neighbor = neighbor,
+      file = x,
+      verbose = verbose
+      )
   }
   # Load SpatialImages
   if (packageVersion(pkg = 'Seurat') >= numeric_version(x = spatial.version)) {

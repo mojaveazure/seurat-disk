@@ -20,7 +20,10 @@ NULL
 GetAssays <- function(assays, index) {
   index.assays <- setdiff(x = names(x = index), y = c('global', 'no.assay'))
   assay.slots <- c('counts', 'data', 'scale.data')
-  assay.msg <- 'Assay specification must include either the name of an assay or one or more assay slots'
+  assay.msg <- paste(
+    'Assay specification must include either the name of an assay',
+    'or one or more assay slots'
+  )
   assays <- assays %||% index.assays
   if (!is.null(x = names(x = assays))) {
     assays <- as.list(x = assays)
@@ -79,7 +82,10 @@ GetAssays <- function(assays, index) {
   names(x = assays) <- unique.assays
   for (i in unique.assays) {
     assays.use <- which(x = names(x = assays.checked) == i)
-    slots.use <- unique(x = unlist(x = assays.checked[assays.use], use.names = FALSE))
+    slots.use <- unique(x = unlist(
+      x = assays.checked[assays.use],
+      use.names = FALSE
+    ))
     slots.use <- slots.use[match(x = names(x = index[[i]]$slots), table = slots.use)]
     slots.use <- as.character(x = na.omit(object = slots.use[index[[i]]$slots]))
     assays[[i]] <- slots.use
@@ -199,4 +205,18 @@ GetImages <- function(images, index, assays = NULL) {
   )
   assays.images <- unique(x = c(unlist(x = assays.images, index$global$images)))
   return(intersect(x = images, y = assays.images))
+}
+
+#' @return \code{GetNeighbors}: A vector of neighbor names
+#'
+#' @rdname GetObject
+#'
+GetNeighbors <- function(neighbors, index) {
+  if (isFALSE(x = neighbors)) {
+    return(NULL)
+  } else if (is.null(x = neighbors)) {
+    return(index[["global"]]$neighbors)
+  } else {
+    return(intersect(x = neighbors, y = index[["global"]]$neighbors))
+  }
 }

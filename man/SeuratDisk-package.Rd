@@ -19,7 +19,7 @@ The h5Seurat file format is specifically designed for the storage
 \section{Package options}{
 
 
-SeuratDisk uses the following options to control behaviour, users can configure
+SeuratDisk uses the following options to control behavior, users can configure
 these with \code{\link[base]{options}}:
 
 \describe{

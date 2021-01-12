@@ -16,6 +16,7 @@ LoadH5Seurat(file, ...)
   assays = NULL,
   reductions = NULL,
   graphs = NULL,
+  neighbors = NULL,
   images = NULL,
   meta.data = TRUE,
   commands = TRUE,
@@ -30,6 +31,7 @@ LoadH5Seurat(file, ...)
   assays = NULL,
   reductions = NULL,
   graphs = NULL,
+  neighbors = NULL,
   images = NULL,
   meta.data = TRUE,
   commands = TRUE,
@@ -44,6 +46,7 @@ LoadH5Seurat(file, ...)
   assays = NULL,
   reductions = NULL,
   graphs = NULL,
+  neighbors = NULL,
   images = NULL,
   meta.data = TRUE,
   commands = TRUE,
@@ -58,6 +61,7 @@ LoadH5Seurat(file, ...)
   assays = NULL,
   reductions = NULL,
   graphs = NULL,
+  neighbors = NULL,
   images = NULL,
   meta.data = TRUE,
   commands = TRUE,
@@ -100,6 +104,13 @@ LoadH5Seurat(file, ...)
 }
 \strong{Note}: Only graphs associated with an assay loaded in \code{assays}
 will be loaded}
+
+\item{neighbors}{One of:
+\itemize{
+ \item A character vector with the names of neighbors
+ \item \code{NULL} for all neighbors
+ \item \code{FALSE} for no neighbors
+}}
 
 \item{images}{One of:
 \itemize{

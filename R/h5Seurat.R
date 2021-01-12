@@ -193,6 +193,10 @@ h5Seurat <- R6Class(
           index$no.assay$commands <- c(index$no.assay$commands, cmd)
         }
       }
+      # Get neighbors information
+      if (Exists(x = self, name = 'neighbors')) {
+        index$global$neighbors <- names(x = self[['neighbors']])
+      }
       # TODO: Get metadata
       # TODO: Get miscellaneous data
       # TODO: Get tool-specific results
@@ -214,7 +218,7 @@ h5Seurat <- R6Class(
       }
       self$set.version(version = version)
       if (numeric_version(x = version) >= numeric_version(x = '3.1.2')) {
-        for (group in c('assays', 'commands', 'graphs', 'misc', 'reductions', 'tools')) {
+        for (group in c('assays', 'commands', 'neighbors', 'graphs', 'misc', 'reductions', 'tools')) {
           if (!private$is.data(name = group, type = 'H5Group')) {
             self$create_group(name = group)
           }
@@ -362,8 +366,6 @@ DefaultAssay.h5SI <- function(object) {
   return(attr(x = object, which = 'active.assay'))
 }
 
-#' @inheritParams base::print
-#'
 #' @return \code{print}: Invisibly returns \code{x}
 #'
 #' @importFrom cli symbol
