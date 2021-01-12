@@ -24,7 +24,7 @@ AssembleSeuratCommand(cmd, file, verbose = TRUE)
 }
 \arguments{
 \item{assay, reduction, graph, image, neighbor, cmd}{Name of assay, reduction,
-graph, image, or command to load}
+graph, image, neighbor, or command to load}
 
 \item{file}{A connected h5Seurat file to pull the data from}
 

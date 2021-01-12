@@ -8,7 +8,7 @@ NULL
 #' Assemble an object from an h5Seurat file
 #'
 #' @param assay,reduction,graph,image,neighbor,cmd Name of assay, reduction,
-#' graph, image, or command to load
+#' graph, image, neighbor, or command to load
 #' @param file A connected h5Seurat file to pull the data from
 #' @param verbose Show progress updates
 #'
