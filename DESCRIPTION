@@ -33,6 +33,7 @@ Imports:
   R6 (>= 2.4.1),
   rlang (>= 0.4.4),
   Seurat (>= 3.1.2),
+  SeuratObject (>= 4.0.0),
   stats,
   tools,
   utils,

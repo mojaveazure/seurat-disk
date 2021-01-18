@@ -109,6 +109,29 @@ AssembleAssay <- function(assay, file, slots = NULL, verbose = TRUE) {
     }
     slot(object = obj, name = 'misc') <- as.list(x = assay.group[['misc']])
   }
+  if (assay.group$attr_exists(attr_name = 's4class')) {
+    classdef <- unlist(x = strsplit(
+      x = h5attr(x = assay.group, which = 's4class'),
+      split = ':'
+    ))
+    pkg <- classdef[1]
+    cls <- classdef[2]
+    formal <- methods::getClassDef(Class = cls, package = pkg, inherits = FALSE)
+    missing <- setdiff(
+      x = slotNames(x = formal),
+      y = slotNames(x = methods::getClass(Class = 'Assay'))
+    )
+    missing <- sapply(
+      X = missing,
+      FUN = function(x) {
+        return(as.list(x = assay.group[[x]]))
+      },
+      simplify = FALSE
+    )
+    obj <- c(SeuratObject::S4ToList(object = obj), missing)
+    attr(x = obj, which = 'classDef') <- paste(classdef, collapse = ':')
+    obj <- SeuratObject::ListToS4(x = obj)
+  }
   return(obj)
 }
 

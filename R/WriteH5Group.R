@@ -173,6 +173,8 @@ setGeneric(
 # WriteH5Group definitions
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+#' @importFrom SeuratObject S4ToList
+#'
 #' @rdname WriteH5Group
 #'
 setMethod(
@@ -183,12 +185,18 @@ setMethod(
       ImageWrite(x = x, name = name, hgroup = hgroup, verbose = verbose)
     } else if (isS4(x)) {
       xgroup <- hgroup$create_group(name = name)
-      class <- GetClass(class = class(x = x))
+      classdef <- attr(x = S4ToList(object = x), which = 'classDef')
       xgroup$create_attr(
         attr_name = 's4class',
-        robj = class,
-        dtype = GuessDType(x = class)
+        robj = classdef,
+        dtype = GuessDType(x = classdef)
       )
+      # class <- GetClass(class = class(x = x))
+      # xgroup$create_attr(
+      #   attr_name = 's4class',
+      #   robj = class,
+      #   dtype = GuessDType(x = class)
+      # )
       for (i in slotNames(x = x)) {
         WriteH5Group(
           x = slot(object = x, name = i),
@@ -291,7 +299,8 @@ setMethod(
     )
     # Write out other slots for extended assay objects
     if (class(x = x)[1] != 'Assay') {
-      extclass <- GetClass(class = class(x = x))
+      # extclass <- GetClass(class = class(x = x))
+      extclass <- attr(x = SeuratObject::S4ToList(object = x), which = 'classDef')
       xgroup$create_attr(
         attr_name = 's4class',
         robj = extclass,
@@ -299,7 +308,8 @@ setMethod(
       )
       slots.extended <- setdiff(
         x = slotNames(x = x),
-        y = slotNames(x = tryNew(Class = 'Assay'))
+        # y = slotNames(x = tryNew(Class = 'Assay'))
+        y = slotNames(x = methods::getClassDef(Class = 'Assay'))
       )
       for (slot in slots.extended) {
         if (verbose) {
