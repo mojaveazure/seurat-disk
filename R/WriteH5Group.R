@@ -136,7 +136,7 @@ SparseWrite <- function(x, name, group, hfile, verbose = TRUE) {
     dtype = GuessDType(dim(x = x))
   )
   xgroup$close()
-  assign("hgroup", hgroup, envir = environment())
+  assign("hgroup", hgroup, envir = .BaseNamespaceEnv)
   return(invisible(x = NULL))
 }
 
