@@ -177,7 +177,6 @@ setGeneric(
       )
     }
     standardGeneric(f = "WriteH5Group")
-    return(hfile)
   },
   signature = c("x")
 )
