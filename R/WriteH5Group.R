@@ -631,6 +631,11 @@ setMethod(
   signature = c("x" = "Graph"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
     SparseWrite(x = x, name = name, group = group, hfile, verbose = verbose)
+    if (group != "/") {
+      hgroup <- hfile[[group]]
+    } else {
+      hgroup <- hfile
+    }
     if (!is.null(x = DefaultAssay(object = x))) {
       hgroup[[name]]$create_attr(
         attr_name = "assay.used",
@@ -669,11 +674,6 @@ setMethod(
   f = "WriteH5Group",
   signature = c("x" = "logical"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
-    if (group != "/") {
-      hgroup <- hfile[[group]]
-    } else {
-      hgroup <- hfile
-    }
     WriteH5Group(
       x = BoolToInt(x = x),
       name = name,
@@ -681,6 +681,11 @@ setMethod(
       hfile = hfile,
       verbose = verbose
     )
+    if (group != "/") {
+      hgroup <- hfile[[group]]
+    } else {
+      hgroup <- hfile
+    }
     hgroup[[name]]$create_attr(
       attr_name = "s3class",
       robj = "logical",
@@ -733,11 +738,6 @@ setMethod(
   f = "WriteH5Group",
   signature = c("x" = "SeuratCommand"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
-    if (group != "/") {
-      hgroup <- hfile[[group]]
-    } else {
-      hgroup <- hfile
-    }
     # Write out params
     WriteH5Group(
       x = Filter(
@@ -757,6 +757,11 @@ setMethod(
       slot.val <- slot(object = x, name = slot)
       if (!is.null(x = slot.val)) {
         slot.val <- as.character(x = slot.val)
+        if (group != "/") {
+          hgroup <- hfile[[group]]
+        } else {
+          hgroup <- hfile
+        }
         hgroup[[name]]$create_attr(
           attr_name = slot,
           robj = slot.val,
