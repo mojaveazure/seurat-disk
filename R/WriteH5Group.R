@@ -107,7 +107,7 @@ ImageWrite <- function(x, name, group, hfile, verbose = TRUE) {
 #'
 #' @keywords internal
 #'
-#' @import HDF5Array
+#' @importFrom HDF5Array writeTENxMatrix
 #'
 SparseWrite <- function(x, name, group, hfile, verbose = TRUE) {
   hgroup <- hfile[[group]]
