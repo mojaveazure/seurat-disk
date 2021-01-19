@@ -105,17 +105,28 @@ ImageWrite <- function(x, name, hgroup, verbose = TRUE) {
 #'
 #' @keywords internal
 #'
+# SparseWrite <- function(x, name, hgroup, verbose = TRUE) {
+#   xgroup <- hgroup$create_group(name = name)
+#   datasets <- c('indices' = 'i', 'indptr' = 'p', 'data' = 'x')
+#   for (i in seq_along(along.with = datasets)) {
+#     ds.i <- slot(object = x, name = datasets[i])
+#     xgroup$create_dataset(
+#       name = names(x = datasets)[i],
+#       robj = ds.i,
+#       dtype = GuessDType(x = ds.i)
+#     )
+#   }
+#   xgroup$create_attr(
+#     attr_name = 'dims',
+#     robj = dim(x = x),
+#     dtype = GuessDType(dim(x = x))
+#   )
+#   return(invisible(x = NULL))
+# }
 SparseWrite <- function(x, name, hgroup, verbose = TRUE) {
   xgroup <- hgroup$create_group(name = name)
-  datasets <- c('indices' = 'i', 'indptr' = 'p', 'data' = 'x')
-  for (i in seq_along(along.with = datasets)) {
-    ds.i <- slot(object = x, name = datasets[i])
-    xgroup$create_dataset(
-      name = names(x = datasets)[i],
-      robj = ds.i,
-      dtype = GuessDType(x = ds.i)
-    )
-  }
+  filepath <- hgroup$filename
+  writeTENxMatrix(x = x, filepath = filepath, group = name,verbose = verbose)
   xgroup$create_attr(
     attr_name = 'dims',
     robj = dim(x = x),
