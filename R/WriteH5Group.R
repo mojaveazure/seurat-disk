@@ -18,15 +18,15 @@ NULL
 #' @keywords internal
 #'
 BasicWrite <- function(x, name, group, hfile = hfile, verbose = TRUE) {
+  if (group != "/") {
+    hgroup <- hfile[[group]]
+  } else {
+    hgroup <- hfile
+  }
   if (is.data.frame(x = x)) {
     hfile <- WriteH5Group(x = x, name = name, group = group, hfile = hfile, verbose = verbose)
   } else if (is.list(x = x)) {
     x <- PadNames(x = x)
-    if (group != "/") {
-      hgroup <- hfile[[group]]
-    } else {
-      hgroup <- hfile
-    }
     xgroup <- hgroup$create_group(name = name)
     for (i in seq_along(along.with = x)) {
       hfile <- WriteH5Group(
@@ -132,7 +132,6 @@ SparseWrite <- function(x, name, group, hfile, verbose = TRUE) {
     dtype = GuessDType(dim(x = x))
   )
   xgroup$close()
-  hfile
   return(hfile)
 }
 
