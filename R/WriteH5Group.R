@@ -136,6 +136,7 @@ SparseWrite <- function(x, name, group, hfile, verbose = TRUE) {
     dtype = GuessDType(dim(x = x))
   )
   xgroup$close()
+  hfile
   return(hfile)
 }
 
