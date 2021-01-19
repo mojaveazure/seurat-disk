@@ -20,7 +20,7 @@ NULL
 #'
 BasicWrite <- function(x, name, group, hfile = hfile, verbose = TRUE) {
   if (is.data.frame(x = x)) {
-    WriteH5Group(x = x, name = name, group = group, hfile = hfile, verbose = verbose)
+    hfile <- WriteH5Group(x = x, name = name, group = group, hfile = hfile, verbose = verbose)
   } else if (is.list(x = x)) {
     x <- PadNames(x = x)
     if (group != "/") {
@@ -30,7 +30,7 @@ BasicWrite <- function(x, name, group, hfile = hfile, verbose = TRUE) {
     }
     xgroup <- hgroup$create_group(name = name)
     for (i in seq_along(along.with = x)) {
-      WriteH5Group(
+      hfile <- WriteH5Group(
         x = x[[i]],
         name = names(x = x)[i],
         group = paste0(group, "/", name),
@@ -55,7 +55,7 @@ BasicWrite <- function(x, name, group, hfile = hfile, verbose = TRUE) {
   } else if (!is.null(x = x)) {
     hgroup$create_dataset(name = name, robj = x, dtype = GuessDType(x = x))
   }
-  return(invisible(x = NULL))
+  return(hfile)
 }
 
 #' Write a SpatialImage object to an HDF5 dataset
@@ -98,7 +98,7 @@ ImageWrite <- function(x, name, group, hfile, verbose = TRUE) {
   # Write out slots other than assay
   slots <- setdiff(x = slotNames(x = x), y = c("assay", "global"))
   for (slot in slots) {
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = slot(object = x, name = slot),
       name = slot,
       group = paste0(group, "/", name),
@@ -106,7 +106,7 @@ ImageWrite <- function(x, name, group, hfile, verbose = TRUE) {
       verbose = verbose
     )
   }
-  return(invisible(x = NULL))
+  return(hfile)
 }
 
 #' Write a sparse matrix to an HDF5 dataset
@@ -136,9 +136,7 @@ SparseWrite <- function(x, name, group, hfile, verbose = TRUE) {
     dtype = GuessDType(dim(x = x))
   )
   xgroup$close()
-  env <- parent.env(environment())
-  assign("hgroup", hgroup, envir = env) 
-  return(invisible(x = NULL))
+  return(hfile)
 }
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -182,6 +180,7 @@ setGeneric(
       )
     }
     standardGeneric(f = "WriteH5Group")
+    return(hfile)
   },
   signature = c("x")
 )
@@ -212,7 +211,7 @@ setMethod(
       )
     }
     if (inherits(x = x, what = "SpatialImage")) {
-      ImageWrite(x = x, name = name, group = group, hfile = hfile, verbose = verbose)
+      hfile <- ImageWrite(x = x, name = name, group = group, hfile = hfile, verbose = verbose)
     } else if (isS4(x)) {
       if (group != "/") {
         hgroup <- hfile[[group]]
@@ -233,7 +232,7 @@ setMethod(
       #   dtype = GuessDType(x = class)
       # )
       for (i in slotNames(x = x)) {
-        WriteH5Group(
+        hfile <- WriteH5Group(
           x = slot(object = x, name = i),
           name = i,
           group = paste0(group, "/", name),
@@ -242,9 +241,9 @@ setMethod(
         )
       }
     } else if (!is.null(x = x)) {
-      BasicWrite(x = x, name = name, group = group, hfile = hfile, verbose = verbose)
+      hfile <- BasicWrite(x = x, name = name, group = group, hfile = hfile, verbose = verbose)
     }
-    return(invisible(x = NULL))
+    return(hfile)
   }
 )
 
@@ -278,11 +277,11 @@ setMethod(
         if (verbose) {
           message("Adding ", i, " for ", name)
         }
-        WriteH5Group(x = dat, name = i, group = paste0(group, "/", name), hfile = hfile, verbose = verbose)
+        hfile <- WriteH5Group(x = dat, name = i, group = paste0(group, "/", name), hfile = hfile, verbose = verbose)
       }
       # For scale.data, ensure we have the features used
       if (i == "scale.data") {
-        WriteH5Group(
+        hfile <- WriteH5Group(
           x = rownames(x = dat),
           name = "scaled.features",
           group = paste0(group, "/", name),
@@ -292,7 +291,7 @@ setMethod(
       }
     }
     # Write out feature names
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = rownames(x = x),
       name = "features",
       group = paste0(group, "/", name),
@@ -310,7 +309,7 @@ setMethod(
       if (verbose) {
         message("Adding variable features for ", name)
       }
-      WriteH5Group(
+      hfile <- WriteH5Group(
         x = VariableFeatures(object = x),
         name = "variable.features",
         group = paste0(group, "/", name),
@@ -325,7 +324,7 @@ setMethod(
       if (verbose) {
         message("Adding feature-level metadata for ", name)
       }
-      WriteH5Group(
+      hfile <- WriteH5Group(
         x = x[[]],
         name = "meta.features",
         group = paste0(group, "/", name),
@@ -336,7 +335,7 @@ setMethod(
       message("No feature-level metadata found for ", name)
     }
     # Write out miscellaneous data
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = Misc(object = x),
       name = "misc",
       group = paste0(group, "/", name),
@@ -361,7 +360,7 @@ setMethod(
         if (verbose) {
           message("Writing out ", slot, " for ", name)
         }
-        WriteH5Group(
+        hfile <- WriteH5Group(
           x = slot(object = x, name = slot),
           name = slot,
           group = paste0(group, "/", name),
@@ -370,7 +369,7 @@ setMethod(
         )
       }
     }
-    return(invisible(x = NULL))
+    return(hfile)
   }
 )
 
@@ -427,7 +426,7 @@ setMethod(
       }
       xgroup <- hgroup$create_group(name = name)
       for (i in colnames(x = x)) {
-        WriteH5Group(
+        hfile <- WriteH5Group(
           x = x[, i, drop = TRUE],
           name = i,
           group = paste0(group, "/", name),
@@ -463,7 +462,7 @@ setMethod(
         )
       }
     }
-    return(invisible(x = NULL))
+    return(hfile)
   }
 )
 
@@ -493,7 +492,7 @@ setMethod(
     if (verbose) {
       message("Adding cell embeddings for ", name)
     }
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = Embeddings(object = x),
       name = "cell.embeddings",
       group = paste0(group, "/", name),
@@ -509,11 +508,11 @@ setMethod(
           message("Adding ", type, " for ", name)
         }
         loadings <- Loadings(object = x, projected = projected)
-        WriteH5Group(
+        hfile <- WriteH5Group(
           x = loadings, name = i, group = paste0(group, "/", name),
           hfile = hfile, verbose = verbose
         )
-        WriteH5Group(
+        hfile <- WriteH5Group(
           x = rownames(x = loadings),
           name = ifelse(test = projected, yes = "projected.features", no = "features"),
           group = paste0(group, "/", name),
@@ -545,7 +544,7 @@ setMethod(
       if (verbose) {
         message("Adding standard deviations for ", name)
       }
-      WriteH5Group(
+      hfile <- WriteH5Group(
         x = Stdev(object = x),
         name = "stdev",
         group = paste0(group, "/", name),
@@ -560,7 +559,7 @@ setMethod(
       if (verbose) {
         message("Adding JackStraw information for ", name)
       }
-      WriteH5Group(
+      hfile <- WriteH5Group(
         x = JS(object = x),
         name = "jackstraw",
         group = paste0(group, "/", name),
@@ -571,14 +570,14 @@ setMethod(
       message("No JackStraw data for ", name)
     }
     # Add misc
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = slot(object = x, name = "misc"),
       name = "misc",
       group = paste0(group, "/", name),
       hfile = hfile,
       verbose = verbose
     )
-    return(invisible(x = NULL))
+    return(hfile)
   }
 )
 
@@ -607,7 +606,7 @@ setMethod(
     }
     xgroup <- hgroup$create_group(name = name)
     # Write the integer values out
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = as.integer(x = x),
       name = "values",
       group = paste0(group, "/", name),
@@ -615,13 +614,14 @@ setMethod(
       verbose = verbose
     )
     # Write the levels out
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = levels(x = x),
       name = "levels",
       group = paste0(group, "/", name),
       hfile = hfile,
       verbose = verbose
     )
+    return(hfile)
   }
 )
 
@@ -633,7 +633,7 @@ setMethod(
   f = "WriteH5Group",
   signature = c("x" = "Graph"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
-    SparseWrite(x = x, name = name, group = group, hfile, verbose = verbose)
+    hfile <- SparseWrite(x = x, name = name, group = group, hfile, verbose = verbose)
     if (group != "/") {
       hgroup <- hfile[[group]]
     } else {
@@ -646,7 +646,7 @@ setMethod(
         dtype = GuessDType(x = DefaultAssay(object = x))
       )
     }
-    return(invisible(x = NULL))
+    return(hfile)
   }
 )
 
@@ -677,7 +677,7 @@ setMethod(
   f = "WriteH5Group",
   signature = c("x" = "logical"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = BoolToInt(x = x),
       name = name,
       group = group,
@@ -694,7 +694,7 @@ setMethod(
       robj = "logical",
       dtype = GuessDType(x = "logical")
     )
-    return(invisible(x = NULL))
+    return(hfile)
   }
 )
 
@@ -722,7 +722,7 @@ setMethod(
         )
         next
       }
-      WriteH5Group(
+      hfile <- WriteH5Group(
         x = slot(object = x, name = i),
         name = i,
         group = paste0(group, "/", name),
@@ -730,6 +730,7 @@ setMethod(
         verbose = verbose
       )
     }
+    return(hfile)
   }
 )
 
@@ -742,7 +743,7 @@ setMethod(
   signature = c("x" = "SeuratCommand"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
     # Write out params
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = Filter(
         f = Negate(f = is.function),
         x = as.list(x = x)
@@ -772,7 +773,7 @@ setMethod(
         )
       }
     }
-    return(invisible(x = NULL))
+    return(hfile)
   }
 )
 

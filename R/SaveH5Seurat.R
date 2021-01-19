@@ -2,9 +2,9 @@
 #'
 NULL
 
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Generics
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #' Save a \code{Seurat} object to an h5Seurat file
 #'
@@ -22,13 +22,12 @@ NULL
 #' @export
 #'
 SaveH5Seurat <- function(
-  object,
-  filename,
-  overwrite = FALSE,
-  verbose = TRUE,
-  ...
-) {
-  UseMethod(generic = 'SaveH5Seurat', object = object)
+                         object,
+                         filename,
+                         overwrite = FALSE,
+                         verbose = TRUE,
+                         ...) {
+  UseMethod(generic = "SaveH5Seurat", object = object)
 }
 
 #' @return \code{as.h5Seurat}: An \code{\link{h5Seurat}} object
@@ -38,12 +37,12 @@ SaveH5Seurat <- function(
 #' @export
 #'
 as.h5Seurat <- function(x, ...) {
-  UseMethod(generic = 'as.h5Seurat', object = x)
+  UseMethod(generic = "as.h5Seurat", object = x)
 }
 
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Methods
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #' @importFrom Seurat as.Seurat Project
 #'
@@ -52,25 +51,24 @@ as.h5Seurat <- function(x, ...) {
 #' @export
 #'
 SaveH5Seurat.default <- function(
-  object,
-  filename,
-  overwrite = FALSE,
-  verbose = TRUE,
-  ...
-) {
+                                 object,
+                                 filename,
+                                 overwrite = FALSE,
+                                 verbose = TRUE,
+                                 ...) {
   tryCatch(
     expr = object <- as.Seurat(object = object, verbose = verbose, ...),
     error = function(...) {
       stop(
         "Unable to coerce an object of class ",
-        paste(class(x = object), collapse = ', '),
+        paste(class(x = object), collapse = ", "),
         " to a Seurat object",
         call. = FALSE
       )
     }
   )
   if (missing(x = filename)) {
-    filename <- paste0(Project(object = object), '.h5Seurat')
+    filename <- paste0(Project(object = object), ".h5Seurat")
   }
   return(invisible(x = SaveH5Seurat(
     object = object,
@@ -88,12 +86,11 @@ SaveH5Seurat.default <- function(
 #' @export
 #'
 SaveH5Seurat.Seurat <- function(
-  object,
-  filename = paste0(Project(object = object), '.h5Seurat'),
-  overwrite = FALSE,
-  verbose = TRUE,
-  ...
-) {
+                                object,
+                                filename = paste0(Project(object = object), ".h5Seurat"),
+                                overwrite = FALSE,
+                                verbose = TRUE,
+                                ...) {
   h5seurat <- as.h5Seurat(
     x = object,
     filename = filename,
@@ -112,25 +109,24 @@ SaveH5Seurat.Seurat <- function(
 #' @export
 #'
 as.h5Seurat.default <- function(
-  x,
-  filename,
-  overwrite = FALSE,
-  verbose = TRUE,
-  ...
-) {
+                                x,
+                                filename,
+                                overwrite = FALSE,
+                                verbose = TRUE,
+                                ...) {
   tryCatch(
     expr = x <- as.Seurat(x = x, verbose = verbose, ...),
     error = function(...) {
       stop(
         "Unable to coerce an object of class ",
-        paste(class(x = x), collapse = ', '),
+        paste(class(x = x), collapse = ", "),
         " to a Seurat object",
         call. = FALSE
       )
     }
   )
   if (missing(x = filename)) {
-    filename <- paste0(Project(object = x), '.h5Seurat')
+    filename <- paste0(Project(object = x), ".h5Seurat")
   }
   return(SaveH5Seurat(
     object = x,
@@ -148,7 +144,7 @@ as.h5Seurat.default <- function(
 as.h5Seurat.H5File <- function(x, ...) {
   return(h5Seurat$new(
     filename = x$filename,
-    mode = ifelse(test = Writeable(x = x, error = FALSE), yes = 'r', no = 'r+')
+    mode = ifelse(test = Writeable(x = x, error = FALSE), yes = "r", no = "r+")
   ))
 }
 
@@ -161,14 +157,13 @@ as.h5Seurat.H5File <- function(x, ...) {
 #' @export
 #'
 as.h5Seurat.Seurat <- function(
-  x,
-  filename = paste0(Project(object = x), '.h5seurat'),
-  overwrite = FALSE,
-  verbose = TRUE,
-  ...
-) {
-  if (!grepl(pattern = '^h5seurat$', x = file_ext(x = filename), ignore.case = TRUE)) {
-    filename <- paste0(filename, '.h5seurat')
+                               x,
+                               filename = paste0(Project(object = x), ".h5seurat"),
+                               overwrite = FALSE,
+                               verbose = TRUE,
+                               ...) {
+  if (!grepl(pattern = "^h5seurat$", x = file_ext(x = filename), ignore.case = TRUE)) {
+    filename <- paste0(filename, ".h5seurat")
   }
   if (file.exists(filename)) {
     if (overwrite) {
@@ -183,9 +178,9 @@ as.h5Seurat.Seurat <- function(
       stop("H5Seurat file at ", filename, " already exists", call. = FALSE)
     }
   }
-  hfile <- h5Seurat$new(filename = filename, mode = 'w')
+  hfile <- h5Seurat$new(filename = filename, mode = "w")
   # Set the version
-  object.version <- as.character(x = slot(object = x, name = 'version'))
+  object.version <- as.character(x = slot(object = x, name = "version"))
   tryCatch(
     expr = hfile$set.version(version = object.version),
     error = function(err) {
@@ -209,8 +204,8 @@ as.h5Seurat.Seurat <- function(
     hfile <- WriteH5Group(
       x = x[[assay]],
       name = assay,
-      group = '/assays',
-      hfile = hfile, 
+      group = "/assays",
+      hfile = hfile,
       verbose = verbose
     )
   }
@@ -219,7 +214,7 @@ as.h5Seurat.Seurat <- function(
     hfile <- WriteH5Group(
       x = x[[reduc]],
       name = reduc,
-      group = '/reductions',
+      group = "/reductions",
       hfile = hfile,
       verbose = verbose
     )
@@ -230,7 +225,7 @@ as.h5Seurat.Seurat <- function(
     hfile <- WriteH5Group(
       x = x[[neighbor]],
       name = neighbor,
-      group = '/neighbors',
+      group = "/neighbors",
       hfile = hfile,
       verbose = verbose
     )
@@ -238,7 +233,7 @@ as.h5Seurat.Seurat <- function(
   # Add Graphs
   graphs <- Filter(
     f = function(g) {
-      return(inherits(x = x[[g]], what = 'Graph'))
+      return(inherits(x = x[[g]], what = "Graph"))
     },
     x = names(x = x)
   )
@@ -246,7 +241,7 @@ as.h5Seurat.Seurat <- function(
     hfile <- WriteH5Group(
       x = x[[graph]],
       name = graph,
-      group = '/graphs',
+      group = "/graphs",
       hfile = hfile,
       verbose = verbose
     )
@@ -264,7 +259,7 @@ as.h5Seurat.Seurat <- function(
       hfile <- WriteH5Group(
         x = x[[image]],
         name = image,
-        group = '/images',
+        group = "/images",
         hfile = hfile,
         verbose = verbose
       )
@@ -272,21 +267,22 @@ as.h5Seurat.Seurat <- function(
   }
   # Add metadata, cell names, and identity classes
   hfile <- WriteH5Group(
-    x = x[[]], 
-    name = 'meta.data', 
+    x = x[[]],
+    name = "meta.data",
     group = "/",
     hfile = hfile,
-    verbose = verbose)
+    verbose = verbose
+  )
   hfile <- WriteH5Group(
     x = colnames(x = x),
-    name = 'cell.names',
+    name = "cell.names",
     group = "/",
     hfile = hfile,
     verbose = verbose
   )
   hfile <- WriteH5Group(
     x = Idents(object = x),
-    name = 'active.ident',
+    name = "active.ident",
     group = "/",
     hfile = hfile,
     verbose = verbose
@@ -296,7 +292,7 @@ as.h5Seurat.Seurat <- function(
     hfile <- WriteH5Group(
       x = x[[cmd]],
       name = cmd,
-      group = '/commands',
+      group = "/commands",
       hfile = hfile,
       verbose = verbose
     )
@@ -306,7 +302,7 @@ as.h5Seurat.Seurat <- function(
     hfile <- WriteH5Group(
       x = Misc(object = x, slot = misc),
       name = misc,
-      group = '/misc',
+      group = "/misc",
       hfile = hfile,
       verbose = verbose
     )
@@ -316,7 +312,7 @@ as.h5Seurat.Seurat <- function(
     hfile <- WriteH5Group(
       x = Tool(object = x, slot = tool),
       name = tool,
-      group = '/tools',
+      group = "/tools",
       hfile = hfile,
       verbose = verbose
     )
