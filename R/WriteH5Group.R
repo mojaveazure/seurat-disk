@@ -135,6 +135,8 @@ SparseWrite <- function(x, name, group, hfile, verbose = TRUE) {
     robj = dim(x = x),
     dtype = GuessDType(dim(x = x))
   )
+  xgroup$close()
+  assign("hgroup", hgroup, envir = .GlobalEnv) 
   return(invisible(x = NULL))
 }
 
@@ -630,7 +632,7 @@ setMethod(
   f = "WriteH5Group",
   signature = c("x" = "Graph"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
-    SparseWrite(x = x, name = name, group = group, hfile, verbose = verbose)
+    hfile <- SparseWrite(x = x, name = name, group = group, hfile, verbose = verbose)
     if (group != "/") {
       hgroup <- hfile[[group]]
     } else {
