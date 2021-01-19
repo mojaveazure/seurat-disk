@@ -210,6 +210,7 @@ as.h5Seurat.Seurat <- function(
       x = x[[assay]],
       name = assay,
       hgroup = hfile[['assays']],
+      hfile = hfile, 
       verbose = verbose
     )
   }
@@ -219,6 +220,7 @@ as.h5Seurat.Seurat <- function(
       x = x[[reduc]],
       name = reduc,
       hgroup = hfile[['reductions']],
+      hfile = hfile,
       verbose = verbose
     )
   }
@@ -229,6 +231,7 @@ as.h5Seurat.Seurat <- function(
       x = x[[neighbor]],
       name = neighbor,
       hgroup = hfile[['neighbors']],
+      hfile = hfile,
       verbose = verbose
     )
   }
@@ -244,6 +247,7 @@ as.h5Seurat.Seurat <- function(
       x = x[[graph]],
       name = graph,
       hgroup = hfile[['graphs']],
+      hfile = hfile,
       verbose = verbose
     )
   }
@@ -261,22 +265,25 @@ as.h5Seurat.Seurat <- function(
         x = x[[image]],
         name = image,
         hgroup = hfile[['images']],
+        hfile = hfile,
         verbose = verbose
       )
     }
   }
   # Add metadata, cell names, and identity classes
-  WriteH5Group(x = x[[]], name = 'meta.data', hgroup = hfile, verbose = verbose)
+  WriteH5Group(x = x[[]], name = 'meta.data', hgroup = hfile,hfile = hfile, verbose = verbose)
   WriteH5Group(
     x = colnames(x = x),
     name = 'cell.names',
     hgroup = hfile,
+    hfile = hfile,
     verbose = verbose
   )
   WriteH5Group(
     x = Idents(object = x),
     name = 'active.ident',
     hgroup = hfile,
+    hfile = hfile,
     verbose = verbose
   )
   # Add SeuratCommands
@@ -285,6 +292,7 @@ as.h5Seurat.Seurat <- function(
       x = x[[cmd]],
       name = cmd,
       hgroup = hfile[['commands']],
+      hfile = hfile,
       verbose = verbose
     )
   }
@@ -294,6 +302,7 @@ as.h5Seurat.Seurat <- function(
       x = Misc(object = x, slot = misc),
       name = misc,
       hgroup = hfile[['misc']],
+      hfile = hfile,
       verbose = verbose
     )
   }
@@ -303,6 +312,7 @@ as.h5Seurat.Seurat <- function(
       x = Tool(object = x, slot = tool),
       name = tool,
       hgroup = hfile[['tools']],
+      hfile = hfile,
       verbose = verbose
     )
   }
