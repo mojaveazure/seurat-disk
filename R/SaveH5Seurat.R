@@ -206,7 +206,7 @@ as.h5Seurat.Seurat <- function(
   )
   # Add Assays
   for (assay in Assays(object = x)) {
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = x[[assay]],
       name = assay,
       group = '/assays',
@@ -216,7 +216,7 @@ as.h5Seurat.Seurat <- function(
   }
   # Add DimReducs
   for (reduc in Reductions(object = x)) {
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = x[[reduc]],
       name = reduc,
       group = '/reductions',
@@ -227,7 +227,7 @@ as.h5Seurat.Seurat <- function(
   # Add Neighbors
   neighbors <- names(x = slot(object = x, name = "neighbors"))
   for (neighbor in neighbors) {
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = x[[neighbor]],
       name = neighbor,
       group = '/neighbors',
@@ -243,7 +243,7 @@ as.h5Seurat.Seurat <- function(
     x = names(x = x)
   )
   for (graph in graphs) {
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = x[[graph]],
       name = graph,
       group = '/graphs',
@@ -261,7 +261,7 @@ as.h5Seurat.Seurat <- function(
       if (verbose) {
         message("Adding image ", image)
       }
-      WriteH5Group(
+      hfile <- WriteH5Group(
         x = x[[image]],
         name = image,
         group = '/images',
@@ -271,20 +271,20 @@ as.h5Seurat.Seurat <- function(
     }
   }
   # Add metadata, cell names, and identity classes
-  WriteH5Group(
+  hfile <- WriteH5Group(
     x = x[[]], 
     name = 'meta.data', 
     group = "/",
     hfile = hfile,
     verbose = verbose)
-  WriteH5Group(
+  hfile <- WriteH5Group(
     x = colnames(x = x),
     name = 'cell.names',
     group = "/",
     hfile = hfile,
     verbose = verbose
   )
-  WriteH5Group(
+  hfile <- WriteH5Group(
     x = Idents(object = x),
     name = 'active.ident',
     group = "/",
@@ -293,7 +293,7 @@ as.h5Seurat.Seurat <- function(
   )
   # Add SeuratCommands
   for (cmd in Command(object = x)) {
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = x[[cmd]],
       name = cmd,
       group = '/commands',
@@ -303,7 +303,7 @@ as.h5Seurat.Seurat <- function(
   }
   # Add miscellaneous data
   for (misc in names(x = Misc(object = x))) {
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = Misc(object = x, slot = misc),
       name = misc,
       group = '/misc',
@@ -313,7 +313,7 @@ as.h5Seurat.Seurat <- function(
   }
   # Add tool data
   for (tool in Tool(object = x)) {
-    WriteH5Group(
+    hfile <- WriteH5Group(
       x = Tool(object = x, slot = tool),
       name = tool,
       group = '/tools',
