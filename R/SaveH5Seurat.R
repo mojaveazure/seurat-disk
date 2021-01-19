@@ -209,7 +209,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = x[[assay]],
       name = assay,
-      group = 'assays',
+      group = '/assays',
       hfile = hfile, 
       verbose = verbose
     )
@@ -219,7 +219,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = x[[reduc]],
       name = reduc,
-      group = 'reductions',
+      group = '/reductions',
       hfile = hfile,
       verbose = verbose
     )
@@ -230,7 +230,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = x[[neighbor]],
       name = neighbor,
-      group = 'neighbors',
+      group = '/neighbors',
       hfile = hfile,
       verbose = verbose
     )
@@ -246,7 +246,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = x[[graph]],
       name = graph,
-      group = 'graphs',
+      group = '/graphs',
       hfile = hfile,
       verbose = verbose
     )
@@ -264,7 +264,7 @@ as.h5Seurat.Seurat <- function(
       WriteH5Group(
         x = x[[image]],
         name = image,
-        group = 'images',
+        group = '/images',
         hfile = hfile,
         verbose = verbose
       )
@@ -274,20 +274,20 @@ as.h5Seurat.Seurat <- function(
   WriteH5Group(
     x = x[[]], 
     name = 'meta.data', 
-    group = NULL,
+    group = "/",
     hfile = hfile,
     verbose = verbose)
   WriteH5Group(
     x = colnames(x = x),
     name = 'cell.names',
-    group = NULL,
+    group = "/",
     hfile = hfile,
     verbose = verbose
   )
   WriteH5Group(
     x = Idents(object = x),
     name = 'active.ident',
-    group = NULL,
+    group = "/",
     hfile = hfile,
     verbose = verbose
   )
@@ -296,7 +296,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = x[[cmd]],
       name = cmd,
-      group = 'commands',
+      group = '/commands',
       hfile = hfile,
       verbose = verbose
     )
@@ -306,7 +306,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = Misc(object = x, slot = misc),
       name = misc,
-      group = 'misc',
+      group = '/misc',
       hfile = hfile,
       verbose = verbose
     )
@@ -316,7 +316,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = Tool(object = x, slot = tool),
       name = tool,
-      group = 'tools',
+      group = '/tools',
       hfile = hfile,
       verbose = verbose
     )
