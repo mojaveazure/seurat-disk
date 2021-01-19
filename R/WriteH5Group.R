@@ -104,7 +104,7 @@ ImageWrite <- function(x, name, hgroup, verbose = TRUE) {
 #' @return Invisibly returns \code{NULL}
 #'
 #' @keywords internal
-#'
+#' @import HDF5Array
 # SparseWrite <- function(x, name, hgroup, verbose = TRUE) {
 #   xgroup <- hgroup$create_group(name = name)
 #   datasets <- c('indices' = 'i', 'indptr' = 'p', 'data' = 'x')
