@@ -209,7 +209,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = x[[assay]],
       name = assay,
-      hgroup = hfile[['assays']],
+      group = 'assays',
       hfile = hfile, 
       verbose = verbose
     )
@@ -219,7 +219,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = x[[reduc]],
       name = reduc,
-      hgroup = hfile[['reductions']],
+      group = 'reductions',
       hfile = hfile,
       verbose = verbose
     )
@@ -230,7 +230,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = x[[neighbor]],
       name = neighbor,
-      hgroup = hfile[['neighbors']],
+      group = 'neighbors',
       hfile = hfile,
       verbose = verbose
     )
@@ -246,7 +246,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = x[[graph]],
       name = graph,
-      hgroup = hfile[['graphs']],
+      group = 'graphs',
       hfile = hfile,
       verbose = verbose
     )
@@ -264,25 +264,30 @@ as.h5Seurat.Seurat <- function(
       WriteH5Group(
         x = x[[image]],
         name = image,
-        hgroup = hfile[['images']],
+        group = 'images',
         hfile = hfile,
         verbose = verbose
       )
     }
   }
   # Add metadata, cell names, and identity classes
-  WriteH5Group(x = x[[]], name = 'meta.data', hgroup = hfile,hfile = hfile, verbose = verbose)
+  WriteH5Group(
+    x = x[[]], 
+    name = 'meta.data', 
+    group = NULL,
+    hfile = hfile,
+    verbose = verbose)
   WriteH5Group(
     x = colnames(x = x),
     name = 'cell.names',
-    hgroup = hfile,
+    group = NULL,
     hfile = hfile,
     verbose = verbose
   )
   WriteH5Group(
     x = Idents(object = x),
     name = 'active.ident',
-    hgroup = hfile,
+    group = NULL,
     hfile = hfile,
     verbose = verbose
   )
@@ -291,7 +296,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = x[[cmd]],
       name = cmd,
-      hgroup = hfile[['commands']],
+      group = 'commands',
       hfile = hfile,
       verbose = verbose
     )
@@ -301,7 +306,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = Misc(object = x, slot = misc),
       name = misc,
-      hgroup = hfile[['misc']],
+      group = 'misc',
       hfile = hfile,
       verbose = verbose
     )
@@ -311,7 +316,7 @@ as.h5Seurat.Seurat <- function(
     WriteH5Group(
       x = Tool(object = x, slot = tool),
       name = tool,
-      hgroup = hfile[['tools']],
+      group = 'tools',
       hfile = hfile,
       verbose = verbose
     )
