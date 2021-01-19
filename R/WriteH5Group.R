@@ -18,11 +18,6 @@ NULL
 #' @keywords internal
 #'
 BasicWrite <- function(x, name, group, hfile = hfile, verbose = TRUE) {
-  if (group != "/") {
-    hgroup <- hfile[[group]]
-  } else {
-    hgroup <- hfile
-  }
   if (is.data.frame(x = x)) {
     hfile <- WriteH5Group(x = x, name = name, group = group, hfile = hfile, verbose = verbose)
   } else if (is.list(x = x)) {
@@ -37,6 +32,8 @@ BasicWrite <- function(x, name, group, hfile = hfile, verbose = TRUE) {
         verbose = verbose
       )
     }
+    hgroup <- hfile[[group]]
+    xgroup <- hfile[[paste0(group, "/", name)]]
     if (!is.null(x = names(x = x)) && length(x = names(x = x))) {
       xgroup$create_attr(
         attr_name = "names",
@@ -71,11 +68,7 @@ ImageWrite <- function(x, name, group, hfile, verbose = TRUE) {
       call. = FALSE
     )
   }
-  if (group != "/") {
-    hgroup <- hfile[[group]]
-  } else {
-    hgroup <- hfile
-  }
+  hgroup <- hfile[[group]]
   xgroup <- hgroup$create_group(name = name)
   # Add assay, globality, and class information
   xgroup$create_attr(
@@ -116,11 +109,7 @@ ImageWrite <- function(x, name, group, hfile, verbose = TRUE) {
 #' @import HDF5Array
 #'
 SparseWrite <- function(x, name, group, hfile, verbose = TRUE) {
-  if (group != "/") {
-    hgroup <- hfile[[group]]
-  } else {
-    hgroup <- hfile
-  }
+  hgroup <- hfile[[group]]
   filename <- hfile$get_filename()
   hfile$close_all()
   writeTENxMatrix(x = x, filepath = filename, group = paste0(group, "/", name), verbose = verbose)
@@ -192,7 +181,6 @@ setMethod(
   f = "WriteH5Group",
   signature = c(x = "ANY"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
-    if (group != "/") {
       tryCatch(
         expr = {
           hgroup <- hfile[[group]]
@@ -204,15 +192,10 @@ setMethod(
           )
         }
       )
-    }
     if (inherits(x = x, what = "SpatialImage")) {
       hfile <- ImageWrite(x = x, name = name, group = group, hfile = hfile, verbose = verbose)
     } else if (isS4(x)) {
-      if (group != "/") {
-        hgroup <- hfile[[group]]
-      } else {
-        hgroup <- hfile
-      }
+      hgroup <- hfile[[group]]
       xgroup <- hgroup$create_group(name = name)
       classdef <- attr(x = S4ToList(object = x), which = "classDef")
       xgroup$create_attr(
@@ -258,12 +241,6 @@ setMethod(
   f = "WriteH5Group",
   signature = c("x" = "Assay"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
-    if (group != "/") {
-      hgroup <- hfile[[group]]
-    } else {
-      hgroup <- hfile
-    }
-    xgroup <- hgroup$create_group(name = name)
     # Write out expression data
     # TODO: determine if empty matrices should be present
     for (i in c("counts", "data", "scale.data")) {
@@ -294,6 +271,8 @@ setMethod(
       verbose = verbose
     )
     # Write out the key
+    hgroup <- hfile[[group]]
+    xgroup <- hgroup$create_group(name = name)
     xgroup$create_attr(
       attr_name = "key",
       robj = Key(object = x),
@@ -341,6 +320,7 @@ setMethod(
     if (class(x = x)[1] != "Assay") {
       # extclass <- GetClass(class = class(x = x))
       extclass <- attr(x = SeuratObject::S4ToList(object = x), which = "classDef")
+      xgroup <- hfile[[paste0(group, "/", name)]]
       xgroup$create_attr(
         attr_name = "s4class",
         robj = extclass,
@@ -413,12 +393,8 @@ setMethod(
       FUN.VALUE = logical(length = 1L),
       USE.NAMES = FALSE
     )
+    hgroup <- hfile[[group]]
     if (any(factor.cols) || getOption(x = "SeuratDisk.dtypes.dataframe_as_group", default = FALSE)) {
-      if (group != "/") {
-        hgroup <- hfile[[group]]
-      } else {
-        hgroup <- hfile
-      }
       xgroup <- hgroup$create_group(name = name)
       for (i in colnames(x = x)) {
         hfile <- WriteH5Group(
@@ -429,6 +405,7 @@ setMethod(
           verbose = verbose
         )
       }
+      xgroup <- hfile[[paste0(group, "/", name)]]
       xgroup$create_attr(
         attr_name = "colnames",
         robj = intersect(x = colnames(x = x), y = names(x = xgroup)),
@@ -477,11 +454,7 @@ setMethod(
   f = "WriteH5Group",
   signature = c("x" = "DimReduc"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
-    if (group != "/") {
-      hgroup <- hfile[[group]]
-    } else {
-      hgroup <- hfile
-    }
+    hgroup <- hfile[[group]]
     xgroup <- hgroup$create_group(name = name)
     # Add cell embeddings
     if (verbose) {
@@ -518,6 +491,7 @@ setMethod(
         message("No ", type, " for ", name)
       }
     }
+    xgroup <- hfile[[paste0(group, "/", name)]]
     # Add assay, key, and global status
     xgroup$create_attr(
       attr_name = "active.assay",
@@ -594,11 +568,7 @@ setMethod(
   f = "WriteH5Group",
   signature = c("x" = "factor"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
-    if (group != "/") {
-      hgroup <- hfile[[group]]
-    } else {
-      hgroup <- hfile
-    }
+    hgroup <- hfile[[group]]
     xgroup <- hgroup$create_group(name = name)
     # Write the integer values out
     hfile <- WriteH5Group(
@@ -629,11 +599,7 @@ setMethod(
   signature = c("x" = "Graph"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
     hfile <- SparseWrite(x = x, name = name, group = group, hfile, verbose = verbose)
-    if (group != "/") {
-      hgroup <- hfile[[group]]
-    } else {
-      hgroup <- hfile
-    }
+    hgroup <- hfile[[group]]
     if (!is.null(x = DefaultAssay(object = x))) {
       hgroup[[name]]$create_attr(
         attr_name = "assay.used",
@@ -679,11 +645,7 @@ setMethod(
       hfile = hfile,
       verbose = verbose
     )
-    if (group != "/") {
-      hgroup <- hfile[[group]]
-    } else {
-      hgroup <- hfile
-    }
+    hgroup <- hfile[[group]]
     hgroup[[name]]$create_attr(
       attr_name = "s3class",
       robj = "logical",
@@ -701,11 +663,7 @@ setMethod(
   f = "WriteH5Group",
   signature = c("x" = "Neighbor"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
-    if (group != "/") {
-      hgroup <- hfile[[group]]
-    } else {
-      hgroup <- hfile
-    }
+    hgroup <- hfile[[group]]
     xgroup <- hgroup$create_group(name = name)
     for (i in slotNames(x = x)) {
       if (i == "alg.idx" && !is.null(x = slot(object = x, name = i))) {
@@ -756,11 +714,7 @@ setMethod(
       slot.val <- slot(object = x, name = slot)
       if (!is.null(x = slot.val)) {
         slot.val <- as.character(x = slot.val)
-        if (group != "/") {
-          hgroup <- hfile[[group]]
-        } else {
-          hgroup <- hfile
-        }
+        hgroup <- hfile[[group]]
         hgroup[[name]]$create_attr(
           attr_name = slot,
           robj = slot.val,
