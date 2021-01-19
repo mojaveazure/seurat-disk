@@ -181,17 +181,17 @@ setMethod(
   f = "WriteH5Group",
   signature = c(x = "ANY"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
-      tryCatch(
-        expr = {
-          hgroup <- hfile[[group]]
-        },
-        error = function(...) {
-          stop(
-            "Unable to find the group [", group, "] in the HDF5 file",
-            call. = FALSE
-          )
-        }
-      )
+    tryCatch(
+      expr = {
+        hgroup <- hfile[[group]]
+      },
+      error = function(...) {
+        stop(
+          "Unable to find the group [", group, "] in the HDF5 file",
+          call. = FALSE
+        )
+      }
+    )
     if (inherits(x = x, what = "SpatialImage")) {
       hfile <- ImageWrite(x = x, name = name, group = group, hfile = hfile, verbose = verbose)
     } else if (isS4(x)) {
