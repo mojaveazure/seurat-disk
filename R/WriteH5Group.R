@@ -127,7 +127,7 @@ SparseWrite <- function(x, name, group, hfile, verbose = TRUE) {
   }
   filename <- hfile$get_filename()
   hfile$close_all()
-  writeTENxMatrix(x = x, filepath = filename, group = name, verbose = TRUE)
+  writeTENxMatrix(x = x, filepath = filename, group = name, verbose = FALSE)
   hfile <- hdf5r::H5File$new(filename = filename, mode = "r+")
   xgroup <- hfile[[name]]
   xgroup$create_attr(
@@ -136,7 +136,7 @@ SparseWrite <- function(x, name, group, hfile, verbose = TRUE) {
     dtype = GuessDType(dim(x = x))
   )
   xgroup$close()
-  assign("hgroup", hgroup, envir = .GlobalEnv) 
+  assign("hgroup", hgroup, envir = .GenericArgsEnv) 
   return(invisible(x = NULL))
 }
 
