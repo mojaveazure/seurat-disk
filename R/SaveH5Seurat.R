@@ -247,8 +247,9 @@ as.h5Seurat.Seurat <- function(
     )
   }
   # Add attributes for project and default assay
-  Project(object = hfile) <- Project(object = x)
-  DefaultAssay(object = hfile) <- DefaultAssay(object = x)
+  h5attr(x = hfile, which = "project") <- Project(object = x)
+  h5attr(x = hfile, which = "active.assay") <- DefaultAssay(object = x)
+  
   # Add Images
   if (package_version(x = object.version) >= package_version(x = spatial.version)) {
     # Older versions of Seurat don't have Images, call directly instead
