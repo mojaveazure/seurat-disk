@@ -18,17 +18,18 @@ NULL
 #'
 #' @keywords internal
 #'
-BasicWrite <- function(x, name, hgroup, verbose = TRUE) {
+BasicWrite <- function(x, name, group,hfile = hfile, verbose = TRUE) {
   if (is.data.frame(x = x)) {
-    WriteH5Group(x = x, name = name, hgroup = hgroup, verbose = verbose)
+    WriteH5Group(x = x, name = name, group = group, hfile = hfile, verbose = verbose)
   } else if (is.list(x = x)) {
     x <- PadNames(x = x)
+    hgroup <- hfile[[group]]
     xgroup <- hgroup$create_group(name = name)
     for (i in seq_along(along.with = x)) {
       WriteH5Group(
         x = x[[i]],
         name = names(x = x)[i],
-        hgroup = xgroup,
+        group = paste0(,"/",) xgroup,
         verbose = verbose
       )
     }
@@ -107,9 +108,9 @@ ImageWrite <- function(x, name, hgroup, verbose = TRUE) {
 #'
 #' @import HDF5Array
 #'
-SparseWrite <- function(x, name, hgroup, verbose = TRUE) {
-  filename <- hgroup$get_filename()
-  hgroup$close_all()
+SparseWrite <- function(x, name, hgroup,hfile, verbose = TRUE) {
+  filename <- hfile$get_filename()
+  hfile$close_all()
   writeTENxMatrix(x = x, filepath = filename, group = name,verbose = TRUE)
   hgroup <- hdf5r::H5File$new(filename = filename, mode = 'r+')
   xgroup <- hgroup[[name]]
