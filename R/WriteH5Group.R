@@ -124,10 +124,9 @@ ImageWrite <- function(x, name, hgroup, verbose = TRUE) {
 #   return(invisible(x = NULL))
 # }
 SparseWrite <- function(x, name, hgroup, verbose = TRUE) {
-  xgroup <- hgroup$create_group(name = name)
   filepath <- hgroup$filename
   writeTENxMatrix(x = x, filepath = filepath, group = name,verbose = FALSE)
-  xgroup$create_attr(
+  hgroup$create_attr(
     attr_name = 'dims',
     robj = dim(x = x),
     dtype = GuessDType(dim(x = x))
