@@ -137,7 +137,6 @@ SparseWrite <- function(x, name, group, hfile, verbose = TRUE) {
   )
   xgroup$close()
   env <- parent.env(environment())
-  warning(paste0(environmentName(env)))
   assign("hgroup", hgroup, envir = env) 
   return(invisible(x = NULL))
 }
