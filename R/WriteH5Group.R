@@ -14,7 +14,6 @@ NULL
 #'
 #' @inheritParams WriteH5Group
 #'
-#' @return Invisibly returns \code{NULL}
 #'
 #' @keywords internal
 #'
@@ -62,7 +61,6 @@ BasicWrite <- function(x, name, group, hfile = hfile, verbose = TRUE) {
 #'
 #' @inheritParams WriteH5Group
 #'
-#' @return Invisibly returns \code{NULL}
 #'
 #' @keywords internal
 #'
@@ -113,8 +111,6 @@ ImageWrite <- function(x, name, group, hfile, verbose = TRUE) {
 #'
 #' @inheritParams WriteH5Group
 #'
-#' @return Invisibly returns \code{NULL}
-#'
 #' @keywords internal
 #'
 #' @import HDF5Array
@@ -161,7 +157,7 @@ SparseWrite <- function(x, name, group, hfile, verbose = TRUE) {
 #' from hdf5r)
 #' @param verbose Show progress updates
 #'
-#' @return Invisibly returns \code{NULL}
+
 #'
 #' @export
 #'
