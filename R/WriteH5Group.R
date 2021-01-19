@@ -123,7 +123,7 @@ SparseWrite <- function(x, name, group, hfile, verbose = TRUE) {
   }
   filename <- hfile$get_filename()
   hfile$close_all()
-  writeTENxMatrix(x = x, filepath = filename, group = name, verbose = verbose)
+  writeTENxMatrix(x = x, filepath = filename, group = paste0(group, "/", name), verbose = verbose)
   hfile <- hdf5r::H5File$new(filename = filename, mode = "r+")
   xgroup <- hfile[[name]]
   xgroup$create_attr(
