@@ -241,6 +241,7 @@ setMethod(
   f = "WriteH5Group",
   signature = c("x" = "Assay"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
+    xgroup <- hfile[[group]]$create_group(name = name)
     # Write out expression data
     # TODO: determine if empty matrices should be present
     for (i in c("counts", "data", "scale.data")) {
@@ -271,8 +272,7 @@ setMethod(
       verbose = verbose
     )
     # Write out the key
-    hgroup <- hfile[[group]]
-    xgroup <- hgroup$create_group(name = name)
+    xgroup <- hfile[[paste0(group, "/", name)]]
     xgroup$create_attr(
       attr_name = "key",
       robj = Key(object = x),
