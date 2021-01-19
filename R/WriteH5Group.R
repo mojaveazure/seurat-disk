@@ -632,7 +632,7 @@ setMethod(
   f = "WriteH5Group",
   signature = c("x" = "Graph"),
   definition = function(x, name, group, hfile, verbose = TRUE) {
-    hfile <- SparseWrite(x = x, name = name, group = group, hfile, verbose = verbose)
+    SparseWrite(x = x, name = name, group = group, hfile, verbose = verbose)
     if (group != "/") {
       hgroup <- hfile[[group]]
     } else {
