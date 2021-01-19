@@ -19,7 +19,7 @@ The h5Seurat file format is specifically designed for the storage
 \section{Package options}{
 
 
-SeuratDisk uses the following options to control behaviour, users can configure
+SeuratDisk uses the following options to control behavior, users can configure
 these with \code{\link[base]{options}}:
 
 \describe{
@@ -40,6 +40,9 @@ these with \code{\link[base]{options}}:
    \item{first}{Chunk along the first dimension}
    \item{last}{Chunk along the last dimension}
   }
+ }
+ \item{\code{SeuratDisk.dimreducs.allglobal}}{
+  Treat all DimReducs as global, regardless of actual global status
  }
 }
 }

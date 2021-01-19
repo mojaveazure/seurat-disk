@@ -166,8 +166,8 @@ setMethod(
 setMethod(
   f = 'as.list',
   signature = c('x' = 'H5Group'),
-  definition = function(x, ...) {
-    list.names <- names(x = x)
+  definition = function(x, which = NULL, ...) {
+    list.names <- which %||% names(x = x)
     if (x$attr_exists(attr_name = 'names')) {
       list.order <- h5attr(x = x, which = 'names')
       missing.names <- setdiff(x = list.order, y = list.names)
@@ -217,23 +217,25 @@ setMethod(
     if (x$attr_exists(attr_name = 's3class')) {
       data <- structure(.Data = data, class = h5attr(x = x, which = 's3class'))
     } else if (x$attr_exists(attr_name = 's4class')) {
-      class <- h5attr(x = x, which = 's4class')
-      if (grepl(pattern = ':', x = class)) {
-        classdef <- unlist(x = strsplit(x = class, split = ':'))
-        classpkg <- classdef[1]
-        class <- classdef[2]
-        try(
-          expr = class <- with_package(
-            package = classpkg,
-            code = getClass(Class = class)
-          ),
-          silent = TRUE
-        )
-      }
-      try(
-        expr = data <- do.call(what = 'new', args = c('Class' = class, data)),
-        silent = TRUE
-      )
+      # browser()
+      attr(x = data, which = 'classDef') <- h5attr(x = x, which = 's4class')
+      data <- SeuratObject::ListToS4(x = data)
+      # if (grepl(pattern = ':', x = class)) {
+      #   classdef <- unlist(x = strsplit(x = class, split = ':'))
+      #   classpkg <- classdef[1]
+      #   class <- classdef[2]
+      #   try(
+      #     expr = class <- with_package(
+      #       package = classpkg,
+      #       code = getClass(Class = class)
+      #     ),
+      #     silent = TRUE
+      #   )
+      # }
+      # try(
+      #   expr = data <- do.call(what = 'new', args = c('Class' = class, data)),
+      #   silent = TRUE
+      # )
     }
     return(data)
   }
@@ -315,12 +317,21 @@ as.sparse.H5Group <- function(x, ...) {
       dims = h5attr(x = x, which = 'dims')
     ))
   }
-  if (x$attr_exists(attr_name = 'h5sparse_shape')) {
+  # Because AnnData likes changing stuff
+  adata.shape <- vapply(
+    X = c('h5sparse_shape', 'shape'),
+    FUN = x$attr_exists,
+    FUN.VALUE = logical(length = 1L)
+  )
+  if (any(adata.shape)) {
     return(sparseMatrix(
       i = x[['indices']][] + 1,
       p = x[['indptr']][],
       x = x[['data']][],
-      dims = rev(x = h5attr(x = x, which = 'h5sparse_shape'))
+      dims = rev(x = h5attr(
+        x = x,
+        which = names(x = which(x = adata.shape))[1]
+      ))
     ))
   }
   return(sparseMatrix(

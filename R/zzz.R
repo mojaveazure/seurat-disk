@@ -10,7 +10,7 @@ NULL
 #'
 #' @section Package options:
 #'
-#' SeuratDisk uses the following options to control behaviour, users can configure
+#' SeuratDisk uses the following options to control behavior, users can configure
 #' these with \code{\link[base]{options}}:
 #'
 #' \describe{
@@ -32,6 +32,9 @@ NULL
 #'    \item{last}{Chunk along the last dimension}
 #'   }
 #'  }
+#'  \item{\code{SeuratDisk.dimreducs.allglobal}}{
+#'   Treat all DimReducs as global, regardless of actual global status
+#'  }
 #' }
 #'
 #' @aliases SeuratDisk
@@ -45,7 +48,8 @@ NULL
 default.options <- list(
   "SeuratDisk.dtypes.logical_to_int" = TRUE,
   "SeuratDisk.dtypes.dataframe_as_group" = TRUE,
-  "SeuratDisk.chunking.MARGIN" = c("largest", "smallest", "first", "last")
+  "SeuratDisk.chunking.MARGIN" = c("largest", "smallest", "first", "last"),
+  "SeuratDisk.dimreducs.allglobal" = FALSE
 )
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

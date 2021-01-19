@@ -7,8 +7,8 @@ NULL
 
 #' Assemble an object from an h5Seurat file
 #'
-#' @param assay,reduction,graph,image,cmd Name of assay, reduction, graph,
-#' image, or command to load
+#' @param assay,reduction,graph,image,neighbor,cmd Name of assay, reduction,
+#' graph, image, neighbor, or command to load
 #' @param file A connected h5Seurat file to pull the data from
 #' @param verbose Show progress updates
 #'
@@ -108,6 +108,29 @@ AssembleAssay <- function(assay, file, slots = NULL, verbose = TRUE) {
       message("Adding miscellaneous information for ", assay)
     }
     slot(object = obj, name = 'misc') <- as.list(x = assay.group[['misc']])
+  }
+  if (assay.group$attr_exists(attr_name = 's4class')) {
+    classdef <- unlist(x = strsplit(
+      x = h5attr(x = assay.group, which = 's4class'),
+      split = ':'
+    ))
+    pkg <- classdef[1]
+    cls <- classdef[2]
+    formal <- methods::getClassDef(Class = cls, package = pkg, inherits = FALSE)
+    missing <- setdiff(
+      x = slotNames(x = formal),
+      y = slotNames(x = methods::getClass(Class = 'Assay'))
+    )
+    missing <- sapply(
+      X = missing,
+      FUN = function(x) {
+        return(as.list(x = assay.group[[x]]))
+      },
+      simplify = FALSE
+    )
+    obj <- c(SeuratObject::S4ToList(object = obj), missing)
+    attr(x = obj, which = 'classDef') <- paste(classdef, collapse = ':')
+    obj <- SeuratObject::ListToS4(x = obj)
   }
   return(obj)
 }
@@ -240,6 +263,21 @@ AssembleImage <- function(image, file, verbose = TRUE) {
       DefaultAssay(object = obj) <- assay
     }
   }
+  return(obj)
+}
+
+#' @importClassesFrom Seurat Neighbor
+#'
+#' @rdname AssembleObject
+#'
+AssembleNeighbor <- function(neighbor, file, verbose = TRUE) {
+  neighbor.group <- file[['neighbors']][[neighbor]]
+  obj <- new(
+    Class = 'Neighbor',
+    nn.idx =  as.matrix(x = neighbor.group[["nn.idx"]]),
+    nn.dist = as.matrix(x = neighbor.group[["nn.dist"]]),
+    cell.names =  as.matrix(x = neighbor.group[["cell.names"]])[,1]
+  )
   return(obj)
 }
 

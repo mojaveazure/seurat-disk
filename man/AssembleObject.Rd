@@ -6,6 +6,7 @@
 \alias{AssembleDimReduc}
 \alias{AssembleGraph}
 \alias{AssembleImage}
+\alias{AssembleNeighbor}
 \alias{AssembleSeuratCommand}
 \title{Assemble an object from an h5Seurat file}
 \usage{
@@ -17,11 +18,13 @@ AssembleGraph(graph, file, verbose = TRUE)
 
 AssembleImage(image, file, verbose = TRUE)
 
+AssembleNeighbor(neighbor, file, verbose = TRUE)
+
 AssembleSeuratCommand(cmd, file, verbose = TRUE)
 }
 \arguments{
-\item{assay, reduction, graph, image, cmd}{Name of assay, reduction, graph,
-image, or command to load}
+\item{assay, reduction, graph, image, neighbor, cmd}{Name of assay, reduction,
+graph, image, neighbor, or command to load}
 
 \item{file}{A connected h5Seurat file to pull the data from}
 
