@@ -151,7 +151,7 @@ as.h5Seurat.H5File <- function(x, ...) {
 #' @importFrom tools file_ext
 #' @importFrom Seurat Project Assays Reductions DefaultAssay<- DefaultAssay
 #' Idents Command Misc Tool 
-#' @importFrom hdf5r h5attr
+#' @import hdf5r
 #'
 #' @rdname SaveH5Seurat
 #' @method as.h5Seurat Seurat
