@@ -151,7 +151,7 @@ as.h5Seurat.H5File <- function(x, ...) {
 #' @importFrom tools file_ext
 #' @importFrom Seurat Project Assays Reductions DefaultAssay<- DefaultAssay
 #' Idents Command Misc Tool 
-#' @importFrom hdf5r h5attr
+#' @importFrom hdf5r h5attr<-
 #'
 #' @rdname SaveH5Seurat
 #' @method as.h5Seurat Seurat
@@ -248,8 +248,8 @@ as.h5Seurat.Seurat <- function(
     )
   }
   # Add attributes for project and default assay
-  hdf5r::h5attr(x = hfile, which = "project") <- Project(object = x)
-  hdf5r::h5attr(x = hfile, which = "active.assay") <- DefaultAssay(object = x)
+  h5attr(x = hfile, which = "project") <- Project(object = x)
+  h5attr(x = hfile, which = "active.assay") <- DefaultAssay(object = x)
   
   # Add Images
   if (package_version(x = object.version) >= package_version(x = spatial.version)) {
