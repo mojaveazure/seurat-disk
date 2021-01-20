@@ -248,8 +248,8 @@ as.h5Seurat.Seurat <- function(
     )
   }
   # Add attributes for project and default assay
-  h5attr(x = hfile, which = "project") <- Project(object = x)
-  h5attr(x = hfile, which = "active.assay") <- DefaultAssay(object = x)
+  hdf5r::h5attr(x = hfile, which = "project") <- Project(object = x)
+  hdf5r::h5attr(x = hfile, which = "active.assay") <- DefaultAssay(object = x)
   
   # Add Images
   if (package_version(x = object.version) >= package_version(x = spatial.version)) {
