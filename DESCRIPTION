@@ -1,8 +1,8 @@
 Package: SeuratDisk
 Type: Package
 Title: Interfaces for HDF5-Based Single Cell File Formats
-Version: 0.0.0.9014
-Date: 2021-01-11
+Version: 0.0.0.9015
+Date: 2021-01-21
 Authors@R: c(
   person(given = 'Paul', family = 'Hoffman', email = 'phoffman@nygenome.org', role = c('aut', 'cre'), comment = c(ORCID = '0000-0002-7693-8957')),
   person(given = 'Rahul', family = 'Satija', email = 'rsatija@nygenome.org', role = 'ctb', comment = c(ORCID = '0000-0001-9448-8833'))
