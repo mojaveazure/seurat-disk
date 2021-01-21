@@ -637,7 +637,6 @@ PB <- function() {
 #' }
 #'
 RandomName <- function(length = 5L, ...) {
-  # CheckDots(..., fxns = "sample")
   return(paste(sample(x = letters, size = length, ...), collapse = ""))
 }
 
@@ -843,6 +842,7 @@ WriteMode <- function(overwrite = FALSE) {
   # setOldClass(Classes = c('scdisk', 'h5Seurat', 'loom'))
   setOldClass(Classes = c('scdisk', 'h5Seurat'))
   RegisterSCDisk(r6class = h5Seurat)
+  RegisterSCDisk(r6class = loom)
   # Set some default options
   op <- options()
   toset <- !names(x = default.options) %in% names(x = op)

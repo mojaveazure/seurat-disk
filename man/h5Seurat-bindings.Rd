@@ -37,17 +37,6 @@
 
 \method{Stdev}{h5Seurat}(object, reduction = "pca")
 }
-\arguments{
-\item{x}{An object}
-
-\item{object}{An object}
-
-\item{...}{Arguments passed to other methods}
-
-\item{value}{Name of assay to set as default}
-
-\item{reduction}{Name of reduction to use}
-}
 \description{
 Seurat bindings for h5Seurat files
 }

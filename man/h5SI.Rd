@@ -12,8 +12,6 @@
 }
 \arguments{
 \item{x, object}{An h5Seurat index (\code{h5SI})}
-
-\item{...}{Arguments passed to other methods}
 }
 \value{
 \code{DefaultAssay}: the assay set as the default assay

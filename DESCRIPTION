@@ -1,8 +1,8 @@
 Package: SeuratDisk
 Type: Package
 Title: Interfaces for HDF5-Based Single Cell File Formats
-Version: 0.0.0.9014
-Date: 2021-01-11
+Version: 0.0.0.9015
+Date: 2021-01-21
 Authors@R: c(
   person(given = 'Paul', family = 'Hoffman', email = 'phoffman@nygenome.org', role = c('aut', 'cre'), comment = c(ORCID = '0000-0002-7693-8957')),
   person(given = 'Rahul', family = 'Satija', email = 'rsatija@nygenome.org', role = 'ctb', comment = c(ORCID = '0000-0001-9448-8833'))
@@ -32,32 +32,37 @@ Imports:
   methods (>= 3.6.0),
   R6 (>= 2.4.1),
   rlang (>= 0.4.4),
-  Seurat (>= 3.1.2),
+  Seurat (>= 3.2.0),
   SeuratObject (>= 4.0.0),
   stats,
+  stringi (>= 1.4.6),
   tools,
   utils,
   withr (>= 2.1.2)
 Collate:
-    'GetObject.R'
     'zzz.R'
+    'GetObject.R'
     'AssembleObject.R'
     'AppendData.R'
+    'TestObject.R'
+    'TestH5.R'
+    'h5info.R'
     'scdisk.R'
     'h5Seurat.R'
     'Connect.R'
-    'TestObject.R'
-    'TestH5.R'
     'PadMatrix.R'
     'sparse_matrix.R'
     'Transpose.R'
     'Convert.R'
     'LoadH5Seurat.R'
+    'loom.R'
+    'loom_bindings.R'
+    'LoadLoom.R'
     'ReadH5.R'
     'WriteH5Group.R'
     'SaveH5Seurat.R'
+    'SaveLoom.R'
     'h5Seurat_bindings.R'
-    'h5info.R'
 Suggests:
     httr,
     knitr,

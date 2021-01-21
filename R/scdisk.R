@@ -1,4 +1,5 @@
 #' @include zzz.R
+#' @include h5info.R
 #'
 NULL
 
@@ -82,6 +83,55 @@ scdisk <- R6Class(
       MARGIN <- GetMargin(dims = self[[dataset]]$dims, MARGIN = MARGIN)
       csize <- csize %||% self[[dataset]]$chunk_dims[MARGIN]
       return(ChunkPoints(dsize = self[[dataset]]$dims[MARGIN], csize = csize))
+    },
+    #' @description Add a timestamp to a dataset or group as an HDF5 attribute
+    #' @param name Name of dataset or group to add timestamp to; if \code{NULL},
+    #' timestamps the file as a whole
+    #' @param attr Name of attribute to store timestamp ass
+    #' @param tz,format See \code{\link{Timestamp}}
+    #' @return Invisilby returns the object
+    timestamp = function(
+      name = NULL,
+      attr = 'ts',
+      tz = 'UTC',
+      format = TSFormats(type = 'R')
+    ) {
+      if (isTRUE(x = Writeable(x = self, error = FALSE))) {
+        .NotYetImplemented()
+      }
+      return(invisible(x = self))
+    },
+    #' @description Retrieve a timestamp from a dataset or group
+    #' @param name Name of dataset or group to retrieve timestamp from; if
+    #' \code{NULL}, retrieves timestamp from at the file-level
+    #' @param attr Name of attribute to retrieve timestamp from
+    #' @param locale Change the timestamp of to the timezone of the locale
+    #' @param tz,format See \code{\link{Timestamp}}
+    #' @return A character with the timestamp
+    last.modified = function(
+      name = NULL,
+      attr = 'ts',
+      locale = TRUE,
+      tz = 'UTC',
+      format = TSFormats(type = 'R')
+    ) {
+      ds <- if (is.null(x = name)) {
+        self
+      } else {
+        if (!Exists(x = self, name = name)) {
+          stop("Cannot find a member named '", name, "'", call. = FALSE)
+        }
+        self[[name]]
+      }
+      if (!AttrExists(x = ds, name = attr)) {
+        stop("Cannot find the timestamp attribute", call. = FALSE)
+      }
+      return(FormatTime(
+        time = h5attr(x = ds, which = attr),
+        locale = locale,
+        tz = tz,
+        format = format
+      ))
     }
   ),
   private = list(
@@ -239,6 +289,51 @@ RegisterSCDisk <- function(r6class) {
 # Internal Functions
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+#' Create and work with timestamps
+#'
+#' @inheritParams base::strftime
+#' @param time A character timestamp
+#' @param locale Change the timestamp of to the timezone of the locale as
+#' determined by \code{\link[base]{Sys.timezone}}
+#'
+#' @return \code{FormatTime}: A character with the formated timestamp
+#'
+#' @name Timestamp
+#' @rdname Timestamp
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \donttest{
+#' # Get a timestamp format
+#' SeuratDisk:::TSFormats()
+#'
+#' # Create a timestamp
+#' SeuratDisk:::Timestamp()
+#'
+#' # Format a timestamp for easy viewing
+#' time <- "20200804T214148Z"
+#' SeuratDisk:::FormatTime(time)
+#' }
+#'
+FormatTime <- function(
+  time,
+  locale = TRUE,
+  tz = 'UTC',
+  format = TSFormats(type = 'R')
+) {
+  time <- as.POSIXct(x = strptime(
+    x = time,
+    format = format,
+    tz = tz
+  ))
+  return(format(
+    x = time,
+    tz = ifelse(test = isTRUE(x = locale), yes = Sys.timezone(), no = tz),
+    usetz = TRUE
+  ))
+}
+
 #' Does an R6 class inherit from scdisk
 #'
 #' @param r6class An \link[R6::R6Class]{R6 class generator} or a character name
@@ -269,4 +364,72 @@ IsSCDisk <- function(r6class) {
     return(IsSCDisk(r6class = r6class$get_inherit()))
   }
   return(FALSE)
+}
+
+#' @return \code{Timestamp}:A character with the current time in the
+#' specified format
+#'
+#' @rdname Timestamp
+#'
+Timestamp <- function(tz = 'UTC', format = TSFormats(type = 'R')) {
+  return(strftime(x = Sys.time(), format = format, tz = tz))
+}
+
+#' @param type Type of format to get, currently supports the following formats:
+#' \itemize{
+#'  \item \dQuote{R}
+#'  \item \dQuote{loom}
+#' }
+#' See \strong{Timestamp formats} below for more details
+#'
+#' @return \code{TSFormats}: Format for a specified type
+#'
+#' @rdname Timestamp
+#'
+#' @section Timestamp formats:
+#' The following formats can be provided by \code{TSFormats}:
+#' \subsection{R}{
+#'  A 24-hour R-friendly format; stores date/time information as the following:
+#'  \itemize{
+#'   \item Four-digit year (eg. \dQuote{2020} for the year 2020)
+#'   \item Two-digit month (eg. \dQuote{04} for the month of April)
+#'   \item Two-digit date (eg. \dQuote{02} for the second day of the month)
+#'   \item The letter \dQuote{T}
+#'   \item 24-hour two-digit time (eg. \dQuote{15} for 3:00 PM)
+#'   \item Two-digit minute (eg \dQuote{05} for five minutes past the hour)
+#'   \item Two-digit second (eg. \dQuote{05} for five seconds into the minute)
+#'   \item The letter \dQuote{Z}
+#'  }
+#'  This results in a timestamp format of \dQuote{YYYYMMDDTHHMMSS.SSSSSSZ} (eg.
+#'  \dQuote{20200402T150505Z} for April 4th, 2020 at 3:05:05 PM). \strong{Note}:
+#'  this is considered \dQuote{R-friendly} as it does \emph{not} use precise
+#'  values for seconds
+#' }
+#' \subsection{loom}{
+#'  The standard format for loom timestamps; stores date/time information as
+#'  the following:
+#'  \itemize{
+#'   \item Four-digit year (eg. \dQuote{2020} for the year 2020)
+#'   \item Two-digit month (eg. \dQuote{04} for the month of April)
+#'   \item Two-digit date (eg. \dQuote{02} for the second day of the month)
+#'   \item The letter \dQuote{T}
+#'   \item 24-hour two-digit time (eg. \dQuote{15} for 3:00 PM)
+#'   \item Two-digit minute (eg \dQuote{05} for five minutes past the hour)
+#'   \item Seconds precise to the millionth (six digits after the decimal)
+#'   \item The letter \dQuote{Z}
+#'  }
+#'  This results in a timestamp format of \dQuote{YYYYMMDDTHHMMSS.SSSSSSZ} (eg.
+#'  \dQuote{20200402T150505Z} for April 4th, 2020 at 3:05:05 PM). \strong{Note}:
+#'  this is \emph{not} considered \dQuote{R-friendly} as it contains precise
+#'  values for seconds. To properly format this time for pretty-printing, please
+#'  remember to strip the precise seconds
+#' }
+#'
+TSFormats <- function(type = c('R', 'loom')) {
+  type <- match.arg(arg = type)
+  return(switch(
+    EXPR = type,
+    'loom' = '%Y%m%dT%H%M%OS6Z',
+    '%Y%m%dT%H%M%SZ'
+  ))
 }
