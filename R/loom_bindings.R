@@ -33,3 +33,13 @@ DefaultAssay.loom <- function(object, ...) {
   )
   return(NULL)
 }
+
+#' @aliases dim
+#'
+#' @rdname loom-bindings
+#' @method dim loom
+#' @export
+#'
+dim.loom <- function(x) {
+  return(rev(x = x[['matrix']]$dims))
+}

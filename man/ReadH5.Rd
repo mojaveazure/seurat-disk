@@ -16,6 +16,7 @@
 \alias{as.matrix.H5D}
 \alias{as.matrix}
 \alias{as.matrix.H5Group}
+\alias{as.sparse.H5D}
 \alias{as.sparse.H5Group}
 \alias{as.sparse}
 \alias{dimnames.H5D}
@@ -30,13 +31,15 @@
 
 \S4method{as.factor}{H5Group}(x)
 
-\S4method{as.list}{H5Group}(x, ...)
+\S4method{as.list}{H5Group}(x, which = NULL, ...)
 
 \method{as.logical}{H5D}(x, ...)
 
 \method{as.matrix}{H5D}(x, transpose = FALSE, ...)
 
 \method{as.matrix}{H5Group}(x, ...)
+
+\method{as.sparse}{H5D}(x, verbose = TRUE, ...)
 
 \method{as.sparse}{H5Group}(x, ...)
 
@@ -79,6 +82,9 @@ data from the HDF5 dataset
 
 \code{as.matrix}, \code{H5D} method: returns a
 \code{\link[base]{matrix}} with the data from the HDF5 dataset
+
+\code{as.sparse}, \code{H5D} method: returns a sparse matrix with the
+data from the HDF5 dataset
 
 \code{as.sparse}, \code{as.matrix}, \code{H5Group} method: returns a
 \code{\link[Matrix]{sparseMatrix}} with the data from the HDF5 group

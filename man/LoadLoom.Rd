@@ -72,7 +72,7 @@ Load data from a loom file into a \code{\link[Seurat]{Seurat}} object
 }
 \details{
 \code{LoadLoom} will try to automatically fill slots of a \code{Seurat}
-object based on data presense or absence in a given loom file. This method
+object based on data presence or absence in a given loom file. This method
 varies by loom specification version. For version-specific details, see
 sections below
 }

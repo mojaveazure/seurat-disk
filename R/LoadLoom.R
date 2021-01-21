@@ -203,7 +203,7 @@ as.Seurat.loom <- function(
 #'
 #' @details
 #' \code{LoadLoom} will try to automatically fill slots of a \code{Seurat}
-#' object based on data presense or absence in a given loom file. This method
+#' object based on data presence or absence in a given loom file. This method
 #' varies by loom specification version. For version-specific details, see
 #' sections below
 #'
@@ -305,7 +305,7 @@ LoadLoom3.0 <- function(
     object <- SetAssayData(
       object = object,
       assay = assay,
-      slot = 'scaled.data',
+      slot = 'scale.data',
       new.data = scaled.data
     )
   }
@@ -314,16 +314,20 @@ LoadLoom3.0 <- function(
   meta.features <- as.data.frame(x = file[['row_attrs']])
   meta.features <- meta.features[, !colnames(x = meta.features) %in% mf.remove, drop = FALSE]
   rownames(x = meta.features) <- dnames$features
-  object[[assay]] <- AddMetaData(
-    object = object[[assay]],
-    metadata = meta.features
-  )
+  if (ncol(x = meta.features)) {
+    object[[assay]] <- AddMetaData(
+      object = object[[assay]],
+      metadata = meta.features
+    )
+  }
   # Load in cell-level metadata
   md.remove <- c(basename(path = cells))
   meta.data <- as.data.frame(x = file[['col_attrs']])
   meta.data <- meta.data[, !colnames(x = meta.data) %in% md.remove, drop = FALSE]
   rownames(x = meta.data) <- dnames$cells
-  object <- AddMetaData(object = object, metadata = meta.data)
+  if (ncol(x = meta.data)) {
+    object <- AddMetaData(object = object, metadata = meta.data)
+  }
   # TODO: Load in dimensional reductions?
   # TODO: Load in cell graphs
   for (i in names(x = file[['col_graphs']])) {

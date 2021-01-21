@@ -284,6 +284,46 @@ as.matrix.H5Group <- function(x, ...) {
   return(as.sparse(x = x, ...))
 }
 
+#' @importFrom Matrix Matrix
+#' @importFrom Seurat as.sparse
+#' @importFrom utils setTxtProgressBar
+#'
+#' @return \code{as.sparse}, \code{H5D} method: returns a sparse matrix with the
+#' data from the HDF5 dataset
+#'
+#' @rdname ReadH5
+#' @method as.sparse H5D
+#' @export
+#'
+as.sparse.H5D <- function(x, verbose = TRUE, ...) {
+  xdims <- x$dims
+  MARGIN <- GetMargin(dims = xdims)
+  chunk.points <- ChunkPoints(
+    dsize = xdims[MARGIN],
+    csize = x$chunk_dims[MARGIN]
+  )
+  mat <- Matrix(data = 0, nrow = xdims[1], ncol = xdims[2], sparse = TRUE)
+  dims <- vector(mode = 'list', length = 2L)
+  dims[[-MARGIN]] <- seq_len(length.out = xdims[-MARGIN])
+  if (isTRUE(x = verbose)) {
+    pb <- PB()
+  }
+  for (i in seq_len(length.out = nrow(x = chunk.points))) {
+    dims[[MARGIN]] <- seq.default(
+      from = chunk.points[i, 'start'],
+      to = chunk.points[i, 'end']
+    )
+    mat[dims[[1]], dims[[2]]] <- x$read(args = dims, drop = FALSE)
+    if (isTRUE(x = verbose)) {
+      setTxtProgressBar(pb = pb, value = i / nrow(x = chunk.points))
+    }
+  }
+  if (isTRUE(x = verbose)) {
+    close(con = pb)
+  }
+  return(as.sparse(x = mat))
+}
+
 #' @importFrom Seurat as.sparse
 #' @importFrom Matrix sparseMatrix
 #'

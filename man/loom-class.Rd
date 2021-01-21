@@ -22,6 +22,9 @@ A class for connections to loom files
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
+\item \href{#method-add_attribute}{\code{loom$add_attribute()}}
+\item \href{#method-add_graph}{\code{loom$add_graph()}}
+\item \href{#method-add_layer}{\code{loom$add_layer()}}
 \item \href{#method-version}{\code{loom$version()}}
 \item \href{#method-timestamp}{\code{loom$timestamp()}}
 \item \href{#method-last.modified}{\code{loom$last.modified()}}
@@ -105,6 +108,76 @@ A class for connections to loom files
 \out{</details>}
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_attribute"></a>}}
+\if{latex}{\out{\hypertarget{method-add_attribute}{}}}
+\subsection{Method \code{add_attribute()}}{
+Add an attribute
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{loom$add_attribute(x, name, type = c("global", "row", "col"))}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{Object to add as an attribute}
+
+\item{\code{name}}{Name to store attribute as}
+
+\item{\code{type}}{Type of attribute to add}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_graph"></a>}}
+\if{latex}{\out{\hypertarget{method-add_graph}{}}}
+\subsection{Method \code{add_graph()}}{
+Add a graph
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{loom$add_graph(x, name, type = c("col", "row"), verbose = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{...}
+
+\item{\code{name}}{...}
+
+\item{\code{type}}{...}
+
+\item{\code{verbose}}{...}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_layer"></a>}}
+\if{latex}{\out{\hypertarget{method-add_layer}{}}}
+\subsection{Method \code{add_layer()}}{
+Add a layer to this loom file
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{loom$add_layer(x, name, transpose = TRUE, verbose = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{An object to save as a layer}
+
+\item{\code{name}}{Name to store layer as}
+
+\item{\code{transpose}}{...}
+
+\item{\code{verbose}}{...}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisibly returns \code{NULL}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-version"></a>}}
 \if{latex}{\out{\hypertarget{method-version}{}}}
 \subsection{Method \code{version()}}{
@@ -136,7 +209,7 @@ timestamps the file as a whole}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Invisilby returns the object
+Invisibly returns the object
 }
 }
 \if{html}{\out{<hr>}}

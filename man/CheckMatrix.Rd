@@ -12,11 +12,11 @@ CheckMatrix(lfile, name, dims = NULL)
 \item{name}{Name of matrix to check}
 
 \item{dims}{If provided, ensure \code{lfile[[name]]} has these dimensions;
-should be a two-dimensional numberic vector with ncells/ncol as the first
+should be a two-dimensional numeric vector with ncells/ncol as the first
 value and nfeature/nrow as the second}
 }
 \value{
-If all checks pass succesfully, invisibly returns \code{name}
+If all checks pass successfully, invisibly returns \code{name}
 }
 \description{
 Check that a dataset is a proper loom matrix

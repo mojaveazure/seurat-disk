@@ -4,14 +4,13 @@
 \alias{loom-bindings}
 \alias{DefaultAssay.loom}
 \alias{DefaultAssay}
+\alias{dim.loom}
+\alias{dim}
 \title{Seurat binding for loom files}
 \usage{
 \method{DefaultAssay}{loom}(object, ...)
-}
-\arguments{
-\item{object}{An object}
 
-\item{...}{Arguments passed to other methods}
+\method{dim}{loom}(x)
 }
 \description{
 Seurat binding for loom files
