@@ -59,6 +59,13 @@ loom <- R6Class(
     add_graph = function(x, name, type = c('col', 'row'), verbose = TRUE) {
       type <- match.arg(arg = type)
       name <- basename(path = name)
+      WriteGraph(
+        x = x,
+        name = name,
+        lfile = self,
+        type = type,
+        verbose = verbose
+      )
       return(invisible(x = self))
     },
     #' @description Add a layer to this loom file
@@ -112,12 +119,19 @@ loom <- R6Class(
       } else if (Exists(x = self, name = H5Path('attrs', loom.version))) {
         self[[H5Path('attrs', loom.version)]][]
       } else {
+        version <- ifelse(
+          test = Exists(x = self, name = '/attrs'),
+          yes = '3.0.0',
+          no = '0.1.0'
+        )
         warning(
-          "Cannot find version information in this loom file",
+          "Cannot find version information in this loom file, assuming to be ",
+          version,
           call. = FALSE,
           immediate. = TRUE
         )
-        NULL
+        # NULL
+        version
       }
       return(numeric_version(x = version))
     },
@@ -415,7 +429,7 @@ methods::setMethod(
     )
     graph$create_dataset(
       name = 'b',
-      robj = PointerToIndex(p = methods::slot(object = x, name = 'p')),
+      robj = PointerToIndex(p = methods::slot(object = x, name = 'p')) - 1,
       dtype = GuessDType(x = 1L)
     )
     graph$create_dataset(

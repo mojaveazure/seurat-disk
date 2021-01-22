@@ -76,10 +76,14 @@ Exists <- function(x, name) {
     stop("'x' must be an HDF5 file or group", call. = FALSE)
   }
   name <- unlist(x = strsplit(x = name[1], split = '/', fixed = TRUE))
+  name <- Filter(f = nchar, x = name)
   path <- character(length = 1L)
   exists <- TRUE
   for (i in seq_along(along.with = name)) {
     path <- paste(path, name[i], sep = '/')
+    if (!inherits(x = x, what = 'H5File')) {
+      path <- gsub(pattern = '^/', replacement = '', x = path)
+    }
     exists <- x$exists(name = path)
     if (isFALSE(x = exists)) {
       break

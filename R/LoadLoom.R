@@ -167,8 +167,9 @@ as.Seurat.loom <- function(
   version <- ClosestVersion(query = x$version(), targets = c('0.1.0', '3.0.0'))
   load.fxn <- switch(
     EXPR = version,
-    '0.1.0' = LoadLoom0.1,
-    '3.0.0' = LoadLoom3.0
+    # '0.1.0' = LoadLoom0.1,
+    # '3.0.0' = LoadLoom3.0
+    LoadLoom3.0
   )
   object <- load.fxn(
       file = x,
@@ -216,14 +217,34 @@ as.Seurat.loom <- function(
 LoadLoom0.1 <- function(
   file,
   assay = NULL,
-  cells = 'CellID',
-  features = 'Gene',
+  cells = 'col_atts/CellID',
+  features = 'row_attrs/Gene',
   normalized = NULL,
   scaled = NULL,
   filter = c('cells', 'features', 'all', 'none'),
   verbose = TRUE
 ) {
-  .NotYetImplemented()
+  # TODO: implement filtering
+  filter <- filter[1]
+  filter <- match.arg(arg = filter)
+  assay <- assay %||% suppressWarnings(expr = DefaultAssay(object = file)) %||% 'RNA'
+  if (isTRUE(x = verbose)) {
+    message("Reading in /matrix")
+  }
+  counts <- t(x = as.matrix(x = file[['matrix']]))
+  dnames <- list(
+    features = file[[features]][],
+    cells = file[[cells]][]
+  )
+  if (anyDuplicated(x = dnames$features)) {
+    warning(
+      "Duplicate feature names found, making unique",
+      call. = FALSE,
+      immediate. = TRUE
+    )
+    dnames$features <- make.unique(names = dnames$features)
+  }
+  dimnames(x = counts) <- dnames
 }
 
 #' @name LoomLoading
@@ -262,6 +283,14 @@ LoadLoom3.0 <- function(
       immediate. = TRUE
     )
     dnames$features <- make.unique(names = dnames$features)
+  }
+  if (anyDuplicated(x = dnames$cells)) {
+    warning(
+      "Duplicate feature names found, making unique",
+      call. = FALSE,
+      immediate. = TRUE
+    )
+    dnames$cells <- make.unique(names = dnames$cells)
   }
   dimnames(x = counts) <- dnames
   # Assemble the initial assay
@@ -368,7 +397,7 @@ LoadGraph <- function(graph) {
   }
   return(sparseMatrix(
     i = graph[['a']][] + 1,
-    j = graph[['b']][],
+    j = graph[['b']][] + 1,
     x = graph[['w']][]
   ))
 }
