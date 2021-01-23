@@ -5,6 +5,7 @@
 \alias{IsDataFrame}
 \alias{IsFactor}
 \alias{IsList}
+\alias{IsLogical}
 \alias{IsMatrix}
 \title{Test an object's class}
 \usage{
@@ -13,6 +14,8 @@ IsDataFrame(x)
 IsFactor(x)
 
 IsList(x)
+
+IsLogical(x)
 
 IsMatrix(x)
 }

@@ -7,6 +7,7 @@
 \alias{IsFactor,H5D-method}
 \alias{IsFactor,H5Group-method}
 \alias{IsList,H5Group-method}
+\alias{IsLogical,H5D-method}
 \alias{IsMatrix,H5D-method}
 \alias{IsMatrix,H5Group-method}
 \title{Test HDF5 datasets and groups to see what kind of data they are}
@@ -20,6 +21,8 @@
 \S4method{IsFactor}{H5Group}(x)
 
 \S4method{IsList}{H5Group}(x)
+
+\S4method{IsLogical}{H5D}(x)
 
 \S4method{IsMatrix}{H5D}(x)
 

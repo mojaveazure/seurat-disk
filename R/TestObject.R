@@ -46,6 +46,16 @@ setGeneric(
 #' @rdname TestObject
 #'
 setGeneric(
+  name = 'IsLogical',
+  def = function(x) {
+    standardGeneric(f = 'IsLogical')
+  },
+  signature = c('x')
+)
+
+#' @rdname TestObject
+#'
+setGeneric(
   name = 'IsMatrix',
   def = function(x) {
     standardGeneric(f = 'IsMatrix')

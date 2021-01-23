@@ -144,6 +144,9 @@ setMethod(
     if (!IsDType(x = x[['values']], dtype = 'H5T_INTEGER') || length(x = x[['values']]$dims) != 1) {
       stop("'values' must be a one-dimensional integer dataset", call. = FALSE)
     }
+    if (!x[['levels']]$dims) {
+      return(factor())
+    }
     values <- x[['values']][]
     levels <- x[['levels']][]
     if (length(x = unique(x = na.omit(object = values))) > length(x = levels)) {
@@ -199,14 +202,18 @@ setMethod(
           as.data.frame(x = x[[i]], ...)
         } else if (IsMatrix(x = x[[i]])) {
           as.matrix(x = x[[i]], ...)
+        } else if (IsLogical(x = x[[i]])) {
+          as.logical(x = x[[i]], ...)
+        } else if (!x[[i]]$dims) {
+          NULL
         } else {
           x[[i]]$read()
         }
       } else {
-        data[[i]] <- if (IsDataFrame(x = x[[i]])) {
-          as.data.frame(x = x[[i]], ...)
-        } else if (IsFactor(x = x[[i]])) {
+        data[[i]] <- if (IsFactor(x = x[[i]])) {
           as.factor(x = x[[i]])
+        } else if (IsDataFrame(x = x[[i]])) {
+          as.data.frame(x = x[[i]], ...)
         } else if (IsMatrix(x = x[[i]])) {
           as.matrix(x = x[[i]], ...)
         } else {
@@ -217,7 +224,6 @@ setMethod(
     if (x$attr_exists(attr_name = 's3class')) {
       data <- structure(.Data = data, class = h5attr(x = x, which = 's3class'))
     } else if (x$attr_exists(attr_name = 's4class')) {
-      # browser()
       attr(x = data, which = 'classDef') <- h5attr(x = x, which = 's4class')
       data <- SeuratObject::ListToS4(x = data)
       # if (grepl(pattern = ':', x = class)) {

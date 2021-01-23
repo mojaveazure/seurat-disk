@@ -121,6 +121,7 @@ AssembleAssay <- function(assay, file, slots = NULL, verbose = TRUE) {
       x = slotNames(x = formal),
       y = slotNames(x = methods::getClass(Class = 'Assay'))
     )
+    missing <- intersect(x = missing, y = names(x = assay.group))
     missing <- sapply(
       X = missing,
       FUN = function(x) {
