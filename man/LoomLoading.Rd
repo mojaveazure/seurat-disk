@@ -9,8 +9,8 @@
 LoadLoom0.1(
   file,
   assay = NULL,
-  cells = "CellID",
-  features = "Gene",
+  cells = "col_atts/CellID",
+  features = "row_attrs/Gene",
   normalized = NULL,
   scaled = NULL,
   filter = c("cells", "features", "all", "none"),
