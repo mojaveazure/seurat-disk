@@ -117,9 +117,11 @@ as.data.frame.H5Group <- function(x, row.names = NULL, optional = FALSE, ...) {
       stop("Unknown dataset type for ", i, call. = FALSE)
     }
   }
-  if (is.null(x = row.names) && AttrExists(x = x, name = '_index')) {
+  if (AttrExists(x = x, name = '_index')) {
     rnames <- h5attr(x = x, which = '_index')
-    row.names <- x[[rnames]][]
+    if (is.null(x = row.names)) {
+      row.names <- x[[rnames]][]
+    }
     df[[rnames]] <- NULL
     df.names <- setdiff(x = df.names, rnames)
   }
