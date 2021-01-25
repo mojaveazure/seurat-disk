@@ -43,7 +43,7 @@ AssembleAssay <- function(assay, file, slots = NULL, verbose = TRUE) {
     stop("At least one of 'counts' or 'data' must be loaded", call. = FALSE)
   }
   assay.group <- file[['assays']][[assay]]
-  features <- assay.group[['features']][]
+  features <- FixFeatures(features = assay.group[['features']][])
   # Add counts if not data, otherwise add data
   if ('counts' %in% slots && !'data' %in% slots) {
     if (verbose) {
@@ -72,7 +72,7 @@ AssembleAssay <- function(assay, file, slots = NULL, verbose = TRUE) {
       dat <- as.matrix(x = assay.group[[slot]])
       colnames(x = dat) <- Cells(x = file)
       rownames(x = dat) <- if (slot == 'scale.data') {
-        assay.group[['scaled.features']][]
+        FixFeatures(features = assay.group[['scaled.features']][])
       } else {
         features
       }

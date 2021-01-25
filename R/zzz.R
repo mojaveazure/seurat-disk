@@ -299,6 +299,34 @@ FileType <- function(file) {
   return(tolower(x = ext))
 }
 
+#' Fix Feature Names
+#'
+#' @param features A vector of feature names
+#'
+#' @return Fixed features
+#'
+#' @keywords internal
+#'
+FixFeatures <- function(features) {
+  if (anyDuplicated(x = features)) {
+    warning(
+      "Non-unique features (rownames) present, making unique",
+      call. = FALSE,
+      immediate. = TRUE
+    )
+    features <- make.unique(names = features)
+  }
+  if (any(grepl(pattern = '_', x = features))) {
+    warning(
+      "Feature names cannot have underscores ('_'), replacing with dashes ('-')",
+      call. = FALSE,
+      immediate. = TRUE
+    )
+    features <- gsub(pattern = '_', replacement = '-', x = features)
+  }
+  return(features)
+}
+
 #' Get a class string with package information
 #'
 #' S4 classes are useful in the context of their defining package (benefits of
