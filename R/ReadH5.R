@@ -117,7 +117,15 @@ as.data.frame.H5Group <- function(x, row.names = NULL, optional = FALSE, ...) {
       stop("Unknown dataset type for ", i, call. = FALSE)
     }
   }
-  return(as.data.frame(x = df, row.names = row.names, optional = optional, ...))
+  if (is.null(x = row.names) && AttrExists(x = x, name = '_index')) {
+    rnames <- h5attr(x = x, which = '_index')
+    row.names <- x[[rnames]][]
+    df[[rnames]] <- NULL
+    df.names <- setdiff(x = df.names, rnames)
+  }
+  df <- as.data.frame(x = df, row.names = row.names, optional = optional, ...)
+  names(x = df) <- df.names
+  return(df)
 }
 
 #' @importFrom stats na.omit

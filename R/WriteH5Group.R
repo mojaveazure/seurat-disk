@@ -372,7 +372,7 @@ setMethod(
       FUN.VALUE = logical(length = 1L),
       USE.NAMES = FALSE
     )
-    if (any(factor.cols) || getOption(x = "SeuratDisk.dtypes.dataframe_as_group", default = FALSE)) {
+    if (any(factor.cols) || getOption(x = "SeuratDisk.dtypes.dataframe_as_group", default = TRUE)) {
       xgroup <- hgroup$create_group(name = name)
       for (i in colnames(x = x)) {
         WriteH5Group(
@@ -392,6 +392,20 @@ setMethod(
           attr_name = 'logicals',
           robj = intersect(x = colnames(x = x)[bool.cols], y = names(x = xgroup)),
           dtype = GuessDType(x = colnames(x = x))
+        )
+      }
+      if (length(x = rownames(x = x))) {
+        rnames <- '_index'
+        xgroup$create_attr(
+          attr_name = '_index',
+          robj = rnames,
+          dtype = GuessDType(x = rnames)
+        )
+        WriteH5Group(
+          x = rownames(x = x),
+          name = rnames,
+          hgroup = xgroup,
+          verbose = verbose
         )
       }
     } else {
