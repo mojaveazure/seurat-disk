@@ -1129,6 +1129,9 @@ H5SeuratToH5AD <- function(
       dfile[['raw']]$create_group(name = 'var')
     }
     # Add feature names
+    if (Exists(x = dfile[['raw/var']], name = rownames)) {
+      dfile[['raw/var']]$link_delete(name = rownames)
+    }
     dfile[['raw/var']]$create_dataset(
       name = rownames,
       robj = assay.group[['features']][],
