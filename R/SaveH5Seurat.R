@@ -162,13 +162,13 @@ as.h5Seurat.H5File <- function(x, ...) {
 #'
 as.h5Seurat.Seurat <- function(
   x,
-  filename = paste0(Project(object = x), '.h5seurat'),
+  filename = paste0(Project(object = x), '.h5Seurat'),
   overwrite = FALSE,
   verbose = TRUE,
   ...
 ) {
   if (!grepl(pattern = '^h5seurat$', x = file_ext(x = filename), ignore.case = TRUE)) {
-    filename <- paste0(filename, '.h5seurat')
+    filename <- paste0(filename, '.h5Seurat')
   }
   if (file.exists(filename)) {
     if (overwrite) {
