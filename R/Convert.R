@@ -1097,6 +1097,24 @@ H5SeuratToH5AD <- function(
       dtype = GuessDType(x = var.cols)
     )
   }
+  
+  # Add encoding, to ensure compatibility with python's anndata > 0.8.0:
+  encoding.info <- c('type' = 'dataframe', 'version' = '0.1.0')
+  names(x = encoding.info) <- paste0('encoding-', names(x = encoding.info))
+  for (i in seq_along(along.with = encoding.info)) {
+    attr.name <- names(x = encoding.info)[i]
+    attr.value <- encoding.info[i]
+    if (dfile[['var']]$attr_exists(attr_name = attr.name)) {
+      dfile[['var']]$attr_delete(attr_name = attr.name)
+    }
+    dfile[['var']]$create_attr(
+      attr_name = attr.name,
+      robj = attr.value,
+      dtype = GuessDType(x = attr.value),
+      space = Scalar()
+    )
+  }
+  
   # Add raw
   if (!is.null(x = raw.data)) {
     if (verbose) {
