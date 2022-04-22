@@ -46,6 +46,13 @@ BasicWrite <- function(x, name, hgroup, verbose = TRUE) {
         dtype = GuessDType(x = class(x = x)[1])
       )
     }
+  } else if (is.vector(x = x) && !is.null(x = names(x = x))) {
+    hgroup$create_dataset(
+      name = paste0(name, "__names__"),
+      robj = names(x = x),
+      dtype = GuessDType(x = names(x = x))
+    )
+    hgroup$create_dataset(name = name, robj = x, dtype = GuessDType(x = x))
   } else if (!is.null(x = x)) {
     hgroup$create_dataset(name = name, robj = x, dtype = GuessDType(x = x))
   }
