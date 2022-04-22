@@ -93,7 +93,8 @@ LoadH5Seurat.character <- function(
   hfile <- h5Seurat$new(filename = file, mode = 'r')
   on.exit(expr = hfile$close_all())
   return(LoadH5Seurat(
-    file = hfile,assays = assays,
+    file = hfile,
+    assays = assays,
     reductions = reductions,
     graphs = graphs,
     neighbors = neighbors,

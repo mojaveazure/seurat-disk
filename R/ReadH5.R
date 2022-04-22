@@ -181,6 +181,15 @@ setMethod(
   signature = c('x' = 'H5Group'),
   definition = function(x, which = NULL, ...) {
     list.names <- which %||% names(x = x)
+    is.vec.name <- grepl(
+      pattern = "__names__",
+      x = list.names,
+      ignore.case = FALSE,
+      perl = FALSE,
+      fixed = TRUE
+    )
+    vec.name.obj <- list.names[is.vec.name]
+    list.names <- list.names[!is.vec.name]
     if (x$attr_exists(attr_name = 'names')) {
       list.order <- h5attr(x = x, which = 'names')
       missing.names <- setdiff(x = list.order, y = list.names)
@@ -207,17 +216,26 @@ setMethod(
     data <- vector(mode = 'list', length = length(x = list.names))
     names(x = data) <- list.names
     for (i in list.names) {
+      i_name <- paste0(i, "__names__")
       if (inherits(x = x[[i]], what = 'H5D')) {
         data[[i]] <- if (IsDataFrame(x = x[[i]])) {
           as.data.frame(x = x[[i]], ...)
         } else if (IsMatrix(x = x[[i]])) {
           as.matrix(x = x[[i]], ...)
         } else if (IsLogical(x = x[[i]])) {
-          as.logical(x = x[[i]], ...)
+          v <- as.logical(x = x[[i]], ...)
+          if (i_name %in% vec.name.obj) {
+            names(x = v) <- x[[i_name]]$read()
+          }
+          v
         } else if (!x[[i]]$dims) {
           NULL
         } else {
-          x[[i]]$read()
+          v <- x[[i]]$read()
+          if (i_name %in% vec.name.obj) {
+            names(x = v) <- x[[i_name]]$read()
+          }
+          v
         }
       } else {
         data[[i]] <- if (IsFactor(x = x[[i]])) {
