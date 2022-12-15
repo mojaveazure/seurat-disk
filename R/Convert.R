@@ -1389,3 +1389,63 @@ H5SeuratToH5AD <- function(
   dfile$flush()
   return(dfile)
 }
+
+
+# Read obs meta data from h5ad file and return a data.frame
+#' @export
+#' 
+readH5AD_obs <- function(file) {
+  hfile <- SeuratDisk:: Connect(filename = file, force = TRUE)
+  hfile_obs <- hfile[['obs']]
+  obs_groups <- setdiff(names(hfile_obs), c('__categories', '_index'))
+  matrix <- matrix(data = NA, nrow = hfile_obs[['_index']]$dims[1], ncol = length(obs_groups))
+  colnames(matrix) <- obs_groups
+  rownames(matrix) <- hfile_obs[['_index']][]
+  if ('__categories' %in% names(hfile_obs)) {
+    hfile_cate <- hfile_obs[['__categories']]
+    for (i in seq_along(obs_groups)) {
+      obs.i <- obs_groups[i]
+      obs_value_i <- hfile_obs[[obs.i]][]
+      if (obs.i %in% names(x = hfile_cate)){
+        obs_value_i <- factor(x = obs_value_i, labels =  hfile_cate[[obs.i]][])
+      }
+      matrix[,i] <- obs_value_i
+    }
+  } else {
+    for (i in seq_along(obs_groups)) {
+      obs.i <- obs_groups[i]
+      if (all(names(hfile_obs[[obs.i]]) == c("categories", "codes"))) {
+        obs_value_i <- factor(x = hfile_obs[[obs.i]][['codes']][], labels =  hfile_obs[[obs.i]][['categories']][])
+      } else {
+        obs_value_i <- hfile_obs[[obs.i]][]
+      }
+      matrix[,i] <- obs_value_i
+    }
+  }
+  matrix <- as.data.frame(matrix)
+  return(matrix)
+}
+
+# Read obsm from h5ad file and return a list of embeddings
+#' @export
+#' 
+readH5AD_obsm <-  function(file) {
+  hfile <- SeuratDisk:: Connect(filename = file, force = TRUE)
+  hfile_obsm <- hfile[['obsm']]
+  if (length(names(hfile_obsm)) == 0) {
+    message('No obsm if found in this object')
+    return (list())
+  }
+  obsm_set <- names(hfile_obsm)
+  cells.name <- hfile[['obs']][['_index']][]
+  obsm.list <- lapply(obsm_set, function(x) {
+    emb <- t(hfile_obsm[[x]][,])
+    rownames(emb) <- cells.name
+    key.name <- gsub('X_', '', x)
+    colnames(emb) <- paste0(key.name, "_", 1:ncol(emb))
+    return(emb)
+  })
+  names(obsm.list) <- gsub('X_', '',obsm_set)
+  return(obsm.list)
+}
+
