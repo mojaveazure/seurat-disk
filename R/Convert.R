@@ -1422,6 +1422,7 @@ readH5AD_obs <- function(file) {
       matrix[,i] <- obs_value_i
     }
   }
+  hfile$close_all()
   matrix <- as.data.frame(matrix)
   return(matrix)
 }
@@ -1446,6 +1447,7 @@ readH5AD_obsm <-  function(file) {
     return(emb)
   })
   names(obsm.list) <- gsub('X_', '',obsm_set)
+  hfile$close_all()
   return(obsm.list)
 }
 
