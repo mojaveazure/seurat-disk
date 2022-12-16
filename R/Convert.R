@@ -1415,7 +1415,12 @@ readH5AD_obs <- function(file) {
     for (i in seq_along(obs_groups)) {
       obs.i <- obs_groups[i]
       if (all(names(hfile_obs[[obs.i]]) == c("categories", "codes"))) {
-        obs_value_i <- factor(x = hfile_obs[[obs.i]][['codes']][], labels =  hfile_obs[[obs.i]][['categories']][])
+        if (length(unique(hfile_obs[[obs.i]][['codes']][])) == length(hfile_obs[[obs.i]][['categories']][])) {
+          obs_value_i <- factor(x = hfile_obs[[obs.i]][['codes']][], labels =  hfile_obs[[obs.i]][['categories']][])
+        } else {
+          obs_value_i <- hfile_obs[[obs.i]][['codes']][]
+        }
+      
       } else {
         obs_value_i <- hfile_obs[[obs.i]][]
       }
