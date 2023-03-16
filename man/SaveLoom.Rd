@@ -37,7 +37,7 @@ as.loom(x, ...)
 )
 }
 \arguments{
-\item{object}{An object}
+\item{object, x}{An object}
 
 \item{filename}{Name of file to save the object to}
 
@@ -46,8 +46,6 @@ as.loom(x, ...)
 \item{verbose}{Show progress updates}
 
 \item{...}{Arguments passed to other methods}
-
-\item{x}{An object}
 }
 \value{
 \code{SaveLoom}: Invisibly returns \code{filename}

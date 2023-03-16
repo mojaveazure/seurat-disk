@@ -22,93 +22,93 @@ A class for connections to h5Seurat files
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-index}{\code{h5Seurat$index()}}
-\item \href{#method-set.version}{\code{h5Seurat$set.version()}}
-\item \href{#method-version}{\code{h5Seurat$version()}}
+\item \href{#method-h5Seurat-index}{\code{h5Seurat$index()}}
+\item \href{#method-h5Seurat-set.version}{\code{h5Seurat$set.version()}}
+\item \href{#method-h5Seurat-version}{\code{h5Seurat$version()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="close">}\href{../../hdf5r/html/H5RefClass.html#method-close}{\code{hdf5r::H5RefClass$close()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="dec_ref">}\href{../../hdf5r/html/H5RefClass.html#method-dec_ref}{\code{hdf5r::H5RefClass$dec_ref()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="get_file_id">}\href{../../hdf5r/html/H5RefClass.html#method-get_file_id}{\code{hdf5r::H5RefClass$get_file_id()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="get_obj_type">}\href{../../hdf5r/html/H5RefClass.html#method-get_obj_type}{\code{hdf5r::H5RefClass$get_obj_type()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="get_ref">}\href{../../hdf5r/html/H5RefClass.html#method-get_ref}{\code{hdf5r::H5RefClass$get_ref()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="inc_ref">}\href{../../hdf5r/html/H5RefClass.html#method-inc_ref}{\code{hdf5r::H5RefClass$inc_ref()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="methods">}\href{../../hdf5r/html/H5RefClass.html#method-methods}{\code{hdf5r::H5RefClass$methods()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_delete">}\href{../../hdf5r/html/H5File.html#method-attr_delete}{\code{hdf5r::H5File$attr_delete()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_delete_by_idx">}\href{../../hdf5r/html/H5File.html#method-attr_delete_by_idx}{\code{hdf5r::H5File$attr_delete_by_idx()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_delete_by_name">}\href{../../hdf5r/html/H5File.html#method-attr_delete_by_name}{\code{hdf5r::H5File$attr_delete_by_name()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_exists">}\href{../../hdf5r/html/H5File.html#method-attr_exists}{\code{hdf5r::H5File$attr_exists()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_exists_by_name">}\href{../../hdf5r/html/H5File.html#method-attr_exists_by_name}{\code{hdf5r::H5File$attr_exists_by_name()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_get_number">}\href{../../hdf5r/html/H5File.html#method-attr_get_number}{\code{hdf5r::H5File$attr_get_number()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_info_by_idx">}\href{../../hdf5r/html/H5File.html#method-attr_info_by_idx}{\code{hdf5r::H5File$attr_info_by_idx()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_info_by_name">}\href{../../hdf5r/html/H5File.html#method-attr_info_by_name}{\code{hdf5r::H5File$attr_info_by_name()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_name_by_idx">}\href{../../hdf5r/html/H5File.html#method-attr_name_by_idx}{\code{hdf5r::H5File$attr_name_by_idx()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_open">}\href{../../hdf5r/html/H5File.html#method-attr_open}{\code{hdf5r::H5File$attr_open()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_open_by_idx">}\href{../../hdf5r/html/H5File.html#method-attr_open_by_idx}{\code{hdf5r::H5File$attr_open_by_idx()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_open_by_name">}\href{../../hdf5r/html/H5File.html#method-attr_open_by_name}{\code{hdf5r::H5File$attr_open_by_name()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_rename">}\href{../../hdf5r/html/H5File.html#method-attr_rename}{\code{hdf5r::H5File$attr_rename()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_rename_by_name">}\href{../../hdf5r/html/H5File.html#method-attr_rename_by_name}{\code{hdf5r::H5File$attr_rename_by_name()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="close_all">}\href{../../hdf5r/html/H5File.html#method-close_all}{\code{hdf5r::H5File$close_all()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="commit">}\href{../../hdf5r/html/H5File.html#method-commit}{\code{hdf5r::H5File$commit()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="create_attr">}\href{../../hdf5r/html/H5File.html#method-create_attr}{\code{hdf5r::H5File$create_attr()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="create_attr_by_name">}\href{../../hdf5r/html/H5File.html#method-create_attr_by_name}{\code{hdf5r::H5File$create_attr_by_name()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="create_dataset">}\href{../../hdf5r/html/H5File.html#method-create_dataset}{\code{hdf5r::H5File$create_dataset()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="create_group">}\href{../../hdf5r/html/H5File.html#method-create_group}{\code{hdf5r::H5File$create_group()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="create_reference">}\href{../../hdf5r/html/H5File.html#method-create_reference}{\code{hdf5r::H5File$create_reference()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="exists">}\href{../../hdf5r/html/H5File.html#method-exists}{\code{hdf5r::H5File$exists()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="file_info">}\href{../../hdf5r/html/H5File.html#method-file_info}{\code{hdf5r::H5File$file_info()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="flush">}\href{../../hdf5r/html/H5File.html#method-flush}{\code{hdf5r::H5File$flush()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="get_filename">}\href{../../hdf5r/html/H5File.html#method-get_filename}{\code{hdf5r::H5File$get_filename()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="get_filesize">}\href{../../hdf5r/html/H5File.html#method-get_filesize}{\code{hdf5r::H5File$get_filesize()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="get_intent">}\href{../../hdf5r/html/H5File.html#method-get_intent}{\code{hdf5r::H5File$get_intent()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="get_obj_count">}\href{../../hdf5r/html/H5File.html#method-get_obj_count}{\code{hdf5r::H5File$get_obj_count()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="get_obj_ids">}\href{../../hdf5r/html/H5File.html#method-get_obj_ids}{\code{hdf5r::H5File$get_obj_ids()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="get_obj_name">}\href{../../hdf5r/html/H5File.html#method-get_obj_name}{\code{hdf5r::H5File$get_obj_name()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="group_info">}\href{../../hdf5r/html/H5File.html#method-group_info}{\code{hdf5r::H5File$group_info()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="group_info_by_idx">}\href{../../hdf5r/html/H5File.html#method-group_info_by_idx}{\code{hdf5r::H5File$group_info_by_idx()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="group_info_by_name">}\href{../../hdf5r/html/H5File.html#method-group_info_by_name}{\code{hdf5r::H5File$group_info_by_name()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link">}\href{../../hdf5r/html/H5File.html#method-link}{\code{hdf5r::H5File$link()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_copy_from">}\href{../../hdf5r/html/H5File.html#method-link_copy_from}{\code{hdf5r::H5File$link_copy_from()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_copy_to">}\href{../../hdf5r/html/H5File.html#method-link_copy_to}{\code{hdf5r::H5File$link_copy_to()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_create_external">}\href{../../hdf5r/html/H5File.html#method-link_create_external}{\code{hdf5r::H5File$link_create_external()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_create_hard">}\href{../../hdf5r/html/H5File.html#method-link_create_hard}{\code{hdf5r::H5File$link_create_hard()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_create_soft">}\href{../../hdf5r/html/H5File.html#method-link_create_soft}{\code{hdf5r::H5File$link_create_soft()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_delete">}\href{../../hdf5r/html/H5File.html#method-link_delete}{\code{hdf5r::H5File$link_delete()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_delete_by_idx">}\href{../../hdf5r/html/H5File.html#method-link_delete_by_idx}{\code{hdf5r::H5File$link_delete_by_idx()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_exists">}\href{../../hdf5r/html/H5File.html#method-link_exists}{\code{hdf5r::H5File$link_exists()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_info">}\href{../../hdf5r/html/H5File.html#method-link_info}{\code{hdf5r::H5File$link_info()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_info_by_idx">}\href{../../hdf5r/html/H5File.html#method-link_info_by_idx}{\code{hdf5r::H5File$link_info_by_idx()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_move_from">}\href{../../hdf5r/html/H5File.html#method-link_move_from}{\code{hdf5r::H5File$link_move_from()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_move_to">}\href{../../hdf5r/html/H5File.html#method-link_move_to}{\code{hdf5r::H5File$link_move_to()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_name_by_idx">}\href{../../hdf5r/html/H5File.html#method-link_name_by_idx}{\code{hdf5r::H5File$link_name_by_idx()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_value">}\href{../../hdf5r/html/H5File.html#method-link_value}{\code{hdf5r::H5File$link_value()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_value_by_idx">}\href{../../hdf5r/html/H5File.html#method-link_value_by_idx}{\code{hdf5r::H5File$link_value_by_idx()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="ls">}\href{../../hdf5r/html/H5File.html#method-ls}{\code{hdf5r::H5File$ls()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="mount">}\href{../../hdf5r/html/H5File.html#method-mount}{\code{hdf5r::H5File$mount()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="obj_copy_from">}\href{../../hdf5r/html/H5File.html#method-obj_copy_from}{\code{hdf5r::H5File$obj_copy_from()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="obj_copy_to">}\href{../../hdf5r/html/H5File.html#method-obj_copy_to}{\code{hdf5r::H5File$obj_copy_to()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="obj_info">}\href{../../hdf5r/html/H5File.html#method-obj_info}{\code{hdf5r::H5File$obj_info()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="obj_info_by_idx">}\href{../../hdf5r/html/H5File.html#method-obj_info_by_idx}{\code{hdf5r::H5File$obj_info_by_idx()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="obj_info_by_name">}\href{../../hdf5r/html/H5File.html#method-obj_info_by_name}{\code{hdf5r::H5File$obj_info_by_name()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="open">}\href{../../hdf5r/html/H5File.html#method-open}{\code{hdf5r::H5File$open()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="open_by_idx">}\href{../../hdf5r/html/H5File.html#method-open_by_idx}{\code{hdf5r::H5File$open_by_idx()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="path_valid">}\href{../../hdf5r/html/H5File.html#method-path_valid}{\code{hdf5r::H5File$path_valid()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="print">}\href{../../hdf5r/html/H5File.html#method-print}{\code{hdf5r::H5File$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="unmount">}\href{../../hdf5r/html/H5File.html#method-unmount}{\code{hdf5r::H5File$unmount()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="chunk.points">}\href{../../SeuratDisk/html/scdisk.html#method-chunk.points}{\code{SeuratDisk::scdisk$chunk.points()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="finalizer">}\href{../../SeuratDisk/html/scdisk.html#method-finalizer}{\code{SeuratDisk::scdisk$finalizer()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="initialize">}\href{../../SeuratDisk/html/scdisk.html#method-initialize}{\code{SeuratDisk::scdisk$initialize()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="last.modified">}\href{../../SeuratDisk/html/scdisk.html#method-last.modified}{\code{SeuratDisk::scdisk$last.modified()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="timestamp">}\href{../../SeuratDisk/html/scdisk.html#method-timestamp}{\code{SeuratDisk::scdisk$timestamp()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="close"><a href='../../hdf5r/html/H5RefClass.html#method-H5RefClass-close'><code>hdf5r::H5RefClass$close()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="dec_ref"><a href='../../hdf5r/html/H5RefClass.html#method-H5RefClass-dec_ref'><code>hdf5r::H5RefClass$dec_ref()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="get_file_id"><a href='../../hdf5r/html/H5RefClass.html#method-H5RefClass-get_file_id'><code>hdf5r::H5RefClass$get_file_id()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="get_obj_type"><a href='../../hdf5r/html/H5RefClass.html#method-H5RefClass-get_obj_type'><code>hdf5r::H5RefClass$get_obj_type()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="get_ref"><a href='../../hdf5r/html/H5RefClass.html#method-H5RefClass-get_ref'><code>hdf5r::H5RefClass$get_ref()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="inc_ref"><a href='../../hdf5r/html/H5RefClass.html#method-H5RefClass-inc_ref'><code>hdf5r::H5RefClass$inc_ref()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5RefClass" data-id="methods"><a href='../../hdf5r/html/H5RefClass.html#method-H5RefClass-methods'><code>hdf5r::H5RefClass$methods()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_delete"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_delete'><code>hdf5r::H5File$attr_delete()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_delete_by_idx"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_delete_by_idx'><code>hdf5r::H5File$attr_delete_by_idx()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_delete_by_name"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_delete_by_name'><code>hdf5r::H5File$attr_delete_by_name()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_exists"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_exists'><code>hdf5r::H5File$attr_exists()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_exists_by_name"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_exists_by_name'><code>hdf5r::H5File$attr_exists_by_name()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_get_number"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_get_number'><code>hdf5r::H5File$attr_get_number()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_info_by_idx"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_info_by_idx'><code>hdf5r::H5File$attr_info_by_idx()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_info_by_name"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_info_by_name'><code>hdf5r::H5File$attr_info_by_name()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_name_by_idx"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_name_by_idx'><code>hdf5r::H5File$attr_name_by_idx()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_open"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_open'><code>hdf5r::H5File$attr_open()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_open_by_idx"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_open_by_idx'><code>hdf5r::H5File$attr_open_by_idx()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_open_by_name"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_open_by_name'><code>hdf5r::H5File$attr_open_by_name()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_rename"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_rename'><code>hdf5r::H5File$attr_rename()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="attr_rename_by_name"><a href='../../hdf5r/html/H5File.html#method-H5File-attr_rename_by_name'><code>hdf5r::H5File$attr_rename_by_name()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="close_all"><a href='../../hdf5r/html/H5File.html#method-H5File-close_all'><code>hdf5r::H5File$close_all()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="commit"><a href='../../hdf5r/html/H5File.html#method-H5File-commit'><code>hdf5r::H5File$commit()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="create_attr"><a href='../../hdf5r/html/H5File.html#method-H5File-create_attr'><code>hdf5r::H5File$create_attr()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="create_attr_by_name"><a href='../../hdf5r/html/H5File.html#method-H5File-create_attr_by_name'><code>hdf5r::H5File$create_attr_by_name()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="create_dataset"><a href='../../hdf5r/html/H5File.html#method-H5File-create_dataset'><code>hdf5r::H5File$create_dataset()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="create_group"><a href='../../hdf5r/html/H5File.html#method-H5File-create_group'><code>hdf5r::H5File$create_group()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="create_reference"><a href='../../hdf5r/html/H5File.html#method-H5File-create_reference'><code>hdf5r::H5File$create_reference()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="exists"><a href='../../hdf5r/html/H5File.html#method-H5File-exists'><code>hdf5r::H5File$exists()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="file_info"><a href='../../hdf5r/html/H5File.html#method-H5File-file_info'><code>hdf5r::H5File$file_info()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="flush"><a href='../../hdf5r/html/H5File.html#method-H5File-flush'><code>hdf5r::H5File$flush()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="get_filename"><a href='../../hdf5r/html/H5File.html#method-H5File-get_filename'><code>hdf5r::H5File$get_filename()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="get_filesize"><a href='../../hdf5r/html/H5File.html#method-H5File-get_filesize'><code>hdf5r::H5File$get_filesize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="get_intent"><a href='../../hdf5r/html/H5File.html#method-H5File-get_intent'><code>hdf5r::H5File$get_intent()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="get_obj_count"><a href='../../hdf5r/html/H5File.html#method-H5File-get_obj_count'><code>hdf5r::H5File$get_obj_count()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="get_obj_ids"><a href='../../hdf5r/html/H5File.html#method-H5File-get_obj_ids'><code>hdf5r::H5File$get_obj_ids()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="get_obj_name"><a href='../../hdf5r/html/H5File.html#method-H5File-get_obj_name'><code>hdf5r::H5File$get_obj_name()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="group_info"><a href='../../hdf5r/html/H5File.html#method-H5File-group_info'><code>hdf5r::H5File$group_info()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="group_info_by_idx"><a href='../../hdf5r/html/H5File.html#method-H5File-group_info_by_idx'><code>hdf5r::H5File$group_info_by_idx()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="group_info_by_name"><a href='../../hdf5r/html/H5File.html#method-H5File-group_info_by_name'><code>hdf5r::H5File$group_info_by_name()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link"><a href='../../hdf5r/html/H5File.html#method-H5File-link'><code>hdf5r::H5File$link()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_copy_from"><a href='../../hdf5r/html/H5File.html#method-H5File-link_copy_from'><code>hdf5r::H5File$link_copy_from()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_copy_to"><a href='../../hdf5r/html/H5File.html#method-H5File-link_copy_to'><code>hdf5r::H5File$link_copy_to()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_create_external"><a href='../../hdf5r/html/H5File.html#method-H5File-link_create_external'><code>hdf5r::H5File$link_create_external()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_create_hard"><a href='../../hdf5r/html/H5File.html#method-H5File-link_create_hard'><code>hdf5r::H5File$link_create_hard()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_create_soft"><a href='../../hdf5r/html/H5File.html#method-H5File-link_create_soft'><code>hdf5r::H5File$link_create_soft()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_delete"><a href='../../hdf5r/html/H5File.html#method-H5File-link_delete'><code>hdf5r::H5File$link_delete()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_delete_by_idx"><a href='../../hdf5r/html/H5File.html#method-H5File-link_delete_by_idx'><code>hdf5r::H5File$link_delete_by_idx()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_exists"><a href='../../hdf5r/html/H5File.html#method-H5File-link_exists'><code>hdf5r::H5File$link_exists()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_info"><a href='../../hdf5r/html/H5File.html#method-H5File-link_info'><code>hdf5r::H5File$link_info()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_info_by_idx"><a href='../../hdf5r/html/H5File.html#method-H5File-link_info_by_idx'><code>hdf5r::H5File$link_info_by_idx()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_move_from"><a href='../../hdf5r/html/H5File.html#method-H5File-link_move_from'><code>hdf5r::H5File$link_move_from()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_move_to"><a href='../../hdf5r/html/H5File.html#method-H5File-link_move_to'><code>hdf5r::H5File$link_move_to()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_name_by_idx"><a href='../../hdf5r/html/H5File.html#method-H5File-link_name_by_idx'><code>hdf5r::H5File$link_name_by_idx()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_value"><a href='../../hdf5r/html/H5File.html#method-H5File-link_value'><code>hdf5r::H5File$link_value()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="link_value_by_idx"><a href='../../hdf5r/html/H5File.html#method-H5File-link_value_by_idx'><code>hdf5r::H5File$link_value_by_idx()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="ls"><a href='../../hdf5r/html/H5File.html#method-H5File-ls'><code>hdf5r::H5File$ls()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="mount"><a href='../../hdf5r/html/H5File.html#method-H5File-mount'><code>hdf5r::H5File$mount()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="obj_copy_from"><a href='../../hdf5r/html/H5File.html#method-H5File-obj_copy_from'><code>hdf5r::H5File$obj_copy_from()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="obj_copy_to"><a href='../../hdf5r/html/H5File.html#method-H5File-obj_copy_to'><code>hdf5r::H5File$obj_copy_to()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="obj_info"><a href='../../hdf5r/html/H5File.html#method-H5File-obj_info'><code>hdf5r::H5File$obj_info()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="obj_info_by_idx"><a href='../../hdf5r/html/H5File.html#method-H5File-obj_info_by_idx'><code>hdf5r::H5File$obj_info_by_idx()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="obj_info_by_name"><a href='../../hdf5r/html/H5File.html#method-H5File-obj_info_by_name'><code>hdf5r::H5File$obj_info_by_name()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="open"><a href='../../hdf5r/html/H5File.html#method-H5File-open'><code>hdf5r::H5File$open()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="open_by_idx"><a href='../../hdf5r/html/H5File.html#method-H5File-open_by_idx'><code>hdf5r::H5File$open_by_idx()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="path_valid"><a href='../../hdf5r/html/H5File.html#method-H5File-path_valid'><code>hdf5r::H5File$path_valid()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="print"><a href='../../hdf5r/html/H5File.html#method-H5File-print'><code>hdf5r::H5File$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hdf5r" data-topic="H5File" data-id="unmount"><a href='../../hdf5r/html/H5File.html#method-H5File-unmount'><code>hdf5r::H5File$unmount()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="chunk.points"><a href='../../SeuratDisk/html/scdisk.html#method-scdisk-chunk.points'><code>SeuratDisk::scdisk$chunk.points()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="finalizer"><a href='../../SeuratDisk/html/scdisk.html#method-scdisk-finalizer'><code>SeuratDisk::scdisk$finalizer()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="initialize"><a href='../../SeuratDisk/html/scdisk.html#method-scdisk-initialize'><code>SeuratDisk::scdisk$initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="last.modified"><a href='../../SeuratDisk/html/scdisk.html#method-scdisk-last.modified'><code>SeuratDisk::scdisk$last.modified()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="SeuratDisk" data-topic="scdisk" data-id="timestamp"><a href='../../SeuratDisk/html/scdisk.html#method-scdisk-timestamp'><code>SeuratDisk::scdisk$timestamp()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-index"></a>}}
-\if{latex}{\out{\hypertarget{method-index}{}}}
+\if{html}{\out{<a id="method-h5Seurat-index"></a>}}
+\if{latex}{\out{\hypertarget{method-h5Seurat-index}{}}}
 \subsection{Method \code{index()}}{
 Get the index for this h5Seurat file
 \subsection{Usage}{
@@ -117,8 +117,8 @@ Get the index for this h5Seurat file
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set.version"></a>}}
-\if{latex}{\out{\hypertarget{method-set.version}{}}}
+\if{html}{\out{<a id="method-h5Seurat-set.version"></a>}}
+\if{latex}{\out{\hypertarget{method-h5Seurat-set.version}{}}}
 \subsection{Method \code{set.version()}}{
 Set the version attribute
 \subsection{Usage}{
@@ -135,8 +135,8 @@ Set the version attribute
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-version"></a>}}
-\if{latex}{\out{\hypertarget{method-version}{}}}
+\if{html}{\out{<a id="method-h5Seurat-version"></a>}}
+\if{latex}{\out{\hypertarget{method-h5Seurat-version}{}}}
 \subsection{Method \code{version()}}{
 Get the version attribute
 \subsection{Usage}{

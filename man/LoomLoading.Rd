@@ -29,8 +29,6 @@ LoadLoom3.0(
 )
 }
 \arguments{
-\item{file}{Name of loom file or a \code{loom} object to load data from}
-
 \item{assay}{Name of assay to store expression data as; if \code{NULL}, will
 search for an HDF5 attribute named \code{SEURAT_ASSAY} or an attribute
 dataset named \code{/attrs/SEURAT_ASSAY} for assay name. If not found,
