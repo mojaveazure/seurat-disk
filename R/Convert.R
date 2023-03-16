@@ -1395,13 +1395,17 @@ H5SeuratToH5AD <- function(
 #' @export
 #' 
 readH5AD_obs <- function(file) {
-  hfile <- SeuratDisk:: Connect(filename = file, force = TRUE)
+  suppressWarnings(expr = hfile <- SeuratDisk:: Connect(filename = file, force = TRUE))
   hfile_obs <- hfile[['obs']]
   obs_groups <- setdiff(names(hfile_obs), c('__categories', '_index'))
-  matrix <- matrix(data = NA, nrow = hfile_obs[['_index']]$dims[1], ncol = length(obs_groups))
+  matrix <- as.data.frame(
+    x = matrix(data = NA,
+               nrow = hfile_obs[['_index']]$dims[1],
+               ncol = length(obs_groups))
+    )
   colnames(matrix) <- obs_groups
   rownames(matrix) <- hfile_obs[['_index']][]
-  if ('__categories' %in% names(hfile_obs)) {
+  if ('__categories' %in% names(x = hfile_obs)) {
     hfile_cate <- hfile_obs[['__categories']]
     for (i in seq_along(obs_groups)) {
       obs.i <- obs_groups[i]
@@ -1415,8 +1419,13 @@ readH5AD_obs <- function(file) {
     for (i in seq_along(obs_groups)) {
       obs.i <- obs_groups[i]
       if (all(names(hfile_obs[[obs.i]]) == c("categories", "codes"))) {
-        if (length(unique(hfile_obs[[obs.i]][['codes']][])) == length(hfile_obs[[obs.i]][['categories']][])) {
-          obs_value_i <- factor(x = hfile_obs[[obs.i]][['codes']][], labels =  hfile_obs[[obs.i]][['categories']][])
+        if (
+          length(unique(hfile_obs[[obs.i]][['codes']][])) == length(hfile_obs[[obs.i]][['categories']][])
+          ) {
+          obs_value_i <- factor(
+            x = hfile_obs[[obs.i]][['codes']][],
+            labels =  hfile_obs[[obs.i]][['categories']][]
+            )
         } else {
           obs_value_i <- hfile_obs[[obs.i]][['codes']][]
         }
@@ -1428,7 +1437,6 @@ readH5AD_obs <- function(file) {
     }
   }
   hfile$close_all()
-  matrix <- as.data.frame(matrix)
   return(matrix)
 }
 
