@@ -61,8 +61,6 @@ AppendData(
 )
 }
 \arguments{
-\item{file}{Name of h5Seurat or connected h5Seurat file to load}
-
 \item{object}{A \code{\link[Seurat]{Seurat}} object to append data to}
 
 \item{assays}{One of:
