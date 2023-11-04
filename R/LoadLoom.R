@@ -164,7 +164,7 @@ as.Seurat.loom <- function(
       scaled <- NULL
     }
   }
-  version <- ClosestVersion(query = x$version(), targets = c('0.1.0', '3.0.0'))
+  version <- ClosestVersion(query = x$version, targets = c('0.1.0', '3.0.0'))
   load.fxn <- switch(
     EXPR = version,
     # '0.1.0' = LoadLoom0.1,
